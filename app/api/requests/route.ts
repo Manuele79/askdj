@@ -85,10 +85,13 @@ export async function GET(req: Request) {
 
   if (!eventCode) return NextResponse.json({ requests: [] });
 
+  const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
+
   const { data, error } = await supabase
     .from("requests")
     .select("*")
     .eq("event_code", eventCode)
+    .gte("created_at", twelveHoursAgo)
     .order("votes", { ascending: false })
     .order("updated_at", { ascending: false })
     .limit(200);
