@@ -60,20 +60,28 @@ export default function RequestClient({ code }: { code: string }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
       <div className="mx-auto max-w-2xl px-4 py-8">
-        <header className="mb-6">
-          <div className="inline-flex items-center gap-2 rounded-full bg-zinc-800/60 px-3 py-1 text-xs text-zinc-200">
-            <span>🎧</span>
-            <span>DJ Requests</span>
-          </div>
+        <header className="mb-6 flex flex-col items-center text-center">
 
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight">
-            Invia una canzone
-          </h1>
+  {/* LOGO MV */}
+  <div className="mb-3 flex h-20 w-20 flex-col items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900/60 shadow">
+    <div className="text-4xl font-black leading-none text-green-400">M</div>
+    <div className="-mt-2 text-4xl font-black leading-none text-pink-400">V</div>
+  </div>
 
-          <p className="mt-2 text-sm text-zinc-300">
-            Evento: <span className="font-mono text-zinc-100">{code}</span>
-          </p>
-        </header>
+  {/* Titolo */}
+  <h1 className="text-4xl font-extrabold tracking-tight">
+    DJ Requests
+  </h1>
+
+  <p className="mt-1 text-lg text-zinc-300">
+    Invia una canzone
+  </p>
+
+  <p className="mt-1 text-sm text-zinc-400">
+    Evento: <span className="font-mono text-zinc-100">{code}</span>
+  </p>
+</header>
+
 
         <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 shadow-sm">
           <div className="space-y-4">
