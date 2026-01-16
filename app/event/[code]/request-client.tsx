@@ -64,11 +64,11 @@ export default function RequestClient({ code }: { code: string }) {
   <header className="mb-8 text-center">
   {/* Logo MV */}
   <div className="mx-auto mb-4 inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-3 shadow-sm">
-    <div className="relative h-10 w-10">
-      <span className="absolute left-0 top-0 text-3xl font-extrabold leading-none text-emerald-400 drop-shadow">
+    <div className="relative h-14 w-14">
+      <span className="absolute left-0 top-0 text-4xl font-extrabold leading-none text-emerald-400 drop-shadow">
         M
       </span>
-      <span className="absolute left-0 top-4 text-3xl font-extrabold leading-none text-pink-400 drop-shadow">
+      <span className="absolute left-0 top-4 text-4xl font-extrabold leading-none text-pink-400 drop-shadow">
         V
       </span>
     </div>
