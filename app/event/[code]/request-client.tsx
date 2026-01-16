@@ -62,24 +62,64 @@ export default function RequestClient({ code }: { code: string }) {
 
       <div className="mx-auto max-w-2xl px-4 py-8">
   <header className="mb-8 text-center">
-  {/* Logo MV */}
-  <div className="mx-auto mb-4 inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-3 shadow-sm">
-    <div className="relative h-14 w-14">
-      <span className="absolute left-0 top-0 text-4xl font-extrabold leading-none text-emerald-400 drop-shadow">
-        M
-      </span>
-      <span className="absolute left-0 top-4 text-4xl font-extrabold leading-none text-pink-400 drop-shadow">
-        V
-      </span>
-    </div>
-  </div>
+  {/* LOGO */}
+<div className="mx-auto mb-3 flex h-20 w-20 items-center justify-center">
+  <svg viewBox="0 0 64 64" className="h-20 w-20">
+    <defs>
+      <linearGradient id="mvGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#34d399" />  {/* verde */}
+        <stop offset="100%" stopColor="#fb7185" /> {/* rosa */}
+      </linearGradient>
+    </defs>
+
+    {/* arco cuffie */}
+    <path
+      d="M12 34c0-12 8-22 20-22s20 10 20 22"
+      fill="none"
+      stroke="url(#mvGrad)"
+      strokeWidth="4"
+      strokeLinecap="round"
+    />
+
+    {/* pad sinistra */}
+    <rect x="6" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
+
+    {/* pad destra */}
+    <rect x="48" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
+
+    {/* lettere MV sovrapposte */}
+    <text
+      x="32"
+      y="38"
+      textAnchor="middle"
+      fontSize="26"
+      fontWeight="900"
+      fontFamily="Arial, sans-serif"
+      fill="#34d399"
+    >
+      M
+    </text>
+
+    <text
+      x="34"
+      y="44"
+      textAnchor="middle"
+      fontSize="26"
+      fontWeight="900"
+      fontFamily="Arial, sans-serif"
+      fill="#fb7185"
+    >
+      V
+    </text>
+  </svg>
+</div>
+
 
   {/* Badge */}
-  <h2 className="mt-2 text-2xl font-extrabold tracking-tight">
-  <span className="bg-gradient-to-r from-emerald-400 to-pink-400 bg-clip-text text-transparent">
-    DJ Requests
-  </span>
+ <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-pink-400">
+  DJ Requests
 </h2>
+
 
   <h1 className="mt-4 text-4xl font-extrabold tracking-tight">
     Invia una canzone
