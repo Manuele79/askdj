@@ -225,9 +225,13 @@ function createEvent() {
           /* DJ MODE */
           <section className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
             {sorted.length === 0 ? (
-              <p className="text-sm text-zinc-400">
-                Nessuna richiesta ancora.
-              </p>
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 text-sm text-zinc-300">
+  <div className="font-semibold text-zinc-100">⚠️ Evento scaduto o vuoto</div>
+  <div className="mt-1 text-zinc-400">
+    Nessun video YouTube valido nelle ultime 12 ore. Se l’evento è nuovo, invia una canzone dall’area ospiti.
+  </div>
+</div>
+
             ) : (
               <ul className="space-y-2">
                 {sorted.map((r, idx) => (
