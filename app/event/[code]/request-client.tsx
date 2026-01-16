@@ -58,36 +58,47 @@ export default function RequestClient({ code }: { code: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
-      <div className="mx-auto max-w-2xl px-4 py-8">
-        <header className="mb-6 flex flex-col items-center text-center">
+   <div className="min-h-screen text-zinc-100 bg-[radial-gradient(ellipse_at_top,_rgba(34,197,94,0.18),_transparent_45%),radial-gradient(ellipse_at_bottom,_rgba(236,72,153,0.18),_transparent_45%),linear-gradient(to_bottom,_#050507,_#070712)]">
 
-  {/* LOGO MV */}
-  <div className="mb-3 flex h-20 w-20 flex-col items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900/60 shadow">
-    <div className="text-4xl font-black leading-none text-green-400">M</div>
-    <div className="-mt-2 text-4xl font-black leading-none text-pink-400">V</div>
+      <div className="mx-auto max-w-2xl px-4 py-8">
+  <header className="mb-8 text-center">
+  {/* Logo MV */}
+  <div className="mx-auto mb-4 inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-3 shadow-sm">
+    <div className="relative h-10 w-10">
+      <span className="absolute left-0 top-0 text-3xl font-extrabold leading-none text-emerald-400 drop-shadow">
+        M
+      </span>
+      <span className="absolute left-0 top-4 text-3xl font-extrabold leading-none text-pink-400 drop-shadow">
+        V
+      </span>
+    </div>
   </div>
 
-  {/* Titolo */}
-  <h1 className="text-4xl font-extrabold tracking-tight">
-    DJ Requests
+  {/* Badge */}
+  <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-200">
+    <span className="opacity-80">🎧</span>
+    <span className="font-semibold tracking-wide">DJ Requests</span>
+  </div>
+
+  <h1 className="mt-4 text-4xl font-extrabold tracking-tight">
+    Invia una canzone
   </h1>
 
-  <p className="mt-1 text-lg text-zinc-300">
-    Invia una canzone
-  </p>
-
-  <p className="mt-1 text-sm text-zinc-400">
-    Evento: <span className="font-mono text-zinc-100">{code}</span>
+  <p className="mt-2 text-base text-zinc-200">
+    Evento:{" "}
+    <span className="rounded-lg border border-white/10 bg-white/5 px-2 py-1 font-mono text-lg text-white">
+      {code}
+    </span>
   </p>
 </header>
+
 
 
         <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 shadow-sm">
           <div className="space-y-4">
             <div>
               <label className="text-sm text-zinc-300">
-                Titolo (opzionale se incolli un link)
+                Titolo (o incolli un link sotto)
               </label>
               <input
                 value={title}
@@ -115,7 +126,8 @@ export default function RequestClient({ code }: { code: string }) {
             <button
               onClick={addRequest}
               disabled={!canSend || loading}
-              className="w-full rounded-xl bg-zinc-100 px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full rounded-xl bg-gradient-to-r from-emerald-400 to-pink-400 px-4 py-3 text-sm font-extrabold text-zinc-950 shadow-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+
             >
               {loading ? "Invio..." : "Invia al DJ"}
             </button>
@@ -125,7 +137,7 @@ export default function RequestClient({ code }: { code: string }) {
         <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-zinc-100">
-              Richieste inviate (demo)
+              Richieste inviate 
             </h2>
             <span className="rounded-full bg-zinc-800 px-2 py-1 text-xs text-zinc-300">
               {sent.length}
@@ -148,9 +160,10 @@ export default function RequestClient({ code }: { code: string }) {
           )}
         </section>
 
-        <footer className="mt-8 text-center text-xs text-zinc-500">
-          Nessun audio viene inviato. Solo link e titolo.
-        </footer>
+        <footer className="mt-8 text-center text-xs text-zinc-400/80">
+  Nessun audio viene inviato — solo link e titolo.
+</footer>
+
       </div>
     </div>
   );
