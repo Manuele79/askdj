@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import EventQr from "@/app/components/EventQr";
+
 type Platform = "youtube" | "spotify" | "apple" | "amazon" | "other";
 
 type RequestItem = {
@@ -84,6 +86,8 @@ function PlatformButton({ r }: { r: RequestItem }) {
 export default function DjClient({ code }: { code: string }) {
   const [mode, setMode] = useState<"dj" | "party">("dj");
   const [items, setItems] = useState<RequestItem[]>([]);
+  const [eventName, setEventName] = useState("");
+
 
   const sorted = useMemo(() => {
     return [...items].sort(
@@ -124,6 +128,13 @@ export default function DjClient({ code }: { code: string }) {
     return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
+function createEvent() {
+  const safe = eventName.trim().toUpperCase().replace(/\s+/g, "-");
+  if (!safe) return;
+  window.location.href = `/dj/${safe}`;
+}
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
@@ -137,35 +148,55 @@ export default function DjClient({ code }: { code: string }) {
             <h1 className="mt-4 text-3xl font-semibold tracking-tight">
               Richieste musicali
             </h1>
-            <p className="mt-2 text-sm text-zinc-300">
-              Evento: <span className="font-mono text-zinc-100">{code}</span>
-            </p>
-          </div>
+<p className="mt-2 text-sm text-zinc-300">
+  Evento: <span className="font-mono text-zinc-100">{code}</span>
+</p>
 
-          <div className="flex gap-2">
-            <button
-              onClick={() => setMode("dj")}
-              className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-                mode === "dj"
-                  ? "bg-white text-black"
-                  : "bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
-              }`}
-            >
-              🎛 DJ
-            </button>
+<div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+  <input
+    value={eventName}
+    onChange={(e) => setEventName(e.target.value)}
+    placeholder="Nome evento"
+    className="w-full rounded-xl bg-zinc-800 px-3 py-2 text-zinc-100 placeholder:text-zinc-400 outline-none ring-1 ring-zinc-700"
+  />
+  <button
+    onClick={createEvent}
+    className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black"
+  >
+    Crea evento
+  </button>
+</div>
 
-            <button
-              onClick={() => setMode("party")}
-              className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-                mode === "party"
-                  ? "bg-white text-black"
-                  : "bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
-              }`}
-            >
-              🎉 Party
-            </button>
-          </div>
-        </header>
+<div className="mt-4">
+  <EventQr eventCode={code} />
+</div>
+
+<div className="mt-4 flex gap-2">
+  <button
+    onClick={() => setMode("dj")}
+    className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+      mode === "dj"
+        ? "bg-white text-black"
+        : "bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
+    }`}
+  >
+    🎛 DJ
+  </button>
+
+  <button
+    onClick={() => setMode("party")}
+    className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+      mode === "party"
+        ? "bg-white text-black"
+        : "bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
+    }`}
+  >
+    🎉 Party
+  </button>
+</div>
+        
+        </div>
+         </header>
 
         {/* PARTY MODE */}
         {mode === "party" ? (
