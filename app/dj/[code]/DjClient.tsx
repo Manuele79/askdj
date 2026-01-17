@@ -77,14 +77,15 @@ function ModeButton({
 }) {
   const activeClass =
     variant === "dj"
-      ? "bg-gradient-to-r from-emerald-400 to-teal-300 text-zinc-950 ring-emerald-300/40 shadow-[0_0_25px_rgba(52,211,153,0.25)]"
-      : "bg-gradient-to-r from-pink-400 to-rose-300 text-zinc-950 ring-pink-300/40 shadow-[0_0_25px_rgba(251,113,133,0.25)]";
+      ? "bg-gradient-to-r from-emerald-400 to-teal-300 text-zinc-950 ring-emerald-300/40 shadow-[0_0_25px_rgba(52,211,153,0.20)]"
+      : "bg-gradient-to-r from-pink-400 to-rose-300 text-zinc-950 ring-pink-300/40 shadow-[0_0_25px_rgba(251,113,133,0.20)]";
 
   return (
     <button
       onClick={onClick}
       className={[
-        "rounded-full px-4 py-2 text-sm font-extrabold transition ring-1",
+        "rounded-full px-4 py-2 text-sm font-extrabold transition",
+        "ring-1",
         active
           ? activeClass
           : "bg-zinc-900/60 text-zinc-200 ring-zinc-700 hover:bg-zinc-800",
@@ -136,6 +137,7 @@ export default function DjClient({ code }: { code: string }) {
     load();
     const t = setInterval(load, 1500);
     return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
   function createEvent() {
@@ -147,24 +149,19 @@ export default function DjClient({ code }: { code: string }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
       <div className="mx-auto max-w-6xl px-4 py-8">
-
-        {/* HEADER */}
+        {/* HEADER TOP */}
         <div className="mb-6 flex flex-col gap-4">
-
           <div className="flex flex-wrap items-center gap-3">
             <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-400 to-pink-400 shadow-[0_0_25px_rgba(255,255,255,0.08)]">
               🎧 DJ Console
             </div>
 
-            {/* EVENT NAME */}
-            {eventName.trim() !== "" && (
-              <div className="text-sm text-zinc-300">
-                Evento:
-                <span className="ml-2 font-mono text-zinc-950 rounded-full bg-gradient-to-r from-zinc-100 to-zinc-200 px-3 py-1 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
-                  {eventName.trim()}
-                </span>
-              </div>
-            )}
+            <div className="text-sm text-zinc-300">
+              Evento:{" "}
+              <span className="ml-2 font-mono text-zinc-950 rounded-full bg-gradient-to-r from-zinc-100 to-zinc-200 px-3 py-1 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
+                {code}
+              </span>
+            </div>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -173,11 +170,11 @@ export default function DjClient({ code }: { code: string }) {
                 Richieste musicali
               </h1>
               <p className="mt-2 text-sm text-zinc-400">
-                Gestisci la coda e invita gli ospiti con il QR
+                Gestisci la coda e manda il link agli ospiti con il QR.
               </p>
             </div>
 
-            {/* CREATE EVENT */}
+            {/* create event */}
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <input
                 value={eventName}
@@ -194,7 +191,7 @@ export default function DjClient({ code }: { code: string }) {
             </div>
           </div>
 
-          {/* MODE BUTTONS */}
+          {/* mode buttons */}
           <div className="flex flex-wrap gap-2">
             <ModeButton
               active={mode === "dj"}
@@ -215,14 +212,18 @@ export default function DjClient({ code }: { code: string }) {
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-
-          {/* LEFT: DJ */}
+          {/* LEFT */}
           <div className="lg:col-span-2">
             {mode === "party" ? (
               <section className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-3 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
                 <div className="mb-2 flex items-center justify-between text-xs text-zinc-400">
                   <span>Party Mode (autoplay YouTube)</span>
-                  <a href={`/party/${code}`} target="_blank" rel="noreferrer" className="text-zinc-200 hover:underline">
+                  <a
+                    href={`/party/${code}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-zinc-200 hover:underline"
+                  >
                     Apri fullscreen ↗
                   </a>
                 </div>
@@ -241,9 +242,7 @@ export default function DjClient({ code }: { code: string }) {
                   <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
                     Console DJ
                   </div>
-                  <div className="text-xs text-zinc-400">
-                    Ordine: voti ▸ attività
-                  </div>
+                  <div className="text-xs text-zinc-400">Ordine: voti ▸ attività</div>
                 </div>
 
                 {sorted.length === 0 ? (
@@ -252,7 +251,8 @@ export default function DjClient({ code }: { code: string }) {
                       ⚠️ Evento scaduto o vuoto
                     </div>
                     <div className="mt-1 text-zinc-400">
-                      Nessun video valido nelle ultime 12 ore.
+                      Nessun video valido nelle ultime 12 ore. Se l’evento è nuovo,
+                      invia una canzone dall’area ospiti.
                     </div>
                   </div>
                 ) : (
@@ -300,9 +300,7 @@ export default function DjClient({ code }: { code: string }) {
                 <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
                   Invito ospiti
                 </div>
-                <div className="text-xs text-zinc-400">
-                  Scansiona e manda richieste
-                </div>
+                <div className="text-xs text-zinc-400">Scansiona e manda richieste</div>
               </div>
 
               <EventQr eventCode={code} />
