@@ -61,58 +61,36 @@ export default function RequestClient({ code }: { code: string }) {
    <div className="min-h-screen text-zinc-100 bg-[radial-gradient(ellipse_at_top,_rgba(34,197,94,0.18),_transparent_45%),radial-gradient(ellipse_at_bottom,_rgba(236,72,153,0.18),_transparent_45%),linear-gradient(to_bottom,_#050507,_#070712)]">
 
       <div className="mx-auto max-w-2xl px-4 py-8">
-  <header className="mb-8 text-center">
-  {/* LOGO */}
-<div className="mx-auto mb-3 flex h-20 w-20 items-center justify-center">
-  <svg viewBox="0 0 64 64" className="h-20 w-20">
-    <defs>
-      <linearGradient id="mvGrad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#34d399" />  {/* verde */}
-        <stop offset="100%" stopColor="#fb7185" /> {/* rosa */}
-      </linearGradient>
-    </defs>
+<header className="mb-8 text-center">
+  {/* Logo MV */}
+  <div className="mx-auto mb-4 inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-3 shadow-sm">
+    <div className="relative h-10 w-10">
+      <span className="absolute left-0 top-0 text-3xl font-extrabold leading-none text-emerald-400 drop-shadow">
+        M
+      </span>
+      <span className="absolute left-0 top-4 text-3xl font-extrabold leading-none text-pink-400 drop-shadow">
+        V
+      </span>
+    </div>
+  </div>
 
-    {/* arco cuffie */}
-    <path
-      d="M12 34c0-12 8-22 20-22s20 10 20 22"
-      fill="none"
-      stroke="url(#mvGrad)"
-      strokeWidth="4"
-      strokeLinecap="round"
-    />
+  {/* Badge */}
+  <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-200">
+    <span className="opacity-80">🎧</span>
+    <span className="font-semibold tracking-wide">DJ Requests</span>
+  </div>
 
-    {/* pad sinistra */}
-    <rect x="6" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
+  <h1 className="mt-4 text-4xl font-extrabold tracking-tight">
+    Invia una canzone
+  </h1>
 
-    {/* pad destra */}
-    <rect x="48" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
-
-    {/* lettere MV sovrapposte */}
-    <text
-      x="32"
-      y="38"
-      textAnchor="middle"
-      fontSize="26"
-      fontWeight="900"
-      fontFamily="Arial, sans-serif"
-      fill="#34d399"
-    >
-      M
-    </text>
-
-    <text
-      x="34"
-      y="44"
-      textAnchor="middle"
-      fontSize="26"
-      fontWeight="900"
-      fontFamily="Arial, sans-serif"
-      fill="#fb7185"
-    >
-      V
-    </text>
-  </svg>
-</div>
+  <p className="mt-2 text-base text-zinc-200">
+    Evento:{" "}
+    <span className="rounded-lg border border-white/10 bg-white/5 px-2 py-1 font-mono text-lg text-white">
+      {code}
+    </span>
+  </p>
+</header>
 
 
   {/* Badge */}
