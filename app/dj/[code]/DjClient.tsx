@@ -21,39 +21,24 @@ function PlatformButton({ r }: { r: RequestItem }) {
   if (!r.url) return null;
 
   const base =
-    "rounded-xl px-3 py-2 text-xs font-semibold text-white hover:opacity-90 transition";
+    "rounded-xl px-3 py-2 text-xs font-semibold text-white hover:opacity-90 transition shadow-[0_6px_18px_rgba(0,0,0,0.25)]";
 
   switch (r.platform) {
     case "youtube":
       return (
-        <a
-          href={r.url}
-          target="_blank"
-          rel="noreferrer"
-          className={`${base} bg-red-600`}
-        >
+        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-red-600`}>
           ▶ YouTube
         </a>
       );
     case "spotify":
       return (
-        <a
-          href={r.url}
-          target="_blank"
-          rel="noreferrer"
-          className={`${base} bg-green-600`}
-        >
+        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-green-600`}>
           🎵 Spotify
         </a>
       );
     case "apple":
       return (
-        <a
-          href={r.url}
-          target="_blank"
-          rel="noreferrer"
-          className={`${base} bg-zinc-700`}
-        >
+        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-zinc-700`}>
            Apple
         </a>
       );
@@ -70,12 +55,7 @@ function PlatformButton({ r }: { r: RequestItem }) {
       );
     default:
       return (
-        <a
-          href={r.url}
-          target="_blank"
-          rel="noreferrer"
-          className={`${base} bg-zinc-600`}
-        >
+        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-zinc-600`}>
           🔗 Link
         </a>
       );
@@ -87,20 +67,26 @@ function ModeButton({
   onClick,
   icon,
   label,
+  variant,
 }: {
   active: boolean;
   onClick: () => void;
   icon: string;
   label: string;
+  variant: "dj" | "party";
 }) {
+  const activeClass =
+    variant === "dj"
+      ? "bg-gradient-to-r from-emerald-400 to-teal-300 text-zinc-950 ring-emerald-300/40 shadow-[0_0_25px_rgba(52,211,153,0.25)]"
+      : "bg-gradient-to-r from-pink-400 to-rose-300 text-zinc-950 ring-pink-300/40 shadow-[0_0_25px_rgba(251,113,133,0.25)]";
+
   return (
     <button
       onClick={onClick}
       className={[
-        "rounded-full px-4 py-2 text-sm font-semibold transition",
-        "ring-1",
+        "rounded-full px-4 py-2 text-sm font-extrabold transition ring-1",
         active
-          ? "bg-white text-black ring-white shadow-[0_0_20px_rgba(255,255,255,0.18)]"
+          ? activeClass
           : "bg-zinc-900/60 text-zinc-200 ring-zinc-700 hover:bg-zinc-800",
       ].join(" ")}
     >
@@ -123,9 +109,7 @@ export default function DjClient({ code }: { code: string }) {
 
   async function load() {
     try {
-      const res = await fetch(
-        `/api/requests?eventCode=${encodeURIComponent(code)}`
-      );
+      const res = await fetch(`/api/requests?eventCode=${encodeURIComponent(code)}`);
       const data = await res.json();
       const next: RequestItem[] = data.requests || [];
 
@@ -152,7 +136,6 @@ export default function DjClient({ code }: { code: string }) {
     load();
     const t = setInterval(load, 1500);
     return () => clearInterval(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
   function createEvent() {
@@ -164,27 +147,37 @@ export default function DjClient({ code }: { code: string }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
       <div className="mx-auto max-w-6xl px-4 py-8">
-        {/* HEADER TOP */}
+
+        {/* HEADER */}
         <div className="mb-6 flex flex-col gap-4">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full bg-zinc-800/60 px-3 py-1 text-xs text-zinc-200">
-            🎧 DJ Console
+
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-400 to-pink-400 shadow-[0_0_25px_rgba(255,255,255,0.08)]">
+              🎧 DJ Console
+            </div>
+
+            {/* EVENT NAME */}
+            {eventName.trim() !== "" && (
+              <div className="text-sm text-zinc-300">
+                Evento:
+                <span className="ml-2 font-mono text-zinc-950 rounded-full bg-gradient-to-r from-zinc-100 to-zinc-200 px-3 py-1 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
+                  {eventName.trim()}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-pink-400">
+              <h1 className="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-pink-400">
                 Richieste musicali
               </h1>
-
-              <p className="mt-2 text-sm text-zinc-300">
-                Evento:{" "}
-                <span className="font-mono text-zinc-100 rounded-md bg-zinc-800 px-2 py-1">
-                  {code}
-                </span>
+              <p className="mt-2 text-sm text-zinc-400">
+                Gestisci la coda e invita gli ospiti con il QR
               </p>
             </div>
 
-            {/* create event */}
+            {/* CREATE EVENT */}
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <input
                 value={eventName}
@@ -201,37 +194,35 @@ export default function DjClient({ code }: { code: string }) {
             </div>
           </div>
 
-          {/* mode buttons */}
+          {/* MODE BUTTONS */}
           <div className="flex flex-wrap gap-2">
             <ModeButton
               active={mode === "dj"}
               onClick={() => setMode("dj")}
               icon="🎛"
               label="DJ"
+              variant="dj"
             />
             <ModeButton
               active={mode === "party"}
               onClick={() => setMode("party")}
               icon="🎉"
               label="Party"
+              variant="party"
             />
           </div>
         </div>
 
-        {/* MAIN GRID: console left, QR right (desktop) */}
+        {/* MAIN GRID */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-          {/* LEFT: console */}
+
+          {/* LEFT: DJ */}
           <div className="lg:col-span-2">
             {mode === "party" ? (
-              <section className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-3">
+              <section className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-3 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
                 <div className="mb-2 flex items-center justify-between text-xs text-zinc-400">
                   <span>Party Mode (autoplay YouTube)</span>
-                  <a
-                    href={`/party/${code}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-zinc-200 hover:underline"
-                  >
+                  <a href={`/party/${code}`} target="_blank" rel="noreferrer" className="text-zinc-200 hover:underline">
                     Apri fullscreen ↗
                   </a>
                 </div>
@@ -245,9 +236,9 @@ export default function DjClient({ code }: { code: string }) {
                 </div>
               </section>
             ) : (
-              <section className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4">
+              <section className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
                 <div className="mb-3 flex items-center justify-between">
-                  <div className="text-sm font-semibold text-zinc-100">
+                  <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
                     Console DJ
                   </div>
                   <div className="text-xs text-zinc-400">
@@ -256,34 +247,31 @@ export default function DjClient({ code }: { code: string }) {
                 </div>
 
                 {sorted.length === 0 ? (
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 text-sm text-zinc-300">
+                  <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 text-sm text-zinc-300 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
                     <div className="font-semibold text-zinc-100">
                       ⚠️ Evento scaduto o vuoto
                     </div>
                     <div className="mt-1 text-zinc-400">
-                      Nessun video valido nelle ultime 12 ore. Se l’evento è
-                      nuovo, invia una canzone dall’area ospiti.
+                      Nessun video valido nelle ultime 12 ore.
                     </div>
                   </div>
                 ) : (
-                  <ul className="space-y-2">
+                  <ul className="space-y-3">
                     {sorted.map((r, idx) => (
                       <li
                         key={r.id}
-                        className="rounded-3xl border border-zinc-800 bg-zinc-950/50 p-3"
+                        className="rounded-3xl border border-zinc-800 bg-zinc-950/55 p-4 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
-                            <div className="text-xs text-zinc-500">
-                              #{idx + 1}
-                            </div>
-                            <div className="truncate font-semibold text-zinc-100">
+                            <div className="text-xs text-zinc-500">#{idx + 1}</div>
+                            <div className="truncate text-base font-extrabold text-zinc-100">
                               {r.title}
                             </div>
                           </div>
 
                           <div className="flex items-center gap-2">
-                            <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs font-semibold text-zinc-200">
+                            <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs font-extrabold text-zinc-200 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
                               🔥 {r.votes}
                             </span>
 
@@ -291,7 +279,7 @@ export default function DjClient({ code }: { code: string }) {
 
                             <button
                               onClick={() => voteUp(r)}
-                              className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-black hover:bg-zinc-100 transition"
+                              className="rounded-xl bg-white px-3 py-2 text-xs font-extrabold text-black hover:bg-zinc-100 transition shadow-[0_10px_25px_rgba(0,0,0,0.25)]"
                             >
                               +1
                             </button>
@@ -305,11 +293,11 @@ export default function DjClient({ code }: { code: string }) {
             )}
           </div>
 
-          {/* RIGHT: QR card */}
+          {/* RIGHT: QR */}
           <aside className="lg:col-span-1">
-            <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 sticky top-4">
+            <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 sticky top-4 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
               <div className="mb-3">
-                <div className="text-sm font-semibold text-zinc-100">
+                <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
                   Invito ospiti
                 </div>
                 <div className="text-xs text-zinc-400">
