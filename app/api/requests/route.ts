@@ -219,9 +219,7 @@ export async function PATCH(req: Request) {
   const body = await req.json().catch(() => ({} as any));
   const id = String(body.id || "").trim();
   const delta = Number(body.delta ?? 1);
-  const ip = getClientIp(req);
-  const denied2 = rateLimitOr429(`patch:${ip}:${id}`, 2000);
-  if (denied2) return denied2;
+
 
 
   if (!id) return NextResponse.json({ ok: false }, { status: 400 });
