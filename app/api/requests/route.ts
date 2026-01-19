@@ -152,6 +152,22 @@ export async function POST(req: Request) {
   if (!eventCode || (!title && !url)) {
     return NextResponse.json({ ok: false, error: "Bad Request" }, { status: 400 });
   }
+    // evento deve esistere ed essere non scaduto
+  const { data: ev, error: evErr } = await supabase
+    .from("events")
+    .select("event_code, expires_at")
+    .eq("event_code", eventCode)
+    .single();
+
+  if (evErr || !ev) {
+    return NextResponse.json({ ok: false, error: "Evento non valido" }, { status: 404 });
+  }
+
+  const exp = ev.expires_at ? Date.parse(ev.expires_at) : 0;
+  if (exp && Date.now() > exp) {
+    return NextResponse.json({ ok: false, error: "Evento scaduto" }, { status: 410 });
+  }
+
 
   const platform = detectPlatform(url);
   const youtubeVideoId = platform === "youtube" ? extractYouTubeVideoId(url) : "";
