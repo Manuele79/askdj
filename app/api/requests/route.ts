@@ -91,8 +91,66 @@ function detectPlatform(urlStr: string) {
   if (u.includes("youtube.com") || u.includes("youtu.be")) return "youtube";
   if (u.includes("spotify.com")) return "spotify";
   if (u.includes("music.apple.com") || u.includes("itunes.apple.com")) return "apple";
-  if (u.includes("music.amazon") || u.includes("amazon.") ) return "amazon";
+  if (u.includes("music.amazon") || u.includes("amazon.")) return "amazon";
   return "other";
+}
+
+// ---- server-side title resolver (no CORS) ----
+async function fetchJsonWithTimeout(url: string, ms = 2500) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      cache: "no-store",
+      headers: {
+        accept: "application/json,text/plain,*/*",
+      },
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+async function resolveTitleServer(title: string, url: string, platform: string) {
+  const t = (title || "").trim();
+  const u = (url || "").trim();
+  if (!u) return t || "Richiesta";
+
+  const looksGeneric =
+    !t ||
+    t.toLowerCase() === "richiesta" ||
+    t.toLowerCase() === "richiesta youtube" ||
+    t.toLowerCase() === "richiesta spotify" ||
+    t.toLowerCase() === "richiesta apple music" ||
+    t.toLowerCase() === "richiesta amazon music";
+
+  if (!looksGeneric) return t;
+
+  if (platform === "youtube") {
+    const data = await fetchJsonWithTimeout(
+      `https://www.youtube.com/oembed?url=${encodeURIComponent(u)}&format=json`
+    );
+    const ot = data?.title ? String(data.title).trim() : "";
+    return ot || "Richiesta YouTube";
+  }
+
+  if (platform === "spotify") {
+    const data = await fetchJsonWithTimeout(
+      `https://open.spotify.com/oembed?url=${encodeURIComponent(u)}`
+    );
+    const ot = data?.title ? String(data.title).trim() : "";
+    return ot || "Richiesta Spotify";
+  }
+
+  if (platform === "apple") return "Richiesta Apple Music";
+  if (platform === "amazon") return "Richiesta Amazon Music";
+
+  return "Richiesta";
 }
 
 // Mappa Supabase (snake_case) -> frontend (camelCase)
@@ -138,21 +196,20 @@ export async function GET(req: Request) {
 
 // POST /api/requests  body: { eventCode, title, url }
 export async function POST(req: Request) {
-  
-
   const body = await req.json().catch(() => ({} as any));
   const eventCode = normalizeEventCode(body.eventCode);
   const title = String(body.title || "").trim();
   const url = String(body.url || body.youtubeUrl || "").trim();
+
   const ip = getClientIp(req);
   const denied = rateLimitOr429(`post:${ip}:${eventCode}`, 10000);
   if (denied) return denied;
 
-
   if (!eventCode || (!title && !url)) {
     return NextResponse.json({ ok: false, error: "Bad Request" }, { status: 400 });
   }
-    // evento deve esistere ed essere non scaduto
+
+  // evento deve esistere ed essere non scaduto
   const { data: ev, error: evErr } = await supabase
     .from("events")
     .select("event_code, expires_at")
@@ -168,10 +225,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Evento scaduto" }, { status: 410 });
   }
 
-
   const platform = detectPlatform(url);
   const youtubeVideoId = platform === "youtube" ? extractYouTubeVideoId(url) : "";
-  const safeTitle = title || (platform === "youtube" ? "Richiesta YouTube" : "Richiesta");
+  const safeTitle = await resolveTitleServer(title, url, platform);
   const nowMs = Date.now();
 
   // MERGE: se stesso brano (youtubeVideoId) nello stesso evento -> +1 voto
@@ -214,7 +270,7 @@ export async function POST(req: Request) {
       youtube_video_id: youtubeVideoId,
       votes: 1,
       updated_at: nowMs,
-      // created_at lo gestisce Supabase con default now()
+      // created_at: default now() in DB
     })
     .select("*")
     .single();
@@ -226,6 +282,7 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok: true, merged: false, request: mapRow(data) });
 }
+
 
 // PATCH /api/requests  body: { id, delta?: number }
 export async function PATCH(req: Request) {
