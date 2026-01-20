@@ -352,10 +352,27 @@ export default function PartyClient({ code }: { code: string }) {
               }
             },
             onError: (e: any) => {
-              setStatusMsg(`⚠️ YouTube error ${e?.data} → skip`);
-              advancingRef.current = false;
-              setTimeout(() => advance(`error-${e?.data}`), 200);
-            },
+  const code = e?.data;
+  setStatusMsg(`⚠️ YouTube error ${code} → skip`);
+
+  const cur = findPlayableByKey(currentKeyRef.current);
+  const p = playerRef.current;
+
+  // Se siamo in PLAYLIST: prova a passare al prossimo video della playlist
+  if (cur?._kind === "playlist" && p?.nextVideo) {
+    try {
+      p.nextVideo();
+      return; // resta dentro la playlist
+    } catch {
+      // se nextVideo fallisce, fallback sotto
+    }
+  }
+
+  // Altrimenti: salta al prossimo item della coda generale
+  advancingRef.current = false;
+  setTimeout(() => advance(`error-${code}`), 200);
+},
+
           },
         });
 
