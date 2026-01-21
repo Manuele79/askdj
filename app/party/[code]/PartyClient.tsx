@@ -77,6 +77,16 @@ export default function PartyClient({ code }: { code: string }) {
   const [loopEnabled, setLoopEnabled] = useState(true);
   const [userStarted, setUserStarted] = useState(false);
   const [statusMsg, setStatusMsg] = useState<string>("");
+  useEffect(() => {
+  try {
+    const v = localStorage.getItem(startedKey(code));
+    if (v === "1") {
+      startedRef.current = true;
+      setUserStarted(true);
+    }
+  } catch {}
+}, [code]);
+
 
   const playerRef = useRef<any>(null);
   const playerContainerId = useRef(
@@ -88,6 +98,12 @@ export default function PartyClient({ code }: { code: string }) {
   const currentKeyRef = useRef<string>("");
   const loopRef = useRef<boolean>(true);
   const advancingRef = useRef<boolean>(false);
+  const startedRef = useRef<boolean>(false);
+
+function startedKey(code: string) {
+  return `djreq_party_started:${String(code || "").toUpperCase()}`;
+}
+
 
   useEffect(() => {
     currentKeyRef.current = currentKey;
@@ -194,7 +210,9 @@ export default function PartyClient({ code }: { code: string }) {
       // se player esiste già → loadPlaylist
       if (p?.loadPlaylist) {
         try {
-          if (!userStarted && p.mute) p.mute();
+          if (!startedRef.current && p.mute) p.mute();
+else p.unMute?.();
+
           p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
           p.playVideo?.();
         } catch {}
@@ -211,7 +229,9 @@ export default function PartyClient({ code }: { code: string }) {
 
     if (p?.loadVideoById) {
       try {
-        if (!userStarted && p.mute) p.mute();
+        if (!startedRef.current && p.mute) p.mute();
+else p.unMute?.();
+
         p.loadVideoById(id);
         p.playVideo?.();
       } catch {}
@@ -318,13 +338,24 @@ export default function PartyClient({ code }: { code: string }) {
           },
           events: {
             onReady: (e: any) => {
-              try {
-                if (!userStarted && e.target.mute) e.target.mute();
-                e.target.playVideo();
-              } catch {}
-              // titolo
-              if (current) setCurrentTitle(current.title || (current._kind === "playlist" ? "Playlist YouTube" : ""));
-            },
+            try {
+    // se l’utente ha già sbloccato audio → forza UNMUTE
+            if (startedRef.current && e.target.unMute) e.target.unMute();
+
+    // se non ha ancora sbloccato → lascia muto
+             if (!startedRef.current && e.target.mute) e.target.mute();
+
+            e.target.playVideo();
+            } catch {}
+
+  // titolo (lascia come già hai)
+            if (current)
+            setCurrentTitle(
+            current.title ||
+           (current._kind === "playlist" ? "Playlist YouTube" : "")
+            );
+          },
+
             onStateChange: (e: any) => {
               // 0 = ended
               if (e.data === 0) {
@@ -383,7 +414,9 @@ export default function PartyClient({ code }: { code: string }) {
       const p = playerRef.current;
 
       try {
-        if (!userStarted && p.mute) p.mute();
+        if (!startedRef.current && p.mute) p.mute();
+else p.unMute?.();
+
 
         if (current?._kind === "playlist") {
           const listId = current._listId || extractYouTubeListId(current.url);
@@ -396,6 +429,8 @@ export default function PartyClient({ code }: { code: string }) {
           if (vid && p.loadVideoById) {
             p.loadVideoById(vid);
             p.playVideo?.();
+            if (startedRef.current) p.unMute?.();
+
           }
         }
       } catch {}
@@ -440,16 +475,23 @@ export default function PartyClient({ code }: { code: string }) {
   }, []);
 
   function handleUserStart() {
-    setUserStarted(true);
-    const p = playerRef.current;
-    if (!p) return;
+  startedRef.current = true;
+  setUserStarted(true);
 
-    try {
-      p.unMute?.();
-      p.playVideo?.();
-      setStatusMsg("✅ Autoplay sbloccato (tap ok)");
-    } catch {}
-  }
+  try {
+    localStorage.setItem(startedKey(code), "1");
+  } catch {}
+
+  const p = playerRef.current;
+  if (!p) return;
+
+  try {
+    p.unMute?.();
+    p.playVideo?.();
+    setStatusMsg("✅ Autoplay sbloccato");
+  } catch {}
+}
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
