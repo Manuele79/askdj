@@ -101,6 +101,9 @@ export default function DjClient({ code }: { code: string }) {
   const [mode, setMode] = useState<"dj" | "party">("dj");
   const [items, setItems] = useState<RequestItem[]>([]);
   const [eventName, setEventName] = useState("");
+  const [joinCode, setJoinCode] = useState("");
+  const [joinMsg, setJoinMsg] = useState("");
+
 
   const sorted = useMemo(() => {
     return [...items].sort(
@@ -140,7 +143,7 @@ export default function DjClient({ code }: { code: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
-  async function createEvent() {
+  async function createEvent() { 
   const safe = eventName.trim().toUpperCase().replace(/\s+/g, "-");
   if (!safe) return;
 
@@ -160,6 +163,33 @@ export default function DjClient({ code }: { code: string }) {
 
   window.location.href = `/dj/${safe}`;
 }
+async function joinExistingEvent() {
+  const safe = joinCode.trim().toUpperCase().replace(/\s+/g, "-");
+  if (!safe) return;
+
+  setJoinMsg("");
+
+  try {
+    const res = await fetch(`/api/events?eventCode=${encodeURIComponent(safe)}`, {
+      cache: "no-store",
+    });
+
+    if (res.status === 200) {
+      window.location.href = `/dj/${safe}`;
+      return;
+    }
+
+    if (res.status === 410) {
+      setJoinMsg("⏳ Evento scaduto (creane uno nuovo).");
+      return;
+    }
+
+    setJoinMsg("❌ Evento non trovato.");
+  } catch {
+    setJoinMsg("⚠️ Errore di rete.");
+  }
+}
+
 
 
   return (
@@ -206,6 +236,29 @@ export default function DjClient({ code }: { code: string }) {
               </button>
             </div>
           </div>
+          {/* join event */}
+<div className="flex flex-col gap-2 sm:flex-row sm:items-center mt-4">
+  <input
+    value={joinCode}
+    onChange={(e) => setJoinCode(e.target.value)}
+    placeholder="Codice evento esistente"
+    className="w-full sm:w-72 rounded-2xl bg-zinc-900/60 px-4 py-3 text-sm text-zinc-100"
+  />
+
+  <button
+    onClick={joinExistingEvent}
+    className="rounded-2xl bg-zinc-700 px-5 py-3 text-sm font-semibold text-zinc-100 hover:bg-zinc-600"
+  >
+    Entra
+  </button>
+</div>
+
+{joinMsg && (
+  <div className="mt-2 text-sm text-zinc-400">
+    {joinMsg}
+  </div>
+)}
+
 
           {/* mode buttons */}
           <div className="flex flex-wrap gap-2">
