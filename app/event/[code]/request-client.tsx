@@ -261,7 +261,7 @@ export default function RequestClient({ code }: { code: string }) {
                 <textarea
                   value={dedication}
                   onChange={(e) => setDedication(e.target.value)}
-                  placeholder="Es: Dedica!"
+                  placeholder="Es: Dedica un pensiero!"
                   rows={2}
                   className="w-full rounded-xl border border-zinc-800 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-zinc-600"
                 />
