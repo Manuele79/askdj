@@ -549,17 +549,19 @@ else p.unMute?.();
                 </span>
               </div>
               {(() => {
-  const cur = playable.find(
-    (p) => (p._key ?? p.youtubeVideoId) === currentKey
-  );
+                const cur = playable.find(
+                 (p) => (p._key ?? p.youtubeVideoId) === currentKey
+                );
 
-  return cur?.dedication ? (
-    <div className="mt-2 rounded-xl border border-white/10 bg-zinc-950/35 px-3 py-2 text-sm text-zinc-200">
-  💬 <span className="italic">{cur.dedication}</span>
-</div>
+                 if (!cur?.dedication) return null;
 
-  ) : null;
-})()}
+                 return (
+                   <div className="mt-2 rounded-xl border border-white/10 bg-zinc-950/35 px-3 py-2 text-sm text-zinc-200">
+                  💬 <span className="italic">{cur.dedication}</span>
+               </div>
+               );
+             })()}
+
 
 
 
