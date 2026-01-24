@@ -23,24 +23,39 @@ function PlatformButton({ r }: { r: RequestItem }) {
   if (!r.url) return null;
 
   const base =
-    "rounded-xl px-3 py-2 text-xs font-semibold text-white hover:opacity-90 transition shadow-[0_6px_18px_rgba(0,0,0,0.25)]";
+    "rounded-xl px-3 py-2 text-xs font-extrabold transition shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:brightness-110";
 
   switch (r.platform) {
     case "youtube":
       return (
-        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-red-600`}>
+        <a
+          href={r.url}
+          target="_blank"
+          rel="noreferrer"
+          className={`${base} text-zinc-950 bg-gradient-to-r from-red-500 to-rose-400`}
+        >
           ▶ YouTube
         </a>
       );
     case "spotify":
       return (
-        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-green-600`}>
+        <a
+          href={r.url}
+          target="_blank"
+          rel="noreferrer"
+          className={`${base} text-zinc-950 bg-gradient-to-r from-green-400 to-emerald-300`}
+        >
           🎵 Spotify
         </a>
       );
     case "apple":
       return (
-        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-zinc-700`}>
+        <a
+          href={r.url}
+          target="_blank"
+          rel="noreferrer"
+          className={`${base} text-zinc-950 bg-gradient-to-r from-zinc-200 to-zinc-100`}
+        >
            Apple
         </a>
       );
@@ -50,19 +65,25 @@ function PlatformButton({ r }: { r: RequestItem }) {
           href={r.url}
           target="_blank"
           rel="noreferrer"
-          className={`${base} bg-yellow-600 text-black`}
+          className={`${base} text-zinc-950 bg-gradient-to-r from-yellow-400 to-amber-300`}
         >
           🛒 Amazon
         </a>
       );
     default:
       return (
-        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-zinc-600`}>
+        <a
+          href={r.url}
+          target="_blank"
+          rel="noreferrer"
+          className={`${base} text-zinc-100 bg-gradient-to-r from-zinc-700 to-zinc-600`}
+        >
           🔗 Link
         </a>
       );
   }
 }
+
 
 function ModeButton({
   active,
