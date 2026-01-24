@@ -328,7 +328,8 @@ else p.unMute?.();
         const listId = isPl ? (current?._listId || extractYouTubeListId(current?.url || "")) : "";
 
         playerRef.current = new window.YT.Player(playerContainerId.current, {
-          videoId: !isPl ? (current?.youtubeVideoId || "") : "",
+          videoId: isPl ? "" : (current?.youtubeVideoId || ""),
+
           playerVars: {
             autoplay: 1,
             playsinline: 1,
