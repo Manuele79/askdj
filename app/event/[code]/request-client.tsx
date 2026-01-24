@@ -274,7 +274,7 @@ export default function RequestClient({ code }: { code: string }) {
                 <textarea
                   value={dedication}
                   onChange={(e) => setDedication(e.target.value)}
-                  placeholder="Es: Per Vale ❤️ spacca tutto!"
+                  placeholder="Dedica:"
                   rows={2}
                   className="w-full rounded-2xl border border-zinc-800 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-zinc-600"
                 />
@@ -344,7 +344,7 @@ export default function RequestClient({ code }: { code: string }) {
         <section className="mt-6 rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-zinc-100">
-              Richieste inviate (solo questo telefono)
+              Richieste inviate
             </h2>
             <span className="rounded-full bg-zinc-800 px-2 py-1 text-xs text-zinc-300">
               {sent.length}
