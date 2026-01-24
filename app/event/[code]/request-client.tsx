@@ -252,7 +252,7 @@ export default function RequestClient({ code }: { code: string }) {
 
             <div>
               <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                Link (YouTube / Spotify / Apple / Amazon…)
+                LINK ( YouTube / Spotify / Apple / Amazon )
               </label>
               <input
                 value={link}
