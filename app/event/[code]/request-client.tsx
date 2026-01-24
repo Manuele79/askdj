@@ -252,7 +252,7 @@ export default function RequestClient({ code }: { code: string }) {
 
             <div>
               <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                LINK ( YouTube / Spotify / Apple / Amazon )
+                LINK: YouTube / Spotify / Apple / Amazon
               </label>
               <input
                 value={link}
@@ -268,7 +268,7 @@ export default function RequestClient({ code }: { code: string }) {
                 onClick={pasteFromClipboard}
                 className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.45)] hover:brightness-110 transition"
               >
-                📋 Incolla link
+                📋 Incolla Link
               </button>
 
               </div>
