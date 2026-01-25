@@ -200,7 +200,8 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({} as any));
   const eventCode = normalizeEventCode(body.eventCode);
   const title = String(body.title || "").trim();
-  const url = String(body.url || body.youtubeUrl || "").trim();
+  const url = String(body.url || "").trim()
+
   const dedication = String(body.dedication || "").trim().slice(0, 180);
 
 
