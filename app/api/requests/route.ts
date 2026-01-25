@@ -200,8 +200,7 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({} as any));
   const eventCode = normalizeEventCode(body.eventCode);
   const title = String(body.title || "").trim();
-  const url = String(body.url || "").trim()
-
+  const url = String(body.url || body.youtubeUrl || "").trim();
   const dedication = String(body.dedication || "").trim().slice(0, 180);
 
 
@@ -231,13 +230,6 @@ export async function POST(req: Request) {
 
   const platform = detectPlatform(url);
   const youtubeVideoId = platform === "youtube" ? extractYouTubeVideoId(url) : "";
-  if (platform === "youtube" && !youtubeVideoId) {
-  return NextResponse.json(
-    { ok: false, error: "Invalid YouTube URL" },
-    { status: 400 }
-  );
-}
-
   const isPlaylist =
   (platform === "youtube" && url.includes("list=")) ||
   (platform === "spotify" && url.toLowerCase().includes("/playlist/"));
