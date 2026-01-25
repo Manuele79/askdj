@@ -231,6 +231,13 @@ export async function POST(req: Request) {
 
   const platform = detectPlatform(url);
   const youtubeVideoId = platform === "youtube" ? extractYouTubeVideoId(url) : "";
+  if (platform === "youtube" && !youtubeVideoId) {
+  return NextResponse.json(
+    { ok: false, error: "Invalid YouTube URL" },
+    { status: 400 }
+  );
+}
+
   const isPlaylist =
   (platform === "youtube" && url.includes("list=")) ||
   (platform === "spotify" && url.toLowerCase().includes("/playlist/"));
