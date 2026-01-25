@@ -23,39 +23,24 @@ function PlatformButton({ r }: { r: RequestItem }) {
   if (!r.url) return null;
 
   const base =
-    "rounded-xl px-3 py-2 text-xs font-extrabold transition shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:brightness-110";
+    "rounded-xl px-3 py-2 text-xs font-semibold text-white hover:opacity-90 transition shadow-[0_6px_18px_rgba(0,0,0,0.25)]";
 
   switch (r.platform) {
     case "youtube":
       return (
-        <a
-          href={r.url}
-          target="_blank"
-          rel="noreferrer"
-          className={`${base} text-zinc-950 bg-gradient-to-r from-red-500 to-rose-400`}
-        >
+        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-red-600`}>
           ▶ YouTube
         </a>
       );
     case "spotify":
       return (
-        <a
-          href={r.url}
-          target="_blank"
-          rel="noreferrer"
-          className={`${base} text-zinc-950 bg-gradient-to-r from-green-400 to-emerald-300`}
-        >
+        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-green-600`}>
           🎵 Spotify
         </a>
       );
     case "apple":
       return (
-        <a
-          href={r.url}
-          target="_blank"
-          rel="noreferrer"
-          className={`${base} text-zinc-950 bg-gradient-to-r from-zinc-200 to-zinc-100`}
-        >
+        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-zinc-700`}>
            Apple
         </a>
       );
@@ -65,25 +50,19 @@ function PlatformButton({ r }: { r: RequestItem }) {
           href={r.url}
           target="_blank"
           rel="noreferrer"
-          className={`${base} text-zinc-950 bg-gradient-to-r from-yellow-400 to-amber-300`}
+          className={`${base} bg-yellow-600 text-black`}
         >
           🛒 Amazon
         </a>
       );
     default:
       return (
-        <a
-          href={r.url}
-          target="_blank"
-          rel="noreferrer"
-          className={`${base} text-zinc-100 bg-gradient-to-r from-zinc-700 to-zinc-600`}
-        >
+        <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-zinc-600`}>
           🔗 Link
         </a>
       );
   }
 }
-
 
 function ModeButton({
   active,
@@ -361,14 +340,12 @@ async function joinExistingEvent() {
                               {r.title}
                             </div>
                             {r.dedication && (
-                            <div className="mt-2 rounded-xl border border-white/10 bg-zinc-950/35 px-3 py-2 text-sm text-zinc-200">
-                            <span className="mr-2">💬</span>
-                            <span className="italic">{r.dedication}</span>
-                         </div>
-                        )}
+  <div className="mt-1 text-xs text-zinc-400 italic">
+    💬 {r.dedication}
+  </div>
+)}
 
-
-                         </div>
+                          </div>
 
                           <div className="flex items-center gap-2">
                             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs font-extrabold text-zinc-200 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
