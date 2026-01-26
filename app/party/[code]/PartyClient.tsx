@@ -501,7 +501,8 @@ else p.unMute?.();
       <div className="mx-auto max-w-4xl px-4 py-8">
         <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-zinc-800/60 px-3 py-1 text-xs text-zinc-200">
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-400 to-pink-400 shadow-[0_0_25px_rgba(255,255,255,0.08)]">
+
               <span>🎉</span>
               <span>Party Mode</span>
             </div>
@@ -516,16 +517,22 @@ else p.unMute?.();
           <div className="flex items-center gap-2">
             <button
               onClick={() => setLoopEnabled((v) => !v)}
-              className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-                loopEnabled ? "bg-white text-black" : "bg-zinc-800 text-zinc-200"
-              }`}
+              className={[
+  "rounded-xl px-4 py-2 text-sm font-extrabold transition",
+  "shadow-[0_0_26px_rgba(34,211,238,0.18)]",
+  loopEnabled
+    ? "bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 text-zinc-950 hover:brightness-110"
+    : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+].join(" ")}
+
             >
               🔁 Loop {loopEnabled ? "ON" : "OFF"}
             </button>
 
             <button
               onClick={playNext}
-              className="rounded-xl bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-white"
+              className="rounded-xl bg-gradient-to-r from-cyan-300 to-emerald-400 px-4 py-2 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.25)] hover:brightness-110 transition"
+
             >
               ⏭ Avanti
             </button>
