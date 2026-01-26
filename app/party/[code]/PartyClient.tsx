@@ -518,12 +518,12 @@ else p.unMute?.();
             <button
               onClick={() => setLoopEnabled((v) => !v)}
               className={[
-  "rounded-xl px-4 py-2 text-sm font-extrabold transition",
-  "shadow-[0_0_26px_rgba(34,211,238,0.18)]",
-  loopEnabled
-    ? "bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 text-zinc-950 hover:brightness-110"
-    : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
-].join(" ")}
+              "rounded-xl px-4 py-2 text-sm font-extrabold transition",
+             "shadow-[0_0_26px_rgba(34,211,238,0.18)]",
+             loopEnabled
+             ? "bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 text-zinc-950 hover:brightness-110"
+             : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+            ].join(" ")}
 
             >
               🔁 Loop {loopEnabled ? "ON" : "OFF"}
@@ -556,21 +556,21 @@ else p.unMute?.();
               </div>
 
               {!userStarted && (
-  <div className="mb-3 rounded-2xl border border-zinc-800/80 bg-zinc-950/50 p-4 ring-1 ring-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
-    <div className="font-semibold">
-      📱 Mobile: 1 tap per sbloccare l’autoplay
-    </div>
-    <div className="mt-1 text-xs text-zinc-400">
-      Premi “Avvia Party” una volta, poi va avanti da sola.
-    </div>
-    <button
-      onClick={handleUserStart}
-      className="mt-3 w-full rounded-xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-4 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
-    >
-      ▶ Avvia Party
-    </button>
-  </div>
-)}
+               <div className="mb-3 rounded-2xl border border-zinc-800/80 bg-zinc-950/50 p-4 ring-1 ring-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
+               <div className="font-semibold">
+                📱 Mobile: 1 tap per sbloccare l’autoplay
+               </div>
+               <div className="mt-1 text-xs text-zinc-400">
+                Premi “Avvia Party” una volta, poi va avanti da sola.
+               </div>
+               <button
+                onClick={handleUserStart}
+                 className="mt-3 w-full rounded-xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-4 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
+                  >
+                  ▶ Avvia Party
+                 </button>
+                </div>
+              )}
 
 
               <div className="aspect-video w-full overflow-hidden rounded-2xl border border-zinc-800 bg-black">
