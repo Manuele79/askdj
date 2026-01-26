@@ -596,9 +596,10 @@ else p.unMute?.();
             {playable.map((r) => (
               <li
                 key={r.id}
-                className={`rounded-xl border border-zinc-800 px-3 py-2 text-sm ${
-                  r._key === currentKey ? "bg-zinc-800/60" : "bg-zinc-950/50"
-                }`}
+                className={`rounded-2xl border border-zinc-800/80 px-4 py-3 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
+  r._key === currentKey ? "bg-zinc-900/60 ring-1 ring-cyan-400/20" : "bg-zinc-950/40"
+}`}
+
               >
                 <div className="flex items-start justify-between gap-3">
                   <button
@@ -612,7 +613,8 @@ else p.unMute?.();
                     {r._kind === "playlist" ? "  📃" : ""}
                   </button>
 
-                  <span className="shrink-0 rounded-full bg-zinc-800 px-3 py-1 text-xs font-semibold text-zinc-200">
+                  <span className="shrink-0 rounded-full bg-zinc-900/60 ring-1 ring-white/10 px-3 py-1 text-xs font-extrabold text-zinc-100"
+                  >
                     🔥 {r.votes}
                   </span>
                 </div>
