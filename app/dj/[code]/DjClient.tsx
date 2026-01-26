@@ -117,7 +117,11 @@ export default function DjClient({ code }: { code: string }) {
     try {
       const res = await fetch(`/api/requests?eventCode=${encodeURIComponent(code)}`);
       const data = await res.json();
-      const next: RequestItem[] = data.requests || [];
+const next: RequestItem[] = (data.requests || []).map((r: any) => ({
+  ...r,
+  dedication: String(r.dedication ?? ""),
+}));
+
 
       setItems((prev) =>
         JSON.stringify(prev) === JSON.stringify(next) ? prev : next
