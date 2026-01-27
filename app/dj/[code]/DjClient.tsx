@@ -239,7 +239,8 @@ async function joinExistingEvent() {
 
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-3 sm:items-end">
+
             <div>
               <h1 className="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-pink-400">
                 Richieste musicali
@@ -255,7 +256,8 @@ async function joinExistingEvent() {
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
                 placeholder="Nome evento"
-                className="w-full sm:w-72 rounded-2xl bg-zinc-900/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-400 outline-none ring-1 ring-zinc-700 focus:ring-zinc-500"
+                className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
+
               />
               <button
                 onClick={createEvent}
@@ -271,7 +273,8 @@ async function joinExistingEvent() {
     value={joinCode}
     onChange={(e) => setJoinCode(e.target.value)}
     placeholder="Codice evento esistente"
-    className="w-full sm:w-72 rounded-2xl bg-zinc-900/60 px-4 py-3 text-sm text-zinc-100"
+    className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
+
   />
 
   <button
@@ -375,10 +378,10 @@ async function joinExistingEvent() {
                               {r.title}
                             </div>
                             {r.dedication && (
-  <div className="mt-1 text-xs text-zinc-400 italic">
-    💬 {r.dedication}
-  </div>
-)}
+                            <div className="mt-1 text-xs text-zinc-400 italic">
+                             💬 {r.dedication}
+                            </div>
+                           )}
 
                           </div>
 
