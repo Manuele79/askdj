@@ -214,7 +214,7 @@ function startedKey(code: string) {
       if (p?.loadPlaylist) {
         try {
           if (!startedRef.current && p.mute) p.mute();
-else p.unMute?.();
+          else p.unMute?.();
 
           p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
           p.playVideo?.();
@@ -233,7 +233,7 @@ else p.unMute?.();
     if (p?.loadVideoById) {
       try {
         if (!startedRef.current && p.mute) p.mute();
-else p.unMute?.();
+        else p.unMute?.();
 
         p.loadVideoById(id);
         p.playVideo?.();
@@ -418,7 +418,7 @@ else p.unMute?.();
 
       try {
         if (!startedRef.current && p.mute) p.mute();
-else p.unMute?.();
+        else p.unMute?.();
 
 
         if (current?._kind === "playlist") {
@@ -495,17 +495,39 @@ else p.unMute?.();
   } catch {}
 }
 
+function resetParty() {
+  startedRef.current = false;
+  setUserStarted(false);
+
+  try {
+    localStorage.removeItem(startedKey(code));
+  } catch {}
+
+  setStatusMsg("🔁 Reset Party: premi Avvia Party");
+
+  const first = playableRef.current?.[0];
+  if (first) {
+    advancingRef.current = false;
+    playItem(first, "reset");
+  }
+}
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
       <div className="mx-auto max-w-4xl px-4 py-8">
         <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-400 to-pink-400 shadow-[0_0_25px_rgba(255,255,255,0.08)]">
+            <button
+              type="button"
+              onClick={resetParty}
+              className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-400 to-pink-400 shadow-[0_0_25px_rgba(255,255,255,0.08)] hover:brightness-110 transition"
+              title="Reset Party"
+            >
+             <span>🎉</span>
+             <span>Party Mode</span>
+            </button>
 
-              <span>🎉</span>
-              <span>Party Mode</span>
-            </div>
             <h1 className="mt-4 text-3xl font-semibold tracking-tight">
               Riproduzione automatica (YouTube)
             </h1>
@@ -519,10 +541,10 @@ else p.unMute?.();
               onClick={() => setLoopEnabled((v) => !v)}
               className={[
               "rounded-xl px-4 py-2 text-sm font-extrabold transition",
-             "shadow-[0_0_26px_rgba(34,211,238,0.18)]",
-             loopEnabled
-             ? "bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 text-zinc-950 hover:brightness-110"
-             : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+              "shadow-[0_0_26px_rgba(34,211,238,0.18)]",
+            loopEnabled
+              ? "bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 text-zinc-950 hover:brightness-110"
+              : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
             ].join(" ")}
 
             >
@@ -597,8 +619,8 @@ else p.unMute?.();
               <li
                 key={r.id}
                 className={`rounded-2xl border border-zinc-800/80 px-4 py-3 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
-  r._key === currentKey ? "bg-zinc-900/60 ring-1 ring-cyan-400/20" : "bg-zinc-950/40"
-}`}
+                r._key === currentKey ? "bg-zinc-900/60 ring-1 ring-cyan-400/20" : "bg-zinc-950/40"
+              }`}
 
               >
                 <div className="flex items-start justify-between gap-3">
