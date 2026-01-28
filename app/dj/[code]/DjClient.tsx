@@ -227,7 +227,7 @@ async function joinExistingEvent() {
               {/* Titolo */}
               <div>
                 <div className="text-lg sm:text-x2 font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
-                  🎧 DJ CONSOLE
+                  🎧 AskDJ
                 </div>
 
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Music Requests</div>
@@ -269,7 +269,7 @@ async function joinExistingEvent() {
                 className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
 
               >
-                Crea Evento
+                Crea evento
               </button>
             </div>
           </div>
@@ -278,7 +278,7 @@ async function joinExistingEvent() {
             <input
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value)}
-              placeholder="Codice Evento Esistente"
+              placeholder="Codice evento esistente"
               className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
 
             />
@@ -326,20 +326,20 @@ async function joinExistingEvent() {
         </div>
 
         {/* MAIN GRID */}
-        <div className="grid grid-cols-2 gap-5 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
           {/* LEFT */}
           <div className="lg:col-span-2">
             {mode === "party" ? (
               <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
-                  <span className="min-w-0 truncate">  Party Autoplay YouTube</span>
+                  <span className="min-w-0 truncate">Party Autoplay YouTube</span>
                   <a
                     href={`/party/${code}`}
                     target="_blank"
                     rel="noreferrer"
                     className="whitespace-nowrap text-zinc-200 hover:underline"
                   >
-                   Apri Fullscreen↗
+                    Apri-Fullscreen↗
                   </a>
                  </div>
 
