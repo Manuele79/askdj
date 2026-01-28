@@ -352,11 +352,12 @@ async function joinExistingEvent() {
               </section>
             ) : (
               <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
-                <div className="flex items-center justify-between">
-                  <div className="text-base font-extrabold text-emerald-300">
+                <div className="text-lg font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.35)]">
+
+                  <div className="text-sm font-semibold text-zinc-300">
                     Console DJ
                   </div>
-                  <div className="text-sm font-semibold text-zinc-200"> Classifica ▸ </div>
+                  <div className="whitespace-nowrap text-sm font-semibold text-zinc-200"> Classifica ▲ </div>
                 </div>
 
                 {sorted.length === 0 ? (
