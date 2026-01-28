@@ -360,7 +360,7 @@ async function joinExistingEvent() {
                 </div>
 
                 {sorted.length === 0 ? (
-                  <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 text-sm text-zinc-300 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+                  <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 pt-6 text-sm text-zinc-300 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
                     <div className="font-semibold text-zinc-100">
                       ⚠️ Evento scaduto o vuoto
                     </div>
@@ -374,7 +374,7 @@ async function joinExistingEvent() {
                     {sorted.map((r, idx) => (
                       <li
                         key={r.id}
-                        className="rounded-3xl overflow-hidden border border-zinc-800 bg-zinc-950/55 p-4 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
+                        className="rounded-3xl overflow-hidden border border-zinc-800 bg-zinc-950/55 p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
