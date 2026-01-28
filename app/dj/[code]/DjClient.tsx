@@ -239,7 +239,7 @@ async function joinExistingEvent() {
 
           </div>
 
-          <div className="flex flex-col gap-3 sm:items-end">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
 
             <div>
               <h1 className="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-pink-400">
@@ -251,7 +251,7 @@ async function joinExistingEvent() {
             </div>
 
             {/* create event */}
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-2 sm:flex-col sm:items-end">
               <input
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
@@ -268,22 +268,21 @@ async function joinExistingEvent() {
             </div>
           </div>
           {/* join event */}
-<div className="flex flex-col gap-2 sm:flex-row sm:items-center mt-4">
-  <input
-    value={joinCode}
-    onChange={(e) => setJoinCode(e.target.value)}
-    placeholder="Codice evento esistente"
-    className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
+          <div className="flex flex-col gap-2 sm:flex-col sm:items-end mt-4">
+            <input
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+              placeholder="Codice evento esistente"
+              className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
 
-  />
-
-  <button
-    onClick={joinExistingEvent}
-    className="rounded-2xl bg-zinc-700 px-5 py-3 text-sm font-semibold text-zinc-100 hover:bg-zinc-600"
-  >
-    Entra
-  </button>
-</div>
+            />
+            <button
+              onClick={joinExistingEvent}
+              className="rounded-2xl bg-zinc-700 px-5 py-3 text-sm font-semibold text-zinc-100 hover:bg-zinc-600"
+            >
+              Entra
+            </button>
+          </div>
 
 {joinMsg && (
   <div className="mt-2 text-sm text-zinc-400">
