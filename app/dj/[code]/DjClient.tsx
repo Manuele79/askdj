@@ -397,12 +397,7 @@ async function joinExistingEvent() {
 
                             <PlatformButton r={r} />
 
-                            <button
-                              onClick={() => voteUp(r)}
-                              className="hidden rounded-xl bg-white px-3 py-2 text-xs font-extrabold text-black hover:bg-zinc-100 transition shadow-[0_10px_25px_rgba(0,0,0,0.25)]"
-                            >
-                              +1
-                            </button>
+                            
                           </div>
                         </div>
                       </li>
