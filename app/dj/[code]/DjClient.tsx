@@ -356,7 +356,7 @@ async function joinExistingEvent() {
                   <div className="min-w-0 text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
                     Console DJ
                   </div>
-                  <div className="whitespace-nowrap text-xs text-zinc-400">Ordine: voti ▸ attività</div>
+                  <div className="whitespace-nowrap text-xs text-zinc-400"> Classifica ▸ </div>
                 </div>
 
                 {sorted.length === 0 ? (
