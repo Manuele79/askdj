@@ -424,9 +424,9 @@ async function joinExistingEvent() {
             <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 sticky top-4 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
               <div className="mb-3">
                 <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
-                  Invito ospiti
+                  INVITO OSPITI:
                 </div>
-                <div className="text-xs text-zinc-400">Scansiona e manda richieste</div>
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Scansiona e manda richieste</div>
               </div>
 
               <EventQr eventCode={code} />
