@@ -326,20 +326,20 @@ async function joinExistingEvent() {
         </div>
 
         {/* MAIN GRID */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-5 lg:grid-cols-3">
           {/* LEFT */}
           <div className="lg:col-span-2">
             {mode === "party" ? (
               <section className="rounded-3xl border border-zinc-700/80 bg-zinc-900/60 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
-                <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-300">
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
                   <span className="min-w-0 truncate">  Party Autoplay YouTube</span>
                   <a
                     href={`/party/${code}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="whitespace-nowrap text-zinc-300 hover:underline"
+                    className="whitespace-nowrap text-zinc-200 hover:underline"
                   >
-                    Apri Fullscreen↗
+                   Apri Fullscreen↗
                   </a>
                  </div>
 
