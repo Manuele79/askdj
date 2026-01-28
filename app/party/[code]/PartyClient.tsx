@@ -75,6 +75,8 @@ export default function PartyClient({ code }: { code: string }) {
   const [items, setItems] = useState<RequestItem[]>([]);
   const [currentKey, setCurrentKey] = useState<string>(""); // videoId o list:<id>
   const [currentTitle, setCurrentTitle] = useState<string>("");
+  const [currentDedication, setCurrentDedication] = useState("");
+
   const [loopEnabled, setLoopEnabled] = useState(true);
   const [userStarted, setUserStarted] = useState(false);
   const [statusMsg, setStatusMsg] = useState<string>("");
@@ -193,6 +195,8 @@ function startedKey(code: string) {
   function setNowPlayingFromItem(item: PlayableItem) {
     setCurrentKey(item._key);
     setCurrentTitle(item.title || (item._kind === "playlist" ? "Playlist YouTube" : ""));
+    setCurrentDedication(item.dedication || "");
+
   }
 
   function playItem(item: PlayableItem, reason?: string) {
@@ -357,6 +361,7 @@ function startedKey(code: string) {
             current.title ||
            (current._kind === "playlist" ? "Playlist YouTube" : "")
             );
+
           },
 
             onStateChange: (e: any) => {
@@ -574,6 +579,13 @@ function resetParty() {
                 Ora in riproduzione:
                 <span className="ml-2 font-semibold text-zinc-100">
                   {currentTitle || "—"}
+
+                  {currentDedication && (
+                   <div className="mt-1 text-xs text-zinc-400 italic">
+                     💬 {currentDedication}
+                   </div>
+                 )}
+
                 </span>
               </div>
 
