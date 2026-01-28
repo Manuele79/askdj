@@ -224,16 +224,16 @@ async function joinExistingEvent() {
 
               {/* Titolo */}
               <div>
-                <div className="text-lg sm:text-xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
+                <div className="text-lg sm:text-x2 font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
                   🎧 DJ CONSOLE
                 </div>
 
-                <div className="text-xs text-zinc-300">Music Requests</div>
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Music Requests</div>
               </div>
             </div>
 
 
-            <div className="text-sm font-bold text-zinc-300">
+            <div className="text-sm font-bold text-zinc-400">
                <span className="text-zinc-400">Evento</span>
                <span className="ml-2 inline-flex items-center rounded-full px-4 py-2 font-mono text-base font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_22px_rgba(34,211,238,0.25)]">
                  {code}
@@ -248,7 +248,7 @@ async function joinExistingEvent() {
               <h1 className="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-pink-400">
                 Richieste musicali
               </h1>
-              <p className="mt-2 text-sm text-zinc-400">
+              <p className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                 Gestisci la coda e manda il link agli ospiti con il QR.
               </p>
             </div>
@@ -423,7 +423,7 @@ async function joinExistingEvent() {
           <aside className="lg:col-span-1">
             <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-4 sticky top-4 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
               <div className="mb-3">
-                <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                   INVITO OSPITI:
                 </div>
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Scansiona e manda richieste</div>
