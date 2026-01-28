@@ -361,6 +361,7 @@ function startedKey(code: string) {
             current.title ||
            (current._kind === "playlist" ? "Playlist YouTube" : "")
             );
+            if (current) setCurrentDedication(current.dedication || "");
 
           },
 
@@ -445,6 +446,8 @@ function startedKey(code: string) {
 
       if (current) {
         setCurrentTitle(current.title || (current._kind === "playlist" ? "Playlist YouTube" : ""));
+        if (current) setCurrentDedication(current.dedication || "");
+
       }
     }
 
