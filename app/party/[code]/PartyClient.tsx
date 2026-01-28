@@ -522,7 +522,9 @@ function resetParty() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
+    <div className="relative min-h-screen bg-gradient-to-b from-zinc-950 via-amber-950/20 to-zinc-900 text-zinc-100">
+      <div className="pointer-events-none absolute top-[-120px] right-[-60px] h-[420px] w-[420px] rounded-full bg-amber-400/20 blur-[120px]" />
+
       <div className="mx-auto max-w-4xl px-4 py-8">
         <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -537,7 +539,7 @@ function resetParty() {
             </button>
 
             <h1 className="mt-4 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-              Riproduzione automatica YouTube
+              Riproduzione Automatica YouTube
             </h1>
             <p className="mt-2 text-sm text-zinc-300">
               Evento: <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">{code}</span>
