@@ -394,7 +394,7 @@ async function joinExistingEvent() {
                     <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                       Console DJ
                     </div>
-                    <div className="text-xs text-zinc-400">
+                    <div className="text-xs text-amber-300">
                       Gestione richieste in tempo reale
                     </div>
                   </div>
