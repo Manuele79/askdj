@@ -256,7 +256,7 @@ async function joinExistingEvent() {
 
               {/* Titolo */}
               <div>
-                <div className="text-2xl sm:text-x2 font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
+                <div className="text-3xl sm:text-x2 font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
                   🎧 AskDJ
                 </div>
 
