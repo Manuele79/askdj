@@ -28,18 +28,18 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
         <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300">
           QR Invito Ospiti
         </div>
-        <div className="text-xs text-zinc-400">
+        <div className="text-xs text-cyan-400">
           Scansiona e manda richieste
         </div>
       </div>
 
-      <div className="rounded-2xl border border-yellow-400/25 bg-white p-3 inline-block">
+      <div className="rounded-2xl border border-cyan-400/25 bg-white p-3 inline-block">
         <QRCodeCanvas value={url} size={200} />
       </div>
 
       <div className="mt-3">
         <div className="rounded-2xl border border-yellow-400/25 bg-zinc-900/40 p-3">
-          <p className="font-mono text-xs text-zinc-200 break-all">{url}</p>
+          <p className="font-mono text-xs text-cyan-200 break-all">{url}</p>
         </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
@@ -57,7 +57,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           <button
             onClick={() => window.print()}
             className="
-              rounded-xl px-4 py-2 text-xs font-extrabold text-zinc-100
+              rounded-xl px-4 py-2 text-xs font-extrabold text-cyan-100
               border border-yellow-400/45 bg-zinc-900/50
               hover:bg-zinc-900/70 transition
               shadow-[0_10px_25px_rgba(0,0,0,0.25)]
