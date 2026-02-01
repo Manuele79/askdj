@@ -408,24 +408,14 @@ export default function RequestClient({ code }: { code: string }) {
               {r.platform}
               </span>
             </div>
-
-            <a
-              href={r.url}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-1 block truncate text-xs text-zinc-300 underline underline-offset-2"
-             title={r.url}
-            >
-           {r.url}
-           </a>
-
-          {r.dedication && r.dedication.trim() && (
-           <div className="mt-1 text-xs text-zinc-200">
-           “{r.dedication}”
-          </div>
-         )}
-       </li>
-       ))}
+       
+              {r.dedication && r.dedication.trim() && (
+             <div className="mt-1 text-xs text-zinc-200">
+               “{r.dedication}”
+             </div>
+             )}
+           </li>
+          ))}
 
             </ul>
           )}
