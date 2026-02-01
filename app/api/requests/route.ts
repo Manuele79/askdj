@@ -250,7 +250,8 @@ const isPlaylist =
   (platform === "youtube" && cleanUrl.includes("list=")) ||
   (platform === "spotify" && cleanUrl.toLowerCase().includes("/playlist/"));
 
-const baseTitle = (title || "").trim() || shareText; // ✅ FIX 2
+const baseTitle = (shareText || title || "").trim();
+
 
 const safeTitle = isPlaylist
   ? (baseTitle || (platform === "youtube" ? "Playlist YouTube" : "Playlist Spotify"))
