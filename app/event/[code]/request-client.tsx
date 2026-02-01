@@ -61,19 +61,39 @@ export default function RequestClient({ code }: { code: string }) {
       const raw = localStorage.getItem(storageKey(code));
       if (!raw) return;
       const arr = JSON.parse(raw);
-       if (Array.isArray(arr)) {
-          setSent(
-            arr
-              .filter(
-                (x) =>
-                 x &&
-                typeof x === "object" &&
-                typeof x.title === "string" &&
-                typeof x.url === "string"
-              )
-              .slice(0, 200)
-          );
-        }
+      if (Array.isArray(arr)) {
+  const normalized: SentItem[] = arr
+    .map((x: any) => {
+      // vecchio formato: stringa = titolo
+      if (typeof x === "string") {
+        return {
+          title: x,
+          url: "",
+          platform: "other",
+          dedication: "",
+          ts: Date.now(),
+        } as SentItem;
+      }
+
+      // nuovo formato: oggetto
+      if (x && typeof x === "object" && typeof x.title === "string") {
+        return {
+          title: x.title,
+          url: typeof x.url === "string" ? x.url : "",
+          platform: (x.platform as Platform) || "other",
+          dedication: typeof x.dedication === "string" ? x.dedication : "",
+          ts: typeof x.ts === "number" ? x.ts : Date.now(),
+        } as SentItem;
+      }
+
+      return null;
+    })
+    .filter(Boolean)
+    .slice(0, 200) as SentItem[];
+
+  setSent(normalized);
+}
+
 
     } catch {
       // ignore
@@ -152,9 +172,6 @@ export default function RequestClient({ code }: { code: string }) {
           if (titleFrom) finalTitle = titleFrom;
         }
       }
-
-      console.log("DEBUG SEND", { t, url, finalTitle, code });
-
 
       const resp = await fetch("/api/requests", {
         method: "POST",
@@ -274,7 +291,7 @@ export default function RequestClient({ code }: { code: string }) {
             INVIA UNA CANZONE
           </h1>
 
-          <p className="mt-3 text-base font-semibold text-cyan-200">
+          <p className="mt-3 text-base font-semibold text-cyan-600">
             EVENTO :
             <span className="ml-2 inline-flex items-center rounded-full px-3 py-1 font-mono text-sm text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_20px_rgba(34,211,238,0.18)]">
               {code}
@@ -329,7 +346,7 @@ export default function RequestClient({ code }: { code: string }) {
                   onChange={(e) => setDedication(e.target.value)}
                   placeholder="❤️ Dedica ❤️"
                   rows={2}
-                  className="mt-2 w-full rounded-xl border border-YELLOW-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
+                  className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
                 />
                 <div className="mt-1 text-xs text-zinc-500">{dedication.length}/180</div>
               </div>
@@ -391,7 +408,7 @@ export default function RequestClient({ code }: { code: string }) {
           </div>
         </section>
 
-        <section className="mt-6 rounded-3xl border border-YELLOW-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
+        <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
               Richieste inviate 
