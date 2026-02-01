@@ -539,9 +539,9 @@ function resetParty() {
             </button>
 
             <h1 className="mt-4 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-              Riproduzione Automatica YouTube
+              Riproduzione Automatica Solo YouTube
             </h1>
-            <p className="mt-2 text-sm text-zinc-300">
+            <p className="mt-2 text-sm text-cyan-500">
               Evento: <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">{code}</span>
             </p>
           </div>
@@ -571,7 +571,7 @@ function resetParty() {
           </div>
         </header>
 
-        <section className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+        <section className="rounded-2xl border border-cyan-800 bg-zinc-900/40 p-4">
           {playable.length === 0 ? (
             <p className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
               Nessun YouTube in coda. Servono link YouTube (video o playlist).
@@ -605,7 +605,7 @@ function resetParty() {
                  📱 Mobile: 1 tap per sbloccare l’autoplay
                 </div>
                 <div className="mt-1 text-xs text-zinc-400">
-                 Premi “Avvia Party” una volta, poi va avanti da sola.
+                 Premi “Avvia Party” una volta, per autoplay.
                 </div>
                 <button
                   onClick={handleUserStart}
@@ -628,7 +628,7 @@ function resetParty() {
           )}
         </section>
 
-        <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+        <section className="mt-6 rounded-2xl border border-cyan-800 bg-zinc-900/40 p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda:YouTube</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
@@ -640,7 +640,7 @@ function resetParty() {
             {playable.map((r) => (
               <li
                 key={r.id}
-                className={`rounded-2xl border border-zinc-800/80 px-4 py-3 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
+                className={`rounded-2xl border border-cyan-800/80 px-4 py-3 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
                 r._key === currentKey ? "bg-zinc-900/60 ring-1 ring-cyan-400/20" : "bg-zinc-950/40"
               }`}
 
@@ -670,7 +670,7 @@ function resetParty() {
         {/* --- SPOTIFY QUEUE (solo lista + link) --- */}
         <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda Spotify</h2>
+            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda:Spotify</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
               {spotifyList.length}
             </span>
