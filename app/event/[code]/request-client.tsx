@@ -153,6 +153,9 @@ export default function RequestClient({ code }: { code: string }) {
         }
       }
 
+      console.log("DEBUG SEND", { t, url, finalTitle, code });
+
+
       const resp = await fetch("/api/requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -271,7 +274,7 @@ export default function RequestClient({ code }: { code: string }) {
             INVIA UNA CANZONE
           </h1>
 
-          <p className="mt-3 text-base font-semibold text-zinc-200">
+          <p className="mt-3 text-base font-semibold text-cyan-200">
             EVENTO :
             <span className="ml-2 inline-flex items-center rounded-full px-3 py-1 font-mono text-sm text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_20px_rgba(34,211,238,0.18)]">
               {code}
@@ -307,12 +310,12 @@ export default function RequestClient({ code }: { code: string }) {
               {/* Incolla link: subito sotto al campo link */}
               <div className="mt-2">
                 <button
-  type="button"
-  onClick={pasteFromClipboard}
-  className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.45)] hover:brightness-110 transition"
->
-  📋 INCOLLA LINK
-</button>
+                type="button"
+                onClick={pasteFromClipboard}
+                className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.45)] hover:brightness-110 transition"
+              >
+               📋 INCOLLA LINK
+              </button>
 
               </div>
 
