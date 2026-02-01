@@ -184,6 +184,20 @@ function startedKey(code: string) {
       .sort((a, b) => b.votes - a.votes || b.updatedAt - a.updatedAt);
   }, [items]);
 
+  const appleList = useMemo(() => {
+    return (items || [])
+      .filter((r) => r.platform === "apple" && r.url)
+      .sort((a, b) => b.votes - a.votes || b.updatedAt - a.updatedAt);
+  }, [items]);
+
+  const amazonList = useMemo(() => {
+    return (items || [])
+      .filter((r) => r.platform === "amazon" && r.url)
+      .sort((a, b) => b.votes - a.votes || b.updatedAt - a.updatedAt);
+  }, [items]);
+
+
+
   useEffect(() => {
     playableRef.current = playable;
   }, [playable]);
@@ -709,6 +723,99 @@ function resetParty() {
             </ul>
           )}
         </section>
+
+        {/* --- APPLE MUSIC QUEUE (solo lista + link) --- */}
+          <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+                Coda:Apple Music
+              </h2>
+              <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
+                {appleList.length}
+              </span>
+            </div>
+
+          {appleList.length === 0 ? (
+              <p className="text-sm text-zinc-400">Nessun brano Apple Music inviato.</p>
+          ) : (
+           <ul className="space-y-2">
+            {appleList.map((r) => (
+           <li
+            key={r.id}
+           className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
+         >
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+                  {r.title}
+                </div>
+                <div className="mt-0.5 truncate text-xs text-zinc-500">
+                  🔥 {r.votes}
+                </div>
+              </div>
+
+              <a
+                href={r.url}
+                target="_blank"
+                rel="noreferrer"
+                className="shrink-0 rounded-xl bg-zinc-100 px-3 py-2 text-xs font-extrabold text-zinc-900 hover:bg-white transition"
+              >
+                🍎 Apri
+              </a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+          {/* --- AMAZON MUSIC QUEUE (solo lista + link) --- */}
+<section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+  <div className="mb-3 flex items-center justify-between">
+    <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+      Coda:Amazon Music
+    </h2>
+    <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
+      {amazonList.length}
+    </span>
+  </div>
+
+  {amazonList.length === 0 ? (
+    <p className="text-sm text-zinc-400">Nessun brano Amazon Music inviato.</p>
+  ) : (
+    <ul className="space-y-2">
+      {amazonList.map((r) => (
+        <li
+          key={r.id}
+          className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+                {r.title}
+              </div>
+              <div className="mt-0.5 truncate text-xs text-zinc-500">
+                🔥 {r.votes}
+              </div>
+            </div>
+
+            <a
+              href={r.url}
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 rounded-xl bg-yellow-500 px-3 py-2 text-xs font-extrabold text-black hover:bg-yellow-400 transition"
+            >
+              🛒 Apri
+            </a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</section>
+
+
+
       </div>
     </div>
   );
