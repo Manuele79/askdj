@@ -114,28 +114,48 @@ export default function RequestClient({ code }: { code: string }) {
   }, [title, link]);
 
   async function pasteFromClipboard() {
-    setHint("");
-    try {
-      if (!navigator.clipboard?.readText) {
-        setHint("⚠️ Il browser non supporta l’incolla automatico. Incolla manualmente.");
-        return;
-      }
-      const clip = (await navigator.clipboard.readText()).trim();
-      if (!clip) {
-        setHint("📋 Appunti vuoti. Copia prima un link dall’app musica.");
-        return;
-      }
-      if (!looksLikeUrl(clip)) {
-        setHint("⚠️ Negli appunti non sembra esserci un link. Copia il link della canzone e riprova.");
-        return;
-      }
-      setLink(clip);
-      setHint("✅ Link incollato dagli appunti.");
-      setTimeout(() => setHint(""), 1600);
-    } catch {
-      setHint("⚠️ Permesso negato o non disponibile. Incolla manualmente.");
+  setHint("");
+  try {
+    if (!navigator.clipboard?.readText) {
+      setHint("⚠️ Il browser non supporta l’incolla automatico. Incolla manualmente.");
+      return;
     }
+
+    const clipRaw = await navigator.clipboard.readText();
+    const clip = (clipRaw || "").trim();
+    if (!clip) {
+      setHint("📋 Appunti vuoti. Copia prima un link dall’app musica.");
+      return;
+    }
+
+    const lines = clip
+      .split(/\r?\n/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    const urlLine = lines.find((l) => looksLikeUrl(l));
+    if (!urlLine) {
+      setHint("⚠️ Negli appunti non sembra esserci un link.");
+      return;
+    }
+
+    const titleLine = lines.find(
+      (l) => l !== urlLine && !looksLikeUrl(l)
+    );
+
+    setLink(urlLine);
+
+    if (!title.trim() && titleLine) {
+      setTitle(titleLine);
+    }
+
+    setHint("✅ Link incollato dagli appunti.");
+    setTimeout(() => setHint(""), 1600);
+  } catch {
+    setHint("⚠️ Permesso negato o non disponibile. Incolla manualmente.");
   }
+}
+
 
   async function addRequest() {
     const t = title.trim();
