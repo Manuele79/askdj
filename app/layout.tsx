@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -17,6 +18,12 @@ export const metadata: Metadata = {
   description: "Invia richieste al DJ con QR (YouTube, Spotify, Apple, Amazon).",
   manifest: "/manifest.json",
   themeColor: "#09090b",
+};
+
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 
