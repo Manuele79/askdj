@@ -239,8 +239,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Evento scaduto" }, { status: 410 });
   }
 
-  // ✅ pulizia URL (Amazon/Apple ecc: "testo + link")
-const rawUrl = url; // quello che arriva dal client
+const rawUrl = url; // ✅ FIX 1
 const cleanUrl = extractFirstUrl(rawUrl) || rawUrl;
 const shareText = cleanUrl ? stripUrlFromText(rawUrl, cleanUrl) : "";
 
@@ -251,17 +250,19 @@ const isPlaylist =
   (platform === "youtube" && cleanUrl.includes("list=")) ||
   (platform === "spotify" && cleanUrl.toLowerCase().includes("/playlist/"));
 
-const safeTitle = isPlaylist
-  ? (title || (platform === "youtube" ? "Playlist YouTube" : "Playlist Spotify"))
-  : await resolveTitleServer(title, cleanUrl, platform);
+const baseTitle = (title || "").trim() || shareText; // ✅ FIX 2
 
-// fallback titolo: se hanno incollato "testo + link" e title è vuoto/generico
+const safeTitle = isPlaylist
+  ? (baseTitle || (platform === "youtube" ? "Playlist YouTube" : "Playlist Spotify"))
+  : await resolveTitleServer(baseTitle, cleanUrl, platform);
+
 const finalTitle =
-  (safeTitle && safeTitle.trim())
+  safeTitle && safeTitle.trim()
     ? safeTitle.trim()
-    : (shareText || `Richiesta ${platform === "amazon" ? "Amazon Music" : platform === "apple" ? "Apple Music" : "Link"}`);
+    : shareText || `Richiesta ${platform === "amazon" ? "Amazon Music" : "Apple Music"}`;
 
 const nowMs = Date.now();
+
 
 
   // MERGE: se stesso brano (youtubeVideoId) nello stesso evento -> +1 voto
