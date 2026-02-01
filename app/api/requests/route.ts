@@ -61,6 +61,17 @@ function requireSecret(req: Request) {
   }
   return null;
 }
+function extractFirstUrl(s: string): string {
+  const m = (s || "").match(/https?:\/\/[^\s]+/i);
+  return m ? m[0] : "";
+}
+
+function stripUrlFromText(s: string, url: string): string {
+  return (s || "").replace(url, "").replace(/\s+/g, " ").trim();
+}
+
+
+
 
 function extractYouTubeVideoId(urlStr: string): string {
   try {
@@ -228,17 +239,30 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Evento scaduto" }, { status: 410 });
   }
 
-  const platform = detectPlatform(url);
-  const youtubeVideoId = platform === "youtube" ? extractYouTubeVideoId(url) : "";
-  const isPlaylist =
-  (platform === "youtube" && url.includes("list=")) ||
-  (platform === "spotify" && url.toLowerCase().includes("/playlist/"));
+  // ✅ pulizia URL (Amazon/Apple ecc: "testo + link")
+const rawUrl = url; // quello che arriva dal client
+const cleanUrl = extractFirstUrl(rawUrl) || rawUrl;
+const shareText = cleanUrl ? stripUrlFromText(rawUrl, cleanUrl) : "";
+
+const platform = detectPlatform(cleanUrl);
+const youtubeVideoId = platform === "youtube" ? extractYouTubeVideoId(cleanUrl) : "";
+
+const isPlaylist =
+  (platform === "youtube" && cleanUrl.includes("list=")) ||
+  (platform === "spotify" && cleanUrl.toLowerCase().includes("/playlist/"));
 
 const safeTitle = isPlaylist
   ? (title || (platform === "youtube" ? "Playlist YouTube" : "Playlist Spotify"))
-  : await resolveTitleServer(title, url, platform);
+  : await resolveTitleServer(title, cleanUrl, platform);
 
-  const nowMs = Date.now();
+// fallback titolo: se hanno incollato "testo + link" e title è vuoto/generico
+const finalTitle =
+  (safeTitle && safeTitle.trim())
+    ? safeTitle.trim()
+    : (shareText || `Richiesta ${platform === "amazon" ? "Amazon Music" : platform === "apple" ? "Apple Music" : "Link"}`);
+
+const nowMs = Date.now();
+
 
   // MERGE: se stesso brano (youtubeVideoId) nello stesso evento -> +1 voto
   if (platform === "youtube" && youtubeVideoId) {
@@ -274,8 +298,8 @@ const safeTitle = isPlaylist
     .from("requests")
     .insert({
       event_code: eventCode,
-      title: safeTitle,
-      url,
+      title: finalTitle,
+      url: cleanUrl,
       dedication,
       platform,
       youtube_video_id: youtubeVideoId,
