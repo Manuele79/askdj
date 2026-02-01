@@ -182,6 +182,47 @@ export default function DjClient({ code }: { code: string }) {
     });
     load();
   }
+  
+  function printPlaylist() {
+  const titles = sorted.map((r, i) => `${i + 1}. ${r.title}`);
+
+  const w = window.open("", "_blank");
+  if (!w) return;
+
+  w.document.write(`
+    <html>
+      <head>
+        <title>Playlist DJ</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+          }
+          h1 {
+            margin-bottom: 20px;
+          }
+          ul {
+            font-size: 16px;
+          }
+          li {
+            margin-bottom: 6px;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>Playlist DJ</h1>
+        <ul>
+          ${titles.map(t => `<li>${t}</li>`).join("")}
+        </ul>
+      </body>
+    </html>
+  `);
+
+  w.document.close();
+  w.print();
+}
+
+
 
   useEffect(() => {
     load();
@@ -251,12 +292,12 @@ async function joinExistingEvent() {
             <div className="flex items-center gap-3">
               {/* Logo MV */}
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-emerald-400 to-pink-400 shadow-[0_0_20px_rgba(34,211,238,0.35)]">
-                <span className="text-2xl font-black text-zinc-950">MV</span>
+                <span className="text-3xl font-black text-zinc-950">MV</span>
               </div>
 
               {/* Titolo */}
               <div>
-                <div className="text-3xl sm:text-x2 font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
+                <div className="text-4xl sm:text-x2 font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
                   🎧 AskDJ
                 </div>
 
@@ -399,9 +440,19 @@ async function joinExistingEvent() {
                     </div>
                   </div>
 
-                  <div className="whitespace-nowrap pr-4 text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300">
-                    Classifica
+                  <div className="flex items-center gap-3">
+                    <div className="whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300">
+                      Classifica
+                    </div>
+
+                    <button
+                      onClick={printPlaylist}
+                      className="rounded-lg px-3 py-1 text-xs font-bold text-zinc-900 bg-gradient-to-r from-amber-300 to-yellow-400 hover:opacity-90"
+                    >
+                      🖨 Stampa
+                    </button>
                   </div>
+
 
                 </div>
 
