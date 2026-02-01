@@ -401,13 +401,32 @@ export default function RequestClient({ code }: { code: string }) {
           ) : (
             <ul className="mt-3 space-y-2">
               {sent.slice(0, 10).map((r, i) => (
-                <li
-                  key={i}
-                  className="rounded-xl border border-YELLOW-400 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-200"
-                >
-                  {r}
-                </li>
-              ))}
+                <li key={r.ts || i} className="rounded-xl border border-yellow-400 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-100">
+                <div className="flex items-center justify-between gap-2">
+                <div className="font-medium">{r.title}</div>
+                <span className="text-[11px] text-zinc-400">
+              {r.platform}
+              </span>
+            </div>
+
+            <a
+              href={r.url}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-1 block truncate text-xs text-zinc-300 underline underline-offset-2"
+             title={r.url}
+            >
+           {r.url}
+           </a>
+
+          {r.dedication && r.dedication.trim() && (
+           <div className="mt-1 text-xs text-zinc-200">
+           “{r.dedication}”
+          </div>
+         )}
+       </li>
+       ))}
+
             </ul>
           )}
 
