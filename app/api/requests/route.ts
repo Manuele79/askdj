@@ -279,7 +279,7 @@ const nowMs = Date.now();
       const newVotes = Number(row.votes || 0) + 1;
       const { data: upd, error: e2 } = await supabase
         .from("requests")
-        .update({ votes: newVotes, updated_at: nowMs, title: safeTitle })
+        .update({ votes: newVotes, updated_at: nowMs, title: finalTitle })
         .eq("id", row.id)
         .select("*")
         .single();
