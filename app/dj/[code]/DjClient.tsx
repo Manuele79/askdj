@@ -50,7 +50,7 @@ function PlatformButton({ r }: { r: RequestItem }) {
           href={r.url}
           target="_blank"
           rel="noreferrer"
-          className={`${base} bg-yellow-600 text-black`}
+          className={`${base} bg-yellow-500 text-black`}
         >
           🛒 Amazon
         </a>
@@ -482,7 +482,7 @@ async function joinExistingEvent() {
                             </div>
                             {r.dedication && (
                             <div className="mt-1 truncate text-xs text-zinc-400 italic">
-                             💬 {r.dedication}
+                             💬 DEDICA: {r.dedication}
                             </div>
                            )}
 
