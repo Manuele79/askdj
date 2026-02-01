@@ -36,11 +36,22 @@ function storageKey(eventCode: string) {
   return `djreq_sent:${String(eventCode || "").toUpperCase()}`;
 }
 
+type Platform = "youtube" | "spotify" | "apple" | "amazon" | "other";
+
+  type SentItem = {
+  title: string;
+  url: string;
+  platform: Platform;
+  dedication?: string;
+  ts: number;
+};
+
+
 export default function RequestClient({ code }: { code: string }) {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
   const [dedication, setDedication] = useState("");
-  const [sent, setSent] = useState<string[]>([]);
+  const [sent, setSent] = useState<SentItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hint, setHint] = useState("");
 
@@ -50,9 +61,20 @@ export default function RequestClient({ code }: { code: string }) {
       const raw = localStorage.getItem(storageKey(code));
       if (!raw) return;
       const arr = JSON.parse(raw);
-      if (Array.isArray(arr)) {
-        setSent(arr.filter((x) => typeof x === "string").slice(0, 30));
-      }
+       if (Array.isArray(arr)) {
+          setSent(
+            arr
+              .filter(
+                (x) =>
+                 x &&
+                typeof x === "object" &&
+                typeof x.title === "string" &&
+                typeof x.url === "string"
+              )
+              .slice(0, 200)
+          );
+        }
+
     } catch {
       // ignore
     }
@@ -147,7 +169,28 @@ export default function RequestClient({ code }: { code: string }) {
         return;
       }
 
-      setSent((prev) => [finalTitle, ...prev].slice(0, 30));
+       const u = url.toLowerCase();
+
+       const platform: Platform =
+       looksLikeYouTube(url) ? "youtube"
+      : u.includes("spotify.com") ? "spotify"
+      : (u.includes("music.apple.com") || u.includes("itunes.apple.com")) ? "apple"
+      : (u.includes("music.amazon") || u.includes("amazon.")) ? "amazon"
+      : "other";
+
+
+      setSent((prev) => [
+  {
+    title: finalTitle,
+    url,
+    platform,
+    dedication: dedication.trim().slice(0, 180),
+    ts: Date.now(),
+  },
+  ...prev,
+].slice(0, 30));
+
+
       setTitle("");
       setLink("");
       setDedication("");
@@ -220,45 +263,45 @@ export default function RequestClient({ code }: { code: string }) {
             </svg>
           </div>
 
-          <h2 className="text-2xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_16px_rgba(34,211,238,0.18)]">
-            DJ Requests
+          <h2 className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_16px_rgba(34,211,238,0.18)]">
+            AskDJ
           </h2>
 
           <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-emerald-200 to-pink-200">
-            Invia una canzone
+            INVIA UNA CANZONE
           </h1>
 
           <p className="mt-3 text-base font-semibold text-zinc-200">
-            Evento:
+            EVENTO :
             <span className="ml-2 inline-flex items-center rounded-full px-3 py-1 font-mono text-sm text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_20px_rgba(34,211,238,0.18)]">
               {code}
             </span>
           </p>
         </header>
 
-        <section className="rounded-3xl border border-zinc-800/80 bg-zinc-900/50 p-5 shadow-[0_18px_60px_rgba(0,0,0,0.35)] ring-1 ring-white/5">
+        <section className="rounded-3xl border border-yellow-400 bg-zinc-900/50 p-5 shadow-[0_18px_60px_rgba(0,0,0,0.35)] ring-1 ring-white/5">
           <div className="space-y-4">
             <div>
               <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                Titolo (opzionale)
+                TITOLO CANZONE:
               </label>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Es: Freed from Desire"
-                className="mt-2 w-full rounded-xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
               />
             </div>
 
             <div>
               <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                Link (YouTube / Spotify / Apple / Amazon…)
+                LINK: YouTube / Spotify / Apple / Amazon…
               </label>
               <input
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
                 placeholder="Incolla qui il link condiviso"
-                className="mt-2 w-full rounded-xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
               />
 
               {/* Incolla link: subito sotto al campo link */}
@@ -268,7 +311,7 @@ export default function RequestClient({ code }: { code: string }) {
   onClick={pasteFromClipboard}
   className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.45)] hover:brightness-110 transition"
 >
-  📋 Incolla link
+  📋 INCOLLA LINK
 </button>
 
               </div>
@@ -276,14 +319,14 @@ export default function RequestClient({ code }: { code: string }) {
               {/* Dedica */}
               <div className="mt-3">
                 <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                  Dedica (opzionale)
+                  Se VUOI MANDARE UNA DEDICA SCRIVI QUI: 
                 </label>
                 <textarea
                   value={dedication}
                   onChange={(e) => setDedication(e.target.value)}
-                  placeholder="Dedica:❤️!"
+                  placeholder="❤️ Dedica ❤️"
                   rows={2}
-                  className="mt-2 w-full rounded-xl border border-zinc-800/80 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
+                  className="mt-2 w-full rounded-xl border border-YELLOW-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
                 />
                 <div className="mt-1 text-xs text-zinc-500">{dedication.length}/180</div>
               </div>
@@ -299,7 +342,7 @@ export default function RequestClient({ code }: { code: string }) {
               disabled={!canSend || loading}
               className="w-full rounded-xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-4 py-3 text-sm font-extrabold text-zinc-950 transition shadow-[0_0_26px_rgba(34,211,238,0.15)] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? "Invio..." : "🚀 Invia al DJ"}
+              {loading ? "Invio..." : "🚀 INVIA AL DJ"}
             </button>
 
             {/* Bottoni piattaforme */}
@@ -337,7 +380,7 @@ export default function RequestClient({ code }: { code: string }) {
               </div>
 
               {!!hint && (
-                <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-xs text-zinc-200">
+                <div className="rounded-xl border border-YELLOW-400 bg-zinc-950/60 px-3 py-2 text-xs text-zinc-200">
                   {hint}
                 </div>
               )}
@@ -345,7 +388,7 @@ export default function RequestClient({ code }: { code: string }) {
           </div>
         </section>
 
-        <section className="mt-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
+        <section className="mt-6 rounded-3xl border border-YELLOW-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
               Richieste inviate 
@@ -360,7 +403,7 @@ export default function RequestClient({ code }: { code: string }) {
               {sent.slice(0, 10).map((r, i) => (
                 <li
                   key={i}
-                  className="rounded-xl border border-zinc-800/80 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-200"
+                  className="rounded-xl border border-YELLOW-400 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-200"
                 >
                   {r}
                 </li>
