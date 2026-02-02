@@ -55,14 +55,14 @@ export default function Home() {
               AskDJ
             </div>
             <div style={{ opacity: 0.85, fontSize: 13 }}>
-              Richieste musicali via QR — senza sbatti.
+              Richieste musicali al DJ via QR.
             </div>
           </div>
         </div>
 
         <div style={{ marginTop: 18, opacity: 0.92, lineHeight: 1.6 }}>
           <div style={{ marginBottom: 10, fontWeight: 800 }}>
-            Come funziona (terra terra):
+            Come funziona :
           </div>
 
           <ol style={{ margin: 0, paddingLeft: 18 }}>
@@ -112,6 +112,9 @@ export default function Home() {
             Apri DJ / Party
           </Link>
 
+          <InstallButton />
+
+
           <div
             style={{
               marginTop: 10,
@@ -120,7 +123,7 @@ export default function Home() {
               textAlign: "center",
             }}
           >
-            (Sì, questo è il pannello “da DJ”. Gli ospiti non lo vedono.)
+            (questo è il pannello “da DJ” per creare evento)
           </div>
         </div>
       </div>
