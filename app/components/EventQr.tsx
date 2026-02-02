@@ -37,10 +37,14 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
         <QRCodeCanvas value={url} size={200} />
       </div>
 
-      <div className="mt-3">
-        <div className="rounded-2xl border border-yellow-400/25 bg-zinc-900/40 p-3">
-          <p className="font-mono text-xs text-zinc-200 break-all">{url}</p>
-        </div>
+      {eventCode !== "TEST123" && (
+      <div className="mt-3 rounded-2xl border border-yellow-400/25 bg-zinc-900/40 p-3">
+       <p className="font-mono text-xs text-zinc-200 break-all">
+       {url}
+      </p>
+      </div>
+      )}
+
 
         <div className="mt-3 flex flex-wrap gap-2">
           <button
@@ -67,6 +71,6 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           </button>
         </div>
       </div>
-    </div>
+    
   );
 }
