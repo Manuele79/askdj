@@ -420,7 +420,7 @@ export default function RequestClient({ code }: { code: string }) {
               </div>
 
               {!!hint && (
-                <div className="rounded-xl border border-YELLOW-400 bg-zinc-950/60 px-3 py-2 text-xs text-zinc-200">
+                <div className="rounded-xl border border-yellow-400 bg-zinc-950/60 px-3 py-2 text-xs text-zinc-200">
                   {hint}
                 </div>
               )}
