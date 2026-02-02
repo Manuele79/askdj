@@ -307,8 +307,8 @@ async function joinExistingEvent() {
 
 
             {code !== "TEST123" && (
-  <div className="text-sm font-bold text-zinc-400">
-    <span className="text-cyan-500">EVENTO:</span>
+  <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+    <span className="text-cyan-600">EVENTO:</span>
     <span className="ml-2 inline-flex items-center rounded-full px-4">
       {code}
     </span>
@@ -338,7 +338,7 @@ async function joinExistingEvent() {
               <input
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
-                placeholder="Scrivi: Nome evento"
+                placeholder="Scrivi: Nome Evento"
                 className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
 
               />
@@ -356,7 +356,7 @@ async function joinExistingEvent() {
             <input
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value)}
-              placeholder="Scrivi: Nome evento esistente"
+              placeholder="Scrivi: Nome Evento Esistente"
               className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
 
             />
@@ -365,7 +365,7 @@ async function joinExistingEvent() {
               className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
 
             >
-              Entra
+              ENTRA
             </button>
           </div>
 
@@ -436,7 +436,7 @@ async function joinExistingEvent() {
   
                   <div className="min-w-0">
                     <div className="pl-4 text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                      Console DJ:
+                      CONSOLE DJ:
                     </div>
                     <div className="pl-4 text-xs text-amber-300">
                       Gestione richieste in tempo reale:
