@@ -1,7 +1,7 @@
 {
-  "name": "DJ Requests",
-  "short_name": "DJ Requests",
-  "start_url": "/",
+  "name": "AskDJ",
+  "short_name": "AskDJ",
+  "start_url": "/dj",
   "display": "standalone",
   "background_color": "#09090b",
   "theme_color": "#09090b",
