@@ -98,7 +98,7 @@ export default function Home() {
 
         <div style={{ marginTop: 18 }}>
           <Link
-            href="/dj"
+            href="/dj/TEST123"
             style={{
               textDecoration: "none",
               display: "block",
