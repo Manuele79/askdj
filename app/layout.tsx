@@ -17,14 +17,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "DJ Requests",
   description: "Invia richieste al DJ con QR (YouTube, Spotify, Apple, Amazon).",
-  manifest: "/manifest.json",
-  themeColor: "#09090b",
+  manifest: "/manifest.json", 
 };
 
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#09090b",
 };
 
 
