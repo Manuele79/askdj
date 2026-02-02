@@ -1,7 +1,7 @@
 {
   "name": "AskDJ",
   "short_name": "AskDJ",
-  "start_url": "/dj",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#09090b",
