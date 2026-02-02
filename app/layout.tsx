@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DJ Requests",
+  title: "AskDJ",
   description: "Invia richieste al DJ con QR (YouTube, Spotify, Apple, Amazon).",
   manifest: "/manifest.json", 
 };
