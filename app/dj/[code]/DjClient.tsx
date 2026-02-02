@@ -306,12 +306,15 @@ async function joinExistingEvent() {
             </div>
 
 
-            <div className="text-sm font-bold text-zinc-400">
-               <span className="text-cyan-500">EVENTO:</span>
-               <span className="ml-2 inline-flex items-center rounded-full px-4 py-2 font-mono text-base font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_22px_rgba(34,211,238,0.25)]">
-                 {code}
-               </span>
-             </div>
+            {code !== "TEST123" && (
+  <div className="text-sm font-bold text-zinc-400">
+    <span className="text-cyan-500">EVENTO:</span>
+    <span className="ml-2 inline-flex items-center rounded-full px-4">
+      {code}
+    </span>
+  </div>
+)}
+
 
           </div>
 
