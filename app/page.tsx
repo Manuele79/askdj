@@ -64,19 +64,19 @@ export default function Home() {
 
         <div style={{ marginTop: 18, opacity: 0.92, lineHeight: 1.6 }}>
           <div style={{ marginBottom: 10, fontWeight: 800 }}>
-            Come funziona :
+            SEI IL DJ?
           </div>
 
           <ol style={{ margin: 0, paddingLeft: 18 }}>
             <li>
-              Il DJ apre <strong>DJ / Party</strong> e crea l’evento.
+              1:CREA UN EVENTO IN : <strong>DJ / Party</strong> (ES:MATRIMONIO-1513).
             </li>
             <li>
-              L’app genera un <strong>QR</strong> per quell’evento.
+              L’APP GENERA UN <strong>QR</strong> PER QUELL’EVENTO DA STAMPARE O SCANSIONARE.
             </li>
             <li>
-              Gli invitati scansionano il QR e finiscono{" "}
-              <strong>diretti</strong> sulla pagina evento per inviare richieste.
+              GLI INVITATI SCANSIONANO IL QR e finiscono{" "}
+              <strong>DIRETTAMENTE</strong> SULLA PAGINA EVENTO PER IVIARE LE RICHIESTE.
             </li>
           </ol>
 
@@ -91,8 +91,8 @@ export default function Home() {
               opacity: 0.9,
             }}
           >
-            Nota: l’ospite <strong>non entra da qui</strong>. Entra solo col QR
-            dell’evento.
+            Nota: QUESTA PAGINA è SOLO<strong>PER IL DJ</strong>. GLI OSPITI ENTRANO SOLO
+            SCANSIONANDO IL QR.
           </div>
         </div>
 
