@@ -125,9 +125,16 @@ function FakeSpectrumWide() {
   );
 }
 
+function makeEventCodeFromName(name: string) {
+  const base = name
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^A-Z0-9-]/g, "");
 
-
-
+  const rand = Math.floor(1000 + Math.random() * 9000); // 4 cifre
+  return `${base}-${rand}`;
+}
 
 
 export default function DjClient({ code }: { code: string }) {
@@ -232,8 +239,10 @@ export default function DjClient({ code }: { code: string }) {
   }, [code]);
 
   async function createEvent() { 
-  const safe = eventName.trim().toUpperCase().replace(/\s+/g, "-");
-  if (!safe) return;
+  const eventCode = makeEventCodeFromName(eventName);
+  if (!eventCode) return;
+
+
 
   const password = prompt("Password per creare evento:");
   if (!password) return;
@@ -241,7 +250,7 @@ export default function DjClient({ code }: { code: string }) {
   const res = await fetch("/api/events", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ eventCode: safe, password }),
+    body: JSON.stringify({ eventCode, password }),
   });
 
   if (!res.ok) {
@@ -249,7 +258,7 @@ export default function DjClient({ code }: { code: string }) {
     return;
   }
 
-  window.location.href = `/dj/${safe}`;
+  window.location.href = `/dj/${eventCode}`;
 }
 async function joinExistingEvent() {
   const safe = joinCode.trim().toUpperCase().replace(/\s+/g, "-");
