@@ -19,7 +19,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 
   return (
     <div
-      
+      id="print-qr"
       className="
         rounded-3xl border border-yellow-400/80 bg-pink-400/20 backdrop-blur p-4
         shadow-[0_0_20px_rgba(250,204,21,0.18)]
@@ -30,7 +30,6 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           QR Invito Ospiti
         </div>
         <div 
-        id="print-qr"
         className="text-xs text-cyan-400">
           Scansiona e manda richieste
         </div>
