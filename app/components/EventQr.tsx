@@ -17,6 +17,13 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
     setTimeout(() => setCopied(false), 1200);
   }
 
+  function printQr() {
+  document.body.classList.add("print-mode");
+  window.print();
+  document.body.classList.remove("print-mode");
+}
+
+
   return (
     <div
       id="print-qr"
@@ -36,13 +43,13 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       </div>
       
       <div className="mb-4 text-center">
-  <div className="text-xl font-extrabold text-cyan-400">
-    Evento:
-  </div>
-  <div className="text-2xl font-black tracking-wide text-black">
-    {eventCode}
-  </div>
-</div>
+        <div className="text-xl font-extrabold text-cyan-400">
+         Evento:
+        </div>
+        <div className="text-2xl font-black tracking-wide text-black">
+        {eventCode}
+       </div>
+      </div>
 
 
       <div
@@ -72,7 +79,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           </button>
 
           <button
-            onClick={() => window.print()}
+            onClick={printQr}
             className="
               rounded-xl px-4 py-2 text-xs font-extrabold text-zinc-100
               border border-yellow-400/45 bg-zinc-900/50
