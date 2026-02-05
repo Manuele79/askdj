@@ -33,6 +33,16 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           Scansiona e manda richieste
         </div>
       </div>
+      
+      <div className="mb-4 text-center">
+  <div className="text-xl font-extrabold text-black">
+    Evento
+  </div>
+  <div className="text-2xl font-black tracking-wide text-black">
+    {eventCode}
+  </div>
+</div>
+
 
       <div
         className="rounded-2xl border border-cyan-400/50 bg-white p-3 inline-block">
