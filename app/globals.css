@@ -5,12 +5,7 @@
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -37,20 +32,11 @@ body {
 
   #print-qr {
     position: fixed;
-    top: 50%;
     left: 50%;
+    top: 50%;
     transform: translate(-50%, -50%) scale(1.35);
-  }
-}
-
-@media print {
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  #print-qr {
-    margin: 0 !important;
+    margin: 0;
+    padding: 0;
+    display: block;
   }
 }
