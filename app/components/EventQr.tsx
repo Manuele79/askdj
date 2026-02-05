@@ -33,7 +33,9 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-cyan-400/50 bg-white p-3 inline-block">
+      <div
+       id="print-qr"
+       className="rounded-2xl border border-cyan-400/50 bg-white p-3 inline-block">
         <QRCodeCanvas value={url} size={200} />
       </div>
 
