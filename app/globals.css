@@ -42,3 +42,15 @@ body {
     transform: translate(-50%, -50%) scale(1.35);
   }
 }
+
+@media print {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #print-qr {
+    margin: 0 !important;
+  }
+}
