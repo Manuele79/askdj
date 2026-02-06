@@ -5,7 +5,12 @@
   --foreground: #171717;
 }
 
-
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -20,26 +25,20 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@page { margin: 0; }
-
 @media print {
   body * {
-    display: none !important;
+    visibility: hidden;
   }
 
-  #print-qr, #print-qr * {
-    display: block !important;
-    visibility: visible !important;
+  #print-qr,
+  #print-qr * {
+    visibility: visible;
   }
 
   #print-qr {
-    position: fixed !important;
-    inset: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.35);
   }
 }
