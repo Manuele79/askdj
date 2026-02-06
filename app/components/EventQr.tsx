@@ -17,22 +17,6 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
     setTimeout(() => setCopied(false), 1200);
   }
 
-  function printQr() {
-  document.body.classList.add("print-mode");
-
-  const cleanup = () => {
-    document.body.classList.remove("print-mode");
-    window.removeEventListener("afterprint", cleanup);
-  };
-  window.addEventListener("afterprint", cleanup);
-
-  requestAnimationFrame(() => {
-    setTimeout(() => window.print(), 50);
-  });
-}
-
-
-
   return (
     <div
       id="print-qr"
@@ -88,7 +72,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           </button>
 
           <button
-            onClick={printQr}
+            onClick={() => window.print()}
             className="
               rounded-xl px-4 py-2 text-xs font-extrabold text-zinc-100
               border border-yellow-400/45 bg-zinc-900/50
