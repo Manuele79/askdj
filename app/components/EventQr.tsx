@@ -40,7 +40,8 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
          Evento:
          </div>
          <div className="text-2xl font-black tracking-wide text-black">
-         {eventCode}
+         {eventCode !== "TEST123" ? eventCode : ""}
+
          </div>
       </div>
 
