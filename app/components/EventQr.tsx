@@ -25,7 +25,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
         shadow-[0_0_20px_rgba(250,204,21,0.18)]
       "
     >
-      <div className="print-reset"></div>
+      <div className="print-reset">
  
       <div className="mb-3">
         <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300">
@@ -86,6 +86,6 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           </button>
         </div>
       </div>
-    
+    </div>
   );
 }
