@@ -19,9 +19,18 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 
   function printQr() {
   document.body.classList.add("print-mode");
-  window.print();
-  document.body.classList.remove("print-mode");
+
+  const cleanup = () => {
+    document.body.classList.remove("print-mode");
+    window.removeEventListener("afterprint", cleanup);
+  };
+  window.addEventListener("afterprint", cleanup);
+
+  requestAnimationFrame(() => {
+    setTimeout(() => window.print(), 50);
+  });
 }
+
 
 
   return (
