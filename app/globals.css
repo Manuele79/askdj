@@ -37,7 +37,7 @@ body {
     position: fixed;
     left: 50%;
     top: 10%;
-    transform: translate(-50%, -20%) scale(1.50);
+    transform: translate(-50%, -50%) scale(1.50);
     transform-origin: top center;
     margin: 0;
     padding: 0;
