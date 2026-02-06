@@ -18,13 +18,14 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
   }
 
   return (
+    <>
     <div
       id="print-qr"
       className="
         rounded-3xl border border-yellow-400/80 bg-pink-400/20 backdrop-blur p-4
         shadow-[0_0_20px_rgba(250,204,21,0.18)]
       "
-    >
+      >
       <div className="mb-3">
         <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300">
           QR Invito Ospiti
@@ -35,13 +36,13 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       </div>
       
       <div className="mb-4 text-center">
-  <div className="text-xl font-extrabold text-black">
-    Evento:
-  </div>
-  <div className="text-2xl font-black tracking-wide text-black">
-    {eventCode}
-  </div>
-</div>
+        <div className="text-xl font-extrabold text-black">
+         Evento:
+         </div>
+         <div className="text-2xl font-black tracking-wide text-black">
+         {eventCode}
+         </div>
+      </div>
 
 
       <div
@@ -57,7 +58,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       </p>
       </div>
       )}
-
+     </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
           <button
@@ -83,7 +84,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
             Stampa QR
           </button>
         </div>
-      </div>
+       </>
     
-  );
+  );      
 }
