@@ -22,21 +22,24 @@ body {
 
 @page { margin: 0; }
 
-/* PRINT MODE MANUALE */
-body.print-mode * {
-  display: none !important;
-}
+@media print {
+  body * {
+    display: none !important;
+  }
 
-body.print-mode #print-qr,
-body.print-mode #print-qr * {
-  display: block !important;
-}
+  #print-qr, #print-qr * {
+    display: block !important;
+    visibility: visible !important;
+  }
 
-body.print-mode #print-qr {
-  display: flex !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  justify-content: center !important;
-  align-items: center !important;
-}
+  #print-qr {
+    position: fixed !important;
+    inset: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
