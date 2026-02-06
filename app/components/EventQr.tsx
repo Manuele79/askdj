@@ -58,8 +58,9 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
        {url}
       </p>
       </div>
+      
       )}
-
+</div>
 
         <div className="mt-3 flex flex-wrap gap-2">
           <button
@@ -86,6 +87,6 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           </button>
         </div>
       </div>
-    </div>
+    
   );
 }
