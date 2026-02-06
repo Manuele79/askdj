@@ -308,7 +308,7 @@ export default function RequestClient({ code }: { code: string }) {
           </h2>
 
           <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-emerald-200 to-pink-200">
-            INVIA UNA CANZONE
+            INVIA UNA CANZONE:
           </h1>
 
           <p className="mt-3 text-base font-semibold text-cyan-600">
@@ -323,24 +323,24 @@ export default function RequestClient({ code }: { code: string }) {
           <div className="space-y-4">
             <div>
               <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                TITOLO CANZONE:
+                SCRIVI IL TITOLO DELLA CANZONE:
               </label>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Es: Freed from Desire"
+                placeholder="incolla qui il titolo della canzone"
                 className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
               />
             </div>
 
             <div>
               <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                LINK: YouTube / Spotify / Apple / Amazon…
+                COPIA IL LINK DA: YouTube/Spotify/Apple/Amazon…
               </label>
               <input
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
-                placeholder="Incolla qui il link condiviso"
+                placeholder="Incolla qui il link della canzone"
                 className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
               />
 
@@ -359,12 +359,12 @@ export default function RequestClient({ code }: { code: string }) {
               {/* Dedica */}
               <div className="mt-3">
                 <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                  Se VUOI MANDARE UNA DEDICA SCRIVI QUI: 
+                  Se VUOI MANDARE UNA DEDICA SCRIVI QUI(LA DEDICA VIENE LETTA SOLO DALLA CONSOLE DJ): 
                 </label>
                 <textarea
                   value={dedication}
                   onChange={(e) => setDedication(e.target.value)}
-                  placeholder="❤️ Dedica ❤️"
+                  placeholder="❤️ Dedica ❤️ (viene letta sola in console dj)"
                   rows={2}
                   className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
                 />
@@ -431,7 +431,7 @@ export default function RequestClient({ code }: { code: string }) {
         <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-              Richieste inviate 
+              Richieste inviate solo dal tuo telefono:
             </h2>
             <span className="rounded-full bg-zinc-800 px-2 py-1 text-xs text-zinc-300">{sent.length}</span>
           </div>
@@ -468,7 +468,7 @@ export default function RequestClient({ code }: { code: string }) {
         </section>
 
         <footer className="mt-8 text-center text-xs text-zinc-500">
-          Nessun audio viene inviato. Solo link, titolo e dedica.
+          Nessun audio viene inviato. Solo il link canzone, titolo e dedica.
         </footer>
       </div>
     </div>
