@@ -27,10 +27,16 @@ body.print-mode * {
   display: none !important;
 }
 
+body.print-mode #print-qr,
+body.print-mode #print-qr * {
+  display: block !important;
+}
+
 body.print-mode #print-qr {
   display: flex !important;
-  width: 100vw;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
+  width: 100vw !important;
+  height: 100vh !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
+
