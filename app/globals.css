@@ -5,6 +5,8 @@
   --foreground: #171717;
 }
 
+
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -30,8 +32,11 @@ body {
 
   #print-qr {
     position: fixed;
-    top: 50%;
     left: 50%;
+    top: 35%;
     transform: translate(-50%, -50%) scale(1.35);
+    margin: 0;
+    padding: 0;
+    display: block;
   }
 }
