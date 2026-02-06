@@ -351,7 +351,7 @@ export default function RequestClient({ code }: { code: string }) {
                 onClick={pasteFromClipboard}
                 className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.45)] hover:brightness-110 transition"
               >
-               📋 INCOLLA LINK
+               📋 INCOLLA IL LINK
               </button>
 
               </div>
@@ -359,7 +359,7 @@ export default function RequestClient({ code }: { code: string }) {
               {/* Dedica */}
               <div className="mt-3">
                 <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                  Se VUOI MANDARE UNA DEDICA SCRIVI QUI(LA DEDICA VIENE LETTA SOLO DALLA CONSOLE DJ): 
+                  Se VUOI MANDARE UNA DEDICA SCRIVI QUI: 
                 </label>
                 <textarea
                   value={dedication}
