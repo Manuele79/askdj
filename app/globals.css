@@ -37,6 +37,7 @@ body {
     left: 50%;
     top: 5%;
     transform: translateX(-50%) scale(1.5);
+    transform-origin: top center;
     margin: 0;
     padding: 0;
     display: block;
