@@ -341,31 +341,32 @@ async function joinExistingEvent() {
                 Gestisci la coda e manda il link agli ospiti con il QR. 
               </p>
               {/* INIZIA QUI */}
-<div className="mt-6 rounded-2xl border border-cyan-400/30 bg-zinc-900/40 p-4">
-  <p className="text-sm font-extrabold text-cyan-400 mb-2">
-    INIZIA QUI 👇
-  </p>
+            {code ! == "TEST123" && (           
+             <div className="mt-6 rounded-2xl border border-cyan-400/30 bg-zinc-900/40 p-4">
+            <p className="text-sm font-extrabold text-cyan-400 mb-2">
+             INIZIA QUI 👇
+             </p>
 
-  <ol className="text-sm text-zinc-200 list-decimal list-inside space-y-1">
-    <li>Scrivi un nome evento e premi <b>Crea Evento</b></li>
-    <li>Quando l’evento è attivo, <b>stampa il QR</b></li>
-    <li>Gli ospiti lo scansionano e inviano richieste</li>
-  </ol>
+             <ol className="text-sm text-zinc-200 list-decimal list-inside space-y-1">
+             <li>Scrivi un nome evento e premi <b>Crea Evento</b></li>
+             <li>Quando l’evento è attivo, <b>stampa il QR</b></li>
+             <li>Gli ospiti lo scansionano e inviano richieste</li>
+             </ol>
 
-  <div className="mt-3 text-xs text-yellow-300">
-    ⚠️ Gli ospiti NON entrano da questa pagina.  
-    Entrano solo scansionando il QR dell’evento.
-  </div>
-</div>
-
+            <div className="mt-3 text-xs text-yellow-300">
+             ⚠️ Gli ospiti NON entrano da questa pagina.  
+              Entrano solo scansionando il QR dell’evento.
             </div>
+          </div>
+         )}
+        </div>
 
             {/* create event */}
             <div className="flex flex-col gap-2 sm:flex-col sm:items-end">
               <input
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
-                placeholder="Scrivi: Nome Evento"
+                placeholder="Scrivi: Nome Evento Nuovo"
                 className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
 
               />
@@ -374,7 +375,7 @@ async function joinExistingEvent() {
                 className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
 
               >
-                Crea Evento
+                CREA EVENTO
               </button>
             </div>
           </div>
@@ -383,7 +384,7 @@ async function joinExistingEvent() {
             <input
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value)}
-              placeholder="Scrivi: Nome Evento Esistente"
+              placeholder="Scrivi: Nome Evento Se Già Esistente"
               className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
 
             />
@@ -466,7 +467,7 @@ async function joinExistingEvent() {
                       CONSOLE DJ:
                     </div>
                     <div className="pl-4 text-xs text-amber-300">
-                      Gestione richieste in tempo reale:
+                      Gestione richieste canzoni in tempo reale:
                     </div>
                   </div>
 
@@ -493,7 +494,7 @@ async function joinExistingEvent() {
                       ⚠️ Evento scaduto o vuoto!
                     </div>
                     <div className="mt-1 text-zinc-400">
-                      NESSUN VIDEO RICEVUTO. CREA NUOVO EVENTO.
+                      NESSUN VIDEO RICEVUTO - CREA NUOVO EVENTO.
                       invia una canzone dall’area ospiti.
                     </div>
                   </div>
@@ -549,14 +550,14 @@ async function joinExistingEvent() {
 
               <div className="mb-3">
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                  INVITA GLI OSPITI (QR):
+                  INVITA GLI OSPITI CON QR:
                 </div>
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Scansionano-inviano canzoni-tu le vedi qui.</div>
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Scansionano-inviano link canzoni-tu le vedi qui.</div>
               </div>
 
               <EventQr eventCode={code} />
               <p className="mt-3 text-xs text-yellow-300 text-center">
-               ⚠️ Gli ospiti NON entrano da DJ / Party.  
+               ⚠️ Gli ospiti NON entrano da DJ/Party.  
                Devono scansionare questo QR.
               </p>
 
