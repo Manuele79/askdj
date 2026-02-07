@@ -342,18 +342,18 @@ async function joinExistingEvent() {
               </p>
               {/* INIZIA QUI */}
             {code ! == "TEST123" && (           
-             <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] P-4">
+             <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
             <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
              INIZIA QUI 👇
              </p>
 
-             <ol className="text-sm text-zinc-200 list-decimal list-inside space-y-2 leading-relaxed">
+             <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
              <li>Scrivi un nome evento e premi <b>Crea Evento</b></li>
              <li>Quando l’evento è attivo, <b>stampa il QR</b></li>
              <li>Gli ospiti lo scansionano e inviano richieste</li>
              </ol>
 
-            <div className="mt-3 text-xs text-yellow-300">
+            <div className="mt-3 text-xs text-yellow-300 leading-snug">
              ⚠️ Gli ospiti NON entrano da questa pagina.  
               Entrano solo scansionando il QR dell’evento.
             </div>
@@ -572,7 +572,7 @@ async function joinExistingEvent() {
 
 
               <div className="mb-3">
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-cyan-300 to-pink-400">
                   INVITA GLI OSPITI (QR):
                 </div>
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Scansionano QR - inviano link canzone - Tu DJ le vede qui.</div>
