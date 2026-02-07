@@ -473,7 +473,7 @@ async function joinExistingEvent() {
 
                   <div className="flex items-center gap-3">
                     <div className="whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300">
-                      Classifica
+                      Classifica   Voti   Link
                     </div>
 
                     <button
