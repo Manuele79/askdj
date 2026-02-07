@@ -430,19 +430,27 @@ async function joinExistingEvent() {
             />
           </div>
         </div>
-        {/* Spiegazione modalità */}
-{mode === null && (
-  <div className="mt-3 text-center text-xs text-zinc-300/90">
-    <div>
-      <span className="font-extrabold text-cyan-300">DJ</span> — Gestisci la coda,
-      apri i link delle richieste e controlli la musica.
+    
+
+    {/* Spiegazione DJ / Party (mostra solo prima che esista un evento vero) */}
+{code === "TEST123" && (
+  <div className="mt-3 rounded-2xl border border-cyan-400/25 bg-white/5 p-3 text-center">
+    <div className="text-xs font-extrabold text-cyan-300">Cosa cambia?</div>
+
+    <div className="mt-2 text-xs text-zinc-200">
+      <span className="font-bold">DJ:</span> gestisci la coda, apri i link e decidi cosa suonare.
     </div>
-    <div className="mt-1">
-      <span className="font-extrabold text-cyan-300">Party</span> — Modalità
-      rilassata: autoplay YouTube / Spotify dalle richieste degli ospiti.
+
+    <div className="mt-1 text-xs text-zinc-200">
+      <span className="font-bold">Party:</span> modalità “festa”: apri i link e fai partire la musica in sequenza.
+    </div>
+
+    <div className="mt-2 text-[11px] text-zinc-400">
+      Dopo che crei l’evento, questa guida sparisce.
     </div>
   </div>
 )}
+
 
 
         {/* MAIN GRID */}
