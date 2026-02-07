@@ -36,10 +36,10 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       </div>
       
       <div className="mb-4 text-center">
-        <div className="text-xl font-extrabold text-black">
+        <div className="text-xl font-extrabold text-cyan-400">
          Evento:
          </div>
-         <div className="text-2xl font-black tracking-wide text-black">
+         <div className="text-2xl font-black tracking-wide text-cyan-500">
          {eventCode !== "TEST123" ? eventCode : ""}
 
          </div>
@@ -54,7 +54,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 
       {eventCode !== "TEST123" && (
       <div className="mt-3 rounded-2xl border border-yellow-400/25 bg-zinc-900/40 p-3">
-       <p className="font-mono text-xs text-zinc-200 break-all">
+       <p className="font-mono text-xs text-cyan-200 break-all">
        {url}
       </p>
       </div>
