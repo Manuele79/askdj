@@ -343,11 +343,11 @@ async function joinExistingEvent() {
               {/* INIZIA QUI */}
             {code ! == "TEST123" && (           
              <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] P-4">
-            <p className="text-sm font-extrabold text-cyan-400 mb-2">
+            <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
              INIZIA QUI 👇
              </p>
 
-             <ol className="text-sm text-zinc-200 list-decimal list-inside space-y-1">
+             <ol className="text-sm text-zinc-200 list-decimal list-inside space-y-2 leading-relaxed">
              <li>Scrivi un nome evento e premi <b>Crea Evento</b></li>
              <li>Quando l’evento è attivo, <b>stampa il QR</b></li>
              <li>Gli ospiti lo scansionano e inviano richieste</li>
