@@ -430,6 +430,20 @@ async function joinExistingEvent() {
             />
           </div>
         </div>
+        {/* Spiegazione modalità */}
+{mode === null && (
+  <div className="mt-3 text-center text-xs text-zinc-300/90">
+    <div>
+      <span className="font-extrabold text-cyan-300">DJ</span> — Gestisci la coda,
+      apri i link delle richieste e controlli la musica.
+    </div>
+    <div className="mt-1">
+      <span className="font-extrabold text-cyan-300">Party</span> — Modalità
+      rilassata: autoplay YouTube / Spotify dalle richieste degli ospiti.
+    </div>
+  </div>
+)}
+
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
@@ -472,7 +486,7 @@ async function joinExistingEvent() {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <div className="whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300">
+                    <div className="whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-300">
                       Classifica: 👇 - Voti: 🔥 - Link: 🎵
                       
                     </div>
