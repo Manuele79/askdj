@@ -342,7 +342,7 @@ async function joinExistingEvent() {
               </p>
               {/* INIZIA QUI */}
             {code ! == "TEST123" && (           
-             <div className="mt-6 rounded-2xl border border-cyan-400/30 bg-zinc-900/40 p-4">
+             <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)]">
             <p className="text-sm font-extrabold text-cyan-400 mb-2">
              INIZIA QUI 👇
              </p>
@@ -434,8 +434,8 @@ async function joinExistingEvent() {
 
     {/* Spiegazione DJ / Party (mostra solo prima che esista un evento vero) */}
 {code === "TEST123" && (
-  <div className="mt-3 rounded-2xl border border-cyan-400/25 bg-white/5 p-3 text-center">
-    <div className="text-xs font-extrabold text-cyan-300">Cosa cambia?</div>
+  <div className="mt-3 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)]">
+    <div className="text-xs font-extrabold text-cyan-300">👆   Cosa cambia?   👆</div>
 
     <div className="mt-2 text-xs text-zinc-200">
       <span className="font-bold">DJ:</span> gestisci la coda, apri i link e decidi cosa suonare.
@@ -445,7 +445,7 @@ async function joinExistingEvent() {
       <span className="font-bold">Party:</span> modalità “festa”: apri i link e fai partire la musica in sequenza.
     </div>
 
-    <div className="mt-2 text-[11px] text-zinc-400">
+    <div className="mt-2 text-[11px] text-yellow-300">
       Dopo che crei l’evento, questa guida sparisce.
     </div>
   </div>
@@ -467,7 +467,7 @@ async function joinExistingEvent() {
                     rel="noreferrer"
                     className="whitespace-nowrap pr-4 text-cyan-400 hover:underline"
                   >
-                    Apri-Fullscreen↗
+                    Apri-Fullscreen👉
                   </a>
                  </div>
 
@@ -494,7 +494,7 @@ async function joinExistingEvent() {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <div className="whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-300">
+                    <div className="whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-500">
                       Classifica: 👇 - Voti: 🔥 - Link: 🎵
                       
                     </div>
@@ -503,7 +503,7 @@ async function joinExistingEvent() {
                       onClick={printPlaylist}
                       className="rounded-lg px-3 py-1 text-xs font-bold text-zinc-900 bg-gradient-to-r from-amber-300 to-yellow-400 hover:opacity-90"
                     >
-                      🖨 Stampa Playlist👇
+                      🖨 Stampa Playlist ▼
                     </button>
                   </div>
 
