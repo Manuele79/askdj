@@ -366,7 +366,7 @@ async function joinExistingEvent() {
               <input
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
-                placeholder="Scrivi: Nome Evento Nuovo"
+                placeholder="Scrivi: Nome Nuovo Evento..."
                 className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
 
               />
@@ -375,7 +375,7 @@ async function joinExistingEvent() {
                 className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
 
               >
-                CREA EVENTO
+                CREA NUOVO EVENTO
               </button>
             </div>
           </div>
@@ -384,7 +384,7 @@ async function joinExistingEvent() {
             <input
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value)}
-              placeholder="Scrivi: Nome Evento Se Già Esistente"
+              placeholder="Scrivi: Nome Evento Esistente..."
               className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
 
             />
@@ -393,7 +393,7 @@ async function joinExistingEvent() {
               className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
 
             >
-              ENTRA
+              RIENTRA IN EVENTO 
             </button>
           </div>
 
@@ -467,13 +467,13 @@ async function joinExistingEvent() {
                       CONSOLE DJ:
                     </div>
                     <div className="pl-4 text-xs text-amber-300">
-                      Gestione richieste canzoni in tempo reale:
+                      Gestione richieste in tempo reale:
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
                     <div className="whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300">
-                      Classifica:👇  Voti:🔥  Link:🎵
+                      Classifica: 👇 - Voti: 🔥 - Link: 🎵
                       
                     </div>
 
@@ -481,7 +481,7 @@ async function joinExistingEvent() {
                       onClick={printPlaylist}
                       className="rounded-lg px-3 py-1 text-xs font-bold text-zinc-900 bg-gradient-to-r from-amber-300 to-yellow-400 hover:opacity-90"
                     >
-                      🖨 Stampa Playlist
+                      🖨 Stampa Playlist👇
                     </button>
                   </div>
 
@@ -551,9 +551,9 @@ async function joinExistingEvent() {
 
               <div className="mb-3">
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                  INVITA GLI OSPITI CON QR:
+                  INVITA GLI OSPITI (QR):
                 </div>
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Scansionano-inviano link canzoni-tu le vedi qui.</div>
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Scansionano QR - inviano link canzone - Tu DJ le vede qui.</div>
               </div>
 
               <EventQr eventCode={code} />
