@@ -342,7 +342,7 @@ async function joinExistingEvent() {
               </p>
               {/* INIZIA QUI */}
             {code ! == "TEST123" && (           
-             <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)]">
+             <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] P-4">
             <p className="text-sm font-extrabold text-cyan-400 mb-2">
              INIZIA QUI 👇
              </p>
@@ -434,7 +434,7 @@ async function joinExistingEvent() {
 
     {/* Spiegazione DJ / Party (mostra solo prima che esista un evento vero) */}
 {code === "TEST123" && (
-  <div className="mt-3 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)]">
+  <div className="mt-3 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] p-3 text-center">
     <div className="text-xs font-extrabold text-cyan-300">👆   Cosa cambia?   👆</div>
 
     <div className="mt-2 text-xs text-zinc-200">
