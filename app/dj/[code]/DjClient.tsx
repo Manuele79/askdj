@@ -480,7 +480,7 @@ async function joinExistingEvent() {
                       onClick={printPlaylist}
                       className="rounded-lg px-3 py-1 text-xs font-bold text-zinc-900 bg-gradient-to-r from-amber-300 to-yellow-400 hover:opacity-90"
                     >
-                      🖨 Stampa
+                      🖨 Stampa Playlist
                     </button>
                   </div>
 
