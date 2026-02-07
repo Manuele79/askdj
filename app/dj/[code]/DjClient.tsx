@@ -512,7 +512,7 @@ async function joinExistingEvent() {
                               {r.title}
                             </div>
                             {r.dedication && (
-                            <div className="mt-1 truncate text-xs text-zinc-400 italic">
+                            <div className="mt-1 truncate text-xs text-rose-400 italic">
                              💬 DEDICA: {r.dedication}
                             </div>
                            )}
