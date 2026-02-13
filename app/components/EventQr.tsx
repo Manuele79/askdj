@@ -28,10 +28,10 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       >
       <div className="mb-3">
         <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300">
-          QR Invito Ospiti
+          QR per Invitare gli Ospiti
         </div>
         <div className="text-xs text-cyan-400">
-          Scansiona e manda richieste
+          Scansionano e manda richieste al DJ
         </div>
       </div>
       
