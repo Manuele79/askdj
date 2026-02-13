@@ -31,13 +31,13 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           QR per Invitare gli Ospiti
         </div>
         <div className="text-xs text-cyan-400">
-          Scansionano e manda richieste al DJ
+          Scansionano e mandano le richieste al DJ:
         </div>
       </div>
       
       <div className="mb-4 text-center">
         <div className="text-xl font-extrabold text-cyan-400">
-         Evento:
+          Nome Evento:
          </div>
          <div className="text-2xl font-black tracking-wide text-cyan-500">
          {eventCode !== "TEST123" ? eventCode : ""}
