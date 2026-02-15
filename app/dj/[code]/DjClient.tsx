@@ -41,7 +41,7 @@ function PlatformButton({ r }: { r: RequestItem }) {
 
     case "tidal":
       return (
-         <a href={r.url}  target="_blank"  rel="noreferrer"  className={`${base} bg-cyan-600`}>
+         <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-cyan-600`}>
             🌊 Tidal
          </a>
       );
@@ -584,7 +584,7 @@ async function joinExistingEvent() {
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-cyan-300 to-pink-400">
                   INVITA GLI OSPITI (QR):
                 </div>
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Scansionano QR - inviano link canzone - Tu DJ le vede qui.</div>
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
               </div>
 
               <EventQr eventCode={code} />
