@@ -73,6 +73,31 @@ function PlatformButton({ r }: { r: RequestItem }) {
   }
 }
 
+function FakeSpectrumWide() {
+  return (
+    <div className="mt-4 flex items-end justify-center gap-2 h-10">
+      {Array.from({ length: 28 }).map((_, i) => (
+        <span
+          key={i}
+          className="w-2 rounded-full bg-gradient-to-t from-amber-400 via-orange-400 to-pink-400 opacity-80 animate-[eqwide_1.4s_ease-in-out_infinite]"
+          style={{ animationDelay: `${i * 60}ms` }}
+        />
+      ))}
+
+      <style jsx>{`
+        @keyframes eqwide {
+          0%   { height: 20%; opacity: .5; }
+          25%  { height: 100%; opacity: 1; }
+          50%  { height: 40%; opacity: .6; }
+          75%  { height: 90%; opacity: .9; }
+          100% { height: 20%; opacity: .5; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+
 function ModeButton({
   active,
   onClick,
@@ -110,29 +135,6 @@ function ModeButton({
   );
 }
 
-function FakeSpectrumWide() {
-  return (
-    <div className="mt-4 flex items-end justify-center gap-2 h-10">
-      {Array.from({ length: 28 }).map((_, i) => (
-        <span
-          key={i}
-          className="w-2 rounded-full bg-gradient-to-t from-amber-400 via-orange-400 to-pink-400 opacity-80 animate-[eqwide_1.4s_ease-in-out_infinite]"
-          style={{ animationDelay: `${i * 60}ms` }}
-        />
-      ))}
-
-      <style jsx>{`
-        @keyframes eqwide {
-          0%   { height: 20%; opacity: .5; }
-          25%  { height: 100%; opacity: 1; }
-          50%  { height: 40%; opacity: .6; }
-          75%  { height: 90%; opacity: .9; }
-          100% { height: 20%; opacity: .5; }
-        }
-      `}</style>
-    </div>
-  );
-}
 
 function makeEventCodeFromName(name: string) {
   const base = name
