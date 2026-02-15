@@ -213,21 +213,37 @@ export default function RequestClient({ code }: { code: string }) {
         return;
       }
 
-       const u = url.toLowerCase();
+      // usa la risposta del server (titolo/platform/url “puliti”)
+        const data = await resp.json().catch(() => null);
 
-       const platform: Platform =
-       looksLikeYouTube(url) ? "youtube"
-      : u.includes("spotify.com") ? "spotify"
-      : u.includes("tidal.com") ? "tidal"
-      : (u.includes("music.apple.com") || u.includes("itunes.apple.com")) ? "apple"
-      : (u.includes("music.amazon") || u.includes("amazon.")) ? "amazon"
-      : "other";
+        const serverTitle =
+         data?.request?.title ? String(data.request.title) : finalTitle;
+
+        const serverUrl =
+          data?.request?.url ? String(data.request.url) : url;
+
+        const serverPlatform =
+          data?.request?.platform ? String(data.request.platform) : null;
+
+
+      const u = serverUrl.toLowerCase();
+
+const fallbackPlatform: Platform =
+  looksLikeYouTube(serverUrl) ? "youtube"
+  : u.includes("spotify.com") ? "spotify"
+  : u.includes("tidal.com") ? "tidal"
+  : (u.includes("music.apple.com") || u.includes("itunes.apple.com")) ? "apple"
+  : (u.includes("music.amazon") || u.includes("amazon.")) ? "amazon"
+  : "other";
+
+const platform = (serverPlatform as Platform) || fallbackPlatform;
+
 
 
       setSent((prev) => [
   {
-    title: finalTitle,
-    url,
+    title: serverTitle,
+    url: serverUrl,
     platform,
     dedication: dedication.trim().slice(0, 180),
     ts: Date.now(),
