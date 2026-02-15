@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import EventQr from "@/app/components/EventQr";
 
-type Platform = "youtube" | "spotify" | "apple" | "amazon" | "other";
+type Platform = "youtube" | "spotify" | "apple" | "amazon" | "tidal" | "other";
 
 type RequestItem = {
   id: string;
@@ -38,6 +38,15 @@ function PlatformButton({ r }: { r: RequestItem }) {
           🎵 Spotify
         </a>
       );
+
+    case "tidal":
+      return (
+         <a href={r.url}  target="_blank"  rel="noreferrer"  className={`${base} bg-cyan-600`}>
+            🌊 Tidal
+         </a>
+      );
+
+      
     case "apple":
       return (
         <a href={r.url} target="_blank" rel="noreferrer" className={`${base} bg-zinc-700`}>
