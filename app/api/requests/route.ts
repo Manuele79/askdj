@@ -103,6 +103,8 @@ function detectPlatform(urlStr: string) {
   if (u.includes("spotify.com")) return "spotify";
   if (u.includes("music.apple.com") || u.includes("itunes.apple.com")) return "apple";
   if (u.includes("music.amazon") || u.includes("amazon.")) return "amazon";
+  if (u.includes("tidal.com")) return "tidal";
+
   return "other";
 }
 
@@ -127,6 +129,32 @@ async function fetchJsonWithTimeout(url: string, ms = 2500) {
   }
 }
 
+async function fetchTextWithTimeout(url: string, ms = 2500) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      cache: "no-store",
+      headers: { accept: "text/html,*/*" },
+    });
+    if (!res.ok) return null;
+    return await res.text();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+function extractOgTitle(html: string) {
+  const m =
+    html.match(/property=["']og:title["'][^>]*content=["']([^"']+)["']/i) ||
+    html.match(/name=["']og:title["'][^>]*content=["']([^"']+)["']/i);
+  return m?.[1]?.trim() || "";
+}
+
+
 async function resolveTitleServer(title: string, url: string, platform: string) {
   const t = (title || "").trim();
   const u = (url || "").trim();
@@ -138,6 +166,7 @@ async function resolveTitleServer(title: string, url: string, platform: string) 
     t.toLowerCase() === "richiesta youtube" ||
     t.toLowerCase() === "richiesta spotify" ||
     t.toLowerCase() === "richiesta apple music" ||
+    t.toLowerCase() === "richiesta tidal" ||
     t.toLowerCase() === "richiesta amazon music";
 
   if (!looksGeneric) return t;
@@ -157,6 +186,17 @@ async function resolveTitleServer(title: string, url: string, platform: string) 
     const ot = data?.title ? String(data.title).trim() : "";
     return ot || "Richiesta Spotify";
   }
+
+   if (platform === "tidal") {
+  const html = await fetchTextWithTimeout(u);
+  const ot = html ? extractOgTitle(html) : "";
+  const cleaned = ot
+    .replace(/\s*\|\s*TIDAL\s*$/i, "")
+    .replace(/\s*-\s*TIDAL\s*$/i, "")
+    .trim();
+  return cleaned || "Richiesta TIDAL";
+}
+
 
   if (platform === "apple") return "Richiesta Apple Music";
   if (platform === "amazon") return "Richiesta Amazon Music";
@@ -260,7 +300,8 @@ const safeTitle = isPlaylist
 const finalTitle =
   safeTitle && safeTitle.trim()
     ? safeTitle.trim()
-    : shareText || `Richiesta ${platform === "amazon" ? "Amazon Music" : "Apple Music"}`;
+    : shareText || `Richiesta ${platform === "amazon" ? "Amazon Music" : platform === "apple" ? "Apple Music" : platform === "tidal" ? "TIDAL" : "Music"}`;
+
 
 const nowMs = Date.now();
 
