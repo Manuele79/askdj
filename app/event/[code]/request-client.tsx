@@ -2,13 +2,15 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type PlatformKey = "youtube" | "spotify" | "apple" | "amazon";
+type PlatformKey = "youtube" | "spotify" | "apple" | "amazon" | "tidal";
 
 const PLATFORM_LINKS: { key: PlatformKey; label: string; href: string }[] = [
   { key: "youtube", label: "YouTube", href: "https://www.youtube.com/" },
   { key: "spotify", label: "Spotify", href: "https://open.spotify.com/" },
   { key: "apple", label: "Apple Music", href: "https://music.apple.com/" },
   { key: "amazon", label: "Amazon Music", href: "https://music.amazon.com/" },
+  { key: "tidal", label: "TIDAL", href: "https://tidal.com/" },
+
 ];
 
 function looksLikeUrl(s: string) {
@@ -23,7 +25,9 @@ function looksLikeUrl(s: string) {
     v.includes("music.apple.com") ||
     v.includes("itunes.apple.com") ||
     v.includes("music.amazon") ||
-    v.includes("amazon.")
+    v.includes("amazon.") ||
+    v.includes("tidal.com")
+
   );
 }
 
@@ -36,7 +40,7 @@ function storageKey(eventCode: string) {
   return `djreq_sent:${String(eventCode || "").toUpperCase()}`;
 }
 
-type Platform = "youtube" | "spotify" | "apple" | "amazon" | "other";
+type Platform = "youtube" | "spotify" | "apple" | "amazon" | "tidal" | "other";
 
   type SentItem = {
   title: string;
@@ -214,6 +218,7 @@ export default function RequestClient({ code }: { code: string }) {
        const platform: Platform =
        looksLikeYouTube(url) ? "youtube"
       : u.includes("spotify.com") ? "spotify"
+      : u.includes("tidal.com") ? "tidal"
       : (u.includes("music.apple.com") || u.includes("itunes.apple.com")) ? "apple"
       : (u.includes("music.amazon") || u.includes("amazon.")) ? "amazon"
       : "other";
@@ -303,12 +308,12 @@ export default function RequestClient({ code }: { code: string }) {
             </svg>
           </div>
 
-          <h2 className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_16px_rgba(34,211,238,0.18)]">
+          <h2 className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-pink-300 drop-shadow-[0_0_16px_rgba(34,211,238,0.18)]">
             AskDJ
           </h2>
 
-          <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-emerald-200 to-pink-200">
-            INVIA UNA CANZONE:
+          <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-emerald-200 to-pink-200">
+            RICHIEDI UNA CANZONE...
           </h1>
 
           <p className="mt-3 text-base font-semibold text-cyan-600">
@@ -322,8 +327,8 @@ export default function RequestClient({ code }: { code: string }) {
         <section className="rounded-3xl border border-yellow-400 bg-zinc-900/50 p-5 shadow-[0_18px_60px_rgba(0,0,0,0.35)] ring-1 ring-white/5">
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                SCRIVI IL TITOLO DELLA CANZONE:
+              <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
+                SCRIVI IL TITOLO DELLA CANZONE...
               </label>
               <input
                 value={title}
@@ -334,8 +339,8 @@ export default function RequestClient({ code }: { code: string }) {
             </div>
 
             <div>
-              <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                COPIA IL LINK DA: YouTube/Spotify/Apple/Amazon…
+              <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
+                COPIA IL LINK DA: YouTube/Spotify/Apple/Amazon/Tidal…
               </label>
               <input
                 value={link}
@@ -359,12 +364,12 @@ export default function RequestClient({ code }: { code: string }) {
               {/* Dedica */}
               <div className="mt-3">
                 <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-                  Se VUOI MANDARE UNA DEDICA SCRIVI QUI: 
+                  VUOI SCRIVERE UNA DEDICA CON LA CANZONE SCRIVI QUI SOTTO: 
                 </label>
                 <textarea
                   value={dedication}
                   onChange={(e) => setDedication(e.target.value)}
-                  placeholder="❤️ Dedica ❤️ (viene letta sola in console dj)"
+                  placeholder="   ❤️ Dedica ❤️     (viene letta solo in console DJ)"
                   rows={2}
                   className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
                 />
@@ -394,6 +399,8 @@ export default function RequestClient({ code }: { code: string }) {
       ? "bg-red-600 hover:bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.4)]"
       : p.key === "spotify"
       ? "bg-green-500 hover:bg-green-400 shadow-[0_0_18px_rgba(34,197,94,0.4)]"
+      : p.key === "tidal"
+      ? "bg-sky-500 hover:bg-sky-400 shadow-[0_0_18px_rgba(56,189,248,0.4)]"
       : p.key === "apple"
       ? "bg-zinc-200 text-black hover:bg-white shadow-[0_0_18px_rgba(255,255,255,0.35)]"
       : p.key === "amazon"
@@ -430,8 +437,8 @@ export default function RequestClient({ code }: { code: string }) {
 
         <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
-              Richieste inviate solo dal tuo telefono:
+            <h2 className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-300">
+              Richieste inviate da questo telefono:
             </h2>
             <span className="rounded-full bg-zinc-800 px-2 py-1 text-xs text-zinc-300">{sent.length}</span>
           </div>
@@ -468,7 +475,7 @@ export default function RequestClient({ code }: { code: string }) {
         </section>
 
         <footer className="mt-8 text-center text-xs text-zinc-500">
-          Nessun audio viene inviato. Solo il link canzone, titolo e dedica.
+          NESSUN AUDIO VIENE INVIATO. SOLO il LINK canzone/titolo e dedica.
         </footer>
       </div>
     </div>
