@@ -8,7 +8,7 @@ type RequestItem = {
   title: string;
   url: string;
   dedication: string;
-  platform: "youtube" | "spotify" | "apple" | "amazon" | "other";
+  platform: "youtube" | "spotify" | "apple" | "amazon" | "tidal" | "other";
   youtubeVideoId: string;
   votes: number;
   createdAt: number;
@@ -183,6 +183,13 @@ function startedKey(code: string) {
       .filter((r) => r.platform === "spotify" && r.url)
       .sort((a, b) => b.votes - a.votes || b.updatedAt - a.updatedAt);
   }, [items]);
+
+  const tidalList = useMemo(() => {
+    return (items || [])
+      .filter((r) => r.platform === "tidal" && r.url)
+     .sort((a, b) => b.votes - a.votes || b.updatedAt - a.updatedAt);
+  }, [items]);
+
 
   const appleList = useMemo(() => {
     return (items || [])
@@ -716,6 +723,49 @@ function resetParty() {
                       className="shrink-0 rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
                     >
                       🎵 Apri
+                    </a>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+                {/* --- TIDAL QUEUE (solo lista + link) --- */}
+        <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda:TIDAL</h2>
+            <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
+              {tidalList.length}
+            </span>
+          </div>
+
+          {tidalList.length === 0 ? (
+            <p className="text-sm text-zinc-400">Nessun brano Tidal inviato.</p>
+          ) : (
+            <ul className="space-y-2">
+              {tidalList.map((r) => (
+                <li
+                  key={r.id}
+                  className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+                        {r.title}
+                      </div>
+                      <div className="mt-0.5 truncate text-xs text-zinc-500">
+                        🔥 {r.votes}
+                      </div>
+                    </div>
+
+                    <a
+                      href={r.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="shrink-0 rounded-xl bg-cyan-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
+                    >
+                      🌊 Apri
                     </a>
                   </div>
                 </li>
