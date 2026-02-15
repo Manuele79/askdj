@@ -595,7 +595,7 @@ function resetParty() {
         <section className="rounded-2xl border border-cyan-800 bg-zinc-900/40 p-4">
           {playable.length === 0 ? (
             <p className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-              Nessun YouTube in coda. Servono link YouTube (video o playlist).
+              Nessun YouTube in coda (video o playlist).
             </p>
           ) : (
             <>
@@ -609,7 +609,7 @@ function resetParty() {
               </div>
                   {currentDedication && (
                    <div className="mt-2 text-sm sm:text-base italic">
-                     <span className="text-red-400 font-semibold">💬 Dedica:</span>
+                     <span className="text-red-400 font-semibold"> 💬 Dedica: </span>
                      <span className="ml-2 text-zinc-200">
                        {currentDedication}
                      </span>
@@ -651,7 +651,7 @@ function resetParty() {
 
         <section className="mt-6 rounded-2xl border border-cyan-800 bg-zinc-900/40 p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda:YouTube</h2>
+            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: YouTube</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
               {playable.length}
             </span>
@@ -691,7 +691,7 @@ function resetParty() {
         {/* --- SPOTIFY QUEUE (solo lista + link) --- */}
         <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda:Spotify</h2>
+            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: Spotify</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
               {spotifyList.length}
             </span>
@@ -734,7 +734,7 @@ function resetParty() {
                 {/* --- TIDAL QUEUE (solo lista + link) --- */}
         <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda:TIDAL</h2>
+            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: TIDAL</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
               {tidalList.length}
             </span>
@@ -778,7 +778,7 @@ function resetParty() {
           <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                Coda:Apple Music
+                Coda: Apple Music
               </h2>
               <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
                 {appleList.length}
@@ -823,7 +823,7 @@ function resetParty() {
 <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
   <div className="mb-3 flex items-center justify-between">
     <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-      Coda:Amazon Music
+      Coda: Amazon Music
     </h2>
     <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
       {amazonList.length}
