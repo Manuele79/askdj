@@ -21,30 +21,45 @@ body {
   font-family: var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
 
-
 @page { margin: 0; }
 
 @media print {
-  html, body { height: 100%; }
+  html, body { height: 100%; background: #fff !important; }
 
-  body * {
-    visibility: hidden;
+  /* nascondi tutto */
+  body * { visibility: hidden !important; }
+
+  /* mostra SOLO l'area stampa */
+  #print-qr { 
+    visibility: visible !important; 
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    background: #fff !important;
+    color: #000 !important;
+    border: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
-  #print-qr,
-  #print-qr * {
-    visibility: visible;
+  #print-qr * { 
+    visibility: visible !important;
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    filter: none !important;
   }
 
-  #print-qr {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%) scale(1.5);
-    margin: 0;
-    padding: 0;
-    display: block;
-    width: max-content;
-  }
+  /* in stampa: togli roba web */
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+
+  /* e nascondi URL lungo */
+  #print-qr p { display: none !important; }
+
+  /* centra e pulisci testo */
+  #print-qr .text-transparent { color: #000 !important; }
 }
-
