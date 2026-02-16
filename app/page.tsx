@@ -99,7 +99,7 @@ export default function Home() {
             </div>
 
             <div style={{ lineHeight: 1.12 }}>
-              <div style={{ fontSize: 24, fontWeight: 1000, letterSpacing: 0.2 }}>
+              <div style={{ fontSize: 28, fontWeight: 1000, letterSpacing: 0.2 }}>
                 <span style={{ color: "rgba(255,215,0,0.95)" }}>Ask</span>DJ
               </div>
               <div style={{ fontSize: 12.8, opacity: 0.72, fontWeight: 700 }}>
@@ -520,8 +520,7 @@ export default function Home() {
                   {img.label}
                 </div>
                 <div style={{ marginTop: 6, fontSize: 12, opacity: 0.62 }}>
-                  (Metti i file in <strong>/public</strong> con questi nomi:
-                  <strong> screen-dj.png</strong> e <strong> screen-event.png</strong>)
+                  
                 </div>
               </div>
             ))}
@@ -540,11 +539,11 @@ export default function Home() {
               },
               {
                 q: "Serve login o account?",
-                a: "Nella versione attuale no.",
+                a: "NO! La condivisione dei link avviene in tempo reale, entrando nell l’app scanerizzando il QR dell’evento ",
               },
               {
                 q: "Cos’è la modalità Party?",
-                a: "È la modalità festa: autoplay YouTube, e accesso rapido ai link. Tu gestisci la serata senza impazzire.",
+                a: "È la modalità festa: autoplay su YouTube, dei link inviati e accesso rapido alle altre piattaforme. Tu gestisci la serata senza impazzire.",
               },
               {
                 q: "Si integra con Rekordbox / console DJ?",
