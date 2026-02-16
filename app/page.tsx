@@ -433,7 +433,7 @@ export default function Home() {
               },
               {
                 title: "Dedica a distanza",
-                text: "Condividi un link: qualcuno dall’altra parte del mondo invia una canzone con messaggio.",
+                text: "Condividi un link con qualcuno dall’altra parte del mondo inviando una canzone con una dedica.",
                 icon: "🌍",
               },
             ].map((u) => (
@@ -556,7 +556,7 @@ export default function Home() {
                   borderRadius: 24,
                   padding: 18,
                   background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.10)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
                 }}
               >
                 <div style={{ fontWeight: 1000, fontSize: 15.5 }}>{f.q}</div>
