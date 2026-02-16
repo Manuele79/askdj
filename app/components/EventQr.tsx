@@ -60,9 +60,12 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 
 
 
-  <div className="no-print">
-  <QRCodeCanvas id="qr-canvas" value={url} size={200} />
+<div className="no-print">
+  <div id="qr-canvas">
+    <QRCodeCanvas value={url} size={200} />
+  </div>
 </div>
+
 
 </div>
 
@@ -90,11 +93,15 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 
           <button
             onClick={() => {
-  const canvas = document.getElementById("qr-canvas") as HTMLCanvasElement | null;
-  if (canvas) {
-    setPrintPng(canvas.toDataURL("image/png"));
-  }
-  setTimeout(() => window.print(), 50);
+const holder = document.getElementById("qr-canvas");
+const canvas = holder?.querySelector("canvas") as HTMLCanvasElement | null;
+
+if (canvas) {
+  setPrintPng(canvas.toDataURL("image/png"));
+}
+
+setTimeout(() => window.print(), 100);
+
 }}
 
             className="
