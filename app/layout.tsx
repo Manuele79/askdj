@@ -15,8 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://askdj.app"),
   title: "AskDJ",
-  description: "Invia richieste al DJ con QR (YouTube, Spotify, Apple, Amazon).",
+  description: "Invia richieste al DJ con QR (YouTube, Spotify, Apple, Amazon, Tidal).",
   manifest: "/manifest.json", 
 };
 
@@ -34,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="it">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
