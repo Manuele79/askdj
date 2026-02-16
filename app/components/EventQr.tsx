@@ -20,6 +20,76 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
     setTimeout(() => setCopied(false), 1200);
   }
 
+  function printQr() {
+  const holder = document.getElementById("qr-canvas");
+  const canvas = holder?.querySelector("canvas") as HTMLCanvasElement | null;
+  if (!canvas) {
+    alert("QR non pronto, riprova tra 1 secondo.");
+    return;
+  }
+
+  const png = canvas.toDataURL("image/png");
+  const safeEvent = (eventCode && eventCode !== "TEST123") ? eventCode : "";
+  const safeUrl = url || "";
+
+  const w = window.open("", "_blank", "width=800,height=900");
+  if (!w) {
+    alert("Popup bloccato dal browser. Consenti i popup per stampare.");
+    return;
+  }
+
+  w.document.open();
+  w.document.write(`
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>AskDJ QR</title>
+  <style>
+    @page { margin: 0; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+    .wrap {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+    }
+    .card {
+      text-align: center;
+      padding: 24px;
+    }
+    .h1 { font-size: 18px; font-weight: 800; margin: 0 0 6px; }
+    .h2 { font-size: 22px; font-weight: 900; margin: 0 0 18px; }
+    img { width: 360px; height: 360px; image-rendering: pixelated; }
+    .url { margin-top: 14px; font-size: 12px; word-break: break-all; color: #111; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="h1">Nome Evento:</div>
+      <div class="h2">${safeEvent}</div>
+      <img src="${png}" alt="QR" />
+      <div class="url">${safeUrl}</div>
+    </div>
+  </div>
+
+  <script>
+    window.onload = () => {
+      window.focus();
+      window.print();
+      setTimeout(() => window.close(), 200);
+    };
+  </script>
+</body>
+</html>
+  `);
+  w.document.close();
+}
+
+
+
   return (
     <>
     <div
@@ -92,17 +162,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           </button>
 
           <button
-            onClick={() => {
-const holder = document.getElementById("qr-canvas");
-const canvas = holder?.querySelector("canvas") as HTMLCanvasElement | null;
-
-if (canvas) {
-  setPrintPng(canvas.toDataURL("image/png"));
-}
-
-setTimeout(() => window.print(), 100);
-
-}}
+            onClick={printQr}
 
             className="
               rounded-xl px-4 py-2 text-xs font-extrabold text-zinc-100
