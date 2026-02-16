@@ -99,7 +99,7 @@ export default function Home() {
             </div>
 
             <div style={{ lineHeight: 1.12 }}>
-              <div style={{ fontSize: 28, fontWeight: 1000, letterSpacing: 0.2 }}>
+              <div style={{ fontSize: 35, fontWeight: 1000, letterSpacing: 0.2 }}>
                 <span style={{ color: "rgba(255,215,0,0.95)" }}>Ask</span>DJ
               </div>
               <div style={{ fontSize: 12.8, opacity: 0.72, fontWeight: 700 }}>
