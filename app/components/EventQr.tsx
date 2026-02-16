@@ -46,11 +46,16 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       </div>
 
 
-      <div
-        
-        className="rounded-2xl border border-cyan-400/50 bg-white p-3 inline-block">
-        <QRCodeCanvas value={url} size={200} />
-      </div>
+      <div className="rounded-2xl border border-cyan-400/50 bg-white p-3 inline-block print:border-0 print:bg-transparent print:p-0">
+  <div className="print-only">
+    <QRCodeCanvas value={url} size={360} />
+  </div>
+
+  <div className="no-print">
+    <QRCodeCanvas value={url} size={200} />
+  </div>
+</div>
+
 
       {eventCode !== "TEST123" && (
       <div className="mt-3 rounded-2xl border border-yellow-400/25 bg-zinc-900/40 p-3">
