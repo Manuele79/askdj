@@ -3,15 +3,63 @@
 import Link from "next/link";
 import InstallButton from "./components/InstallButton";
 
+function SectionTitle({ title }: { title: string }) {
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div
+        style={{
+          fontSize: 20,
+          fontWeight: 1000,
+          letterSpacing: -0.2,
+        }}
+      >
+        {title}
+      </div>
+      <div
+        aria-hidden="true"
+        style={{
+          height: 6,
+          width: 160,
+          borderRadius: 999,
+          marginTop: 8,
+          background:
+            "linear-gradient(90deg, rgba(255,215,0,0.95), rgba(255,215,0,0.12))",
+          opacity: 0.92,
+        }}
+      />
+    </div>
+  );
+}
+
+function Chip({ text }: { text: string }) {
+  return (
+    <div
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "12px 14px",
+        borderRadius: 16,
+        background: "rgba(0,0,0,0.24)",
+        border: "1px solid rgba(255,255,255,0.10)",
+        color: "rgba(255,255,255,0.84)",
+        fontSize: 12.5,
+        fontWeight: 900,
+      }}
+    >
+      {text}
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <main
       style={{
         minHeight: "100vh",
-        padding: "28px 18px",
+        padding: "30px 18px",
         background:
-          // “foto” finta (glow + texture)
-          "radial-gradient(900px 520px at 15% 15%, rgba(255, 215, 0, 0.18), transparent 60%)," +
+          "radial-gradient(900px 520px at 15% 15%, rgba(255, 215, 0, 0.16), transparent 60%)," +
           "radial-gradient(800px 520px at 85% 20%, rgba(0, 255, 200, 0.10), transparent 58%)," +
           "radial-gradient(900px 520px at 60% 95%, rgba(255, 70, 120, 0.08), transparent 60%)," +
           "linear-gradient(180deg, #07070b 0%, #0b0b14 55%, #090913 100%)",
@@ -20,24 +68,24 @@ export default function Home() {
           "var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
       }}
     >
-      <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Top bar */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: 12,
-            marginBottom: 18,
+            gap: 14,
+            marginBottom: 22,
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div
               aria-hidden="true"
               style={{
-                width: 46,
-                height: 46,
-                borderRadius: 14,
+                width: 50,
+                height: 50,
+                borderRadius: 16,
                 display: "grid",
                 placeItems: "center",
                 background:
@@ -50,24 +98,24 @@ export default function Home() {
               🎧
             </div>
 
-            <div style={{ lineHeight: 1.1 }}>
-              <div style={{ fontSize: 18, fontWeight: 950, letterSpacing: 0.2 }}>
-                AskDJ
+            <div style={{ lineHeight: 1.12 }}>
+              <div style={{ fontSize: 24, fontWeight: 1000, letterSpacing: 0.2 }}>
+                <span style={{ color: "rgba(255,215,0,0.95)" }}>Ask</span>DJ
               </div>
-              <div style={{ fontSize: 12.5, opacity: 0.72 }}>
+              <div style={{ fontSize: 12.8, opacity: 0.72, fontWeight: 700 }}>
                 QR per richieste musicali & dediche — stile pro, zero caos.
               </div>
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
             <a
               href="#come-funziona"
               style={{
                 textDecoration: "none",
-                color: "rgba(255,255,255,0.78)",
-                fontWeight: 800,
-                fontSize: 12.5,
+                color: "rgba(255,255,255,0.80)",
+                fontWeight: 900,
+                fontSize: 12.8,
               }}
             >
               Come funziona
@@ -76,9 +124,9 @@ export default function Home() {
               href="#casi"
               style={{
                 textDecoration: "none",
-                color: "rgba(255,255,255,0.78)",
-                fontWeight: 800,
-                fontSize: 12.5,
+                color: "rgba(255,255,255,0.80)",
+                fontWeight: 900,
+                fontSize: 12.8,
               }}
             >
               Eventi
@@ -87,9 +135,9 @@ export default function Home() {
               href="#faq"
               style={{
                 textDecoration: "none",
-                color: "rgba(255,255,255,0.78)",
-                fontWeight: 800,
-                fontSize: 12.5,
+                color: "rgba(255,255,255,0.80)",
+                fontWeight: 900,
+                fontSize: 12.8,
               }}
             >
               FAQ
@@ -100,8 +148,8 @@ export default function Home() {
         {/* Hero */}
         <section
           style={{
-            borderRadius: 26,
-            padding: 22,
+            borderRadius: 28,
+            padding: 24,
             background: "rgba(255,255,255,0.06)",
             border: "1px solid rgba(255,255,255,0.10)",
             boxShadow: "0 22px 70px rgba(0,0,0,0.60)",
@@ -110,7 +158,6 @@ export default function Home() {
             overflow: "hidden",
           }}
         >
-          {/* subtle “photo” layer */}
           <div
             aria-hidden="true"
             style={{
@@ -134,39 +181,47 @@ export default function Home() {
                 borderRadius: 999,
                 background: "rgba(0,0,0,0.30)",
                 border: "1px solid rgba(255,215,0,0.22)",
-                fontWeight: 900,
+                fontWeight: 1000,
                 letterSpacing: 0.3,
-                fontSize: 12.5,
+                fontSize: 12.8,
               }}
             >
               ✨ Wedding • DJ • Party
-              <span style={{ opacity: 0.75, fontWeight: 800 }}>
-                (gli ospiti entrano solo via QR)
-              </span>
             </div>
 
             <h1
               style={{
-                margin: "14px 0 8px",
-                fontSize: 36,
+                margin: "16px 0 10px",
+                fontSize: 38,
                 lineHeight: 1.08,
                 fontWeight: 1000,
-                letterSpacing: -0.2,
+                letterSpacing: -0.4,
               }}
             >
-              Il modo elegante per raccogliere
-              <span style={{ color: "rgba(255,215,0,0.95)" }}> richieste & dediche </span>
+              Il modo elegante per raccogliere{" "}
+              <span style={{ color: "rgba(255,215,0,0.95)" }}>
+                richieste & dediche
+              </span>{" "}
               al DJ.
             </h1>
 
-            <div style={{ fontSize: 15.5, opacity: 0.86, lineHeight: 1.65, maxWidth: 760 }}>
-              Con un QR gli ospiti inviano brani (YouTube / Spotify / Apple / Amazon / TIDAL)
-              e una dedica. Tu da DJ hai una lista pulita, aggregata e pronta.
-              Niente “url sparsi” in chat. Niente caos.
+            <div
+              style={{
+                fontSize: 15.8,
+                opacity: 0.88,
+                lineHeight: 1.72,
+                maxWidth: 820,
+                fontWeight: 650,
+              }}
+            >
+              Con un QR gli ospiti inviano brani (YouTube / Spotify / Apple /
+              Amazon / TIDAL) e una dedica. Tu da DJ hai una lista pulita,
+              aggregata e pronta. Niente link sparsi in chat. Niente caos.
             </div>
 
-            <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 10 }}>
-              {/* Nota: per ora lascio /dj/TEST123 per non rompere. Quando crei /dj/page.tsx lo cambi a /dj */}
+            <div style={{ marginTop: 18, display: "flex", flexWrap: "wrap", gap: 10 }}>
+              {/* Nota: per ora lascio /dj/TEST123 per non rompere.
+                  Quando crei /dj/page.tsx lo cambi a /dj */}
               <Link
                 href="/dj/TEST123"
                 style={{
@@ -175,14 +230,15 @@ export default function Home() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 10,
-                  background: "linear-gradient(135deg, rgba(255,215,0,0.95), rgba(255,255,255,0.10))",
+                  background:
+                    "linear-gradient(135deg, rgba(255,215,0,0.95), rgba(255,255,255,0.10))",
                   color: "#0b0b14",
                   padding: "14px 16px",
                   borderRadius: 16,
-                  fontWeight: 950,
+                  fontWeight: 1000,
                   boxShadow: "0 18px 38px rgba(255,215,0,0.14)",
                   border: "1px solid rgba(255,215,0,0.32)",
-                  minWidth: 210,
+                  minWidth: 215,
                 }}
               >
                 🎛️ Apri pannello DJ
@@ -190,28 +246,22 @@ export default function Home() {
 
               <InstallButton />
 
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "12px 14px",
-                  borderRadius: 16,
-                  background: "rgba(0,0,0,0.24)",
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  color: "rgba(255,255,255,0.80)",
-                  fontSize: 12.5,
-                  fontWeight: 800,
-                }}
-              >
-                ✅ PWA installabile • ✅ QR stampa • ✅ titoli ok
-              </div>
+              <Chip text="✅ PWA installabile" />
+              <Chip text="✅ QR stampa" />
+              <Chip text="✅ Titoli OK" />
             </div>
           </div>
         </section>
 
         {/* Benefit cards */}
-        <section style={{ marginTop: 18, display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
+        <section
+          style={{
+            marginTop: 28,
+            display: "grid",
+            gap: 14,
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+          }}
+        >
           {[
             {
               title: "Zero caos",
@@ -232,8 +282,8 @@ export default function Home() {
             <div
               key={c.title}
               style={{
-                borderRadius: 22,
-                padding: 16,
+                borderRadius: 24,
+                padding: 18,
                 background: "rgba(255,255,255,0.05)",
                 border: "1px solid rgba(255,255,255,0.10)",
                 boxShadow: "0 18px 55px rgba(0,0,0,0.45)",
@@ -243,8 +293,8 @@ export default function Home() {
                 <div
                   aria-hidden="true"
                   style={{
-                    width: 38,
-                    height: 38,
+                    width: 40,
+                    height: 40,
                     borderRadius: 14,
                     display: "grid",
                     placeItems: "center",
@@ -254,9 +304,17 @@ export default function Home() {
                 >
                   {c.icon}
                 </div>
-                <div style={{ fontWeight: 1000, fontSize: 15.5 }}>{c.title}</div>
+                <div style={{ fontWeight: 1000, fontSize: 16.2 }}>{c.title}</div>
               </div>
-              <div style={{ marginTop: 10, opacity: 0.82, lineHeight: 1.6, fontSize: 13.5 }}>
+              <div
+                style={{
+                  marginTop: 12,
+                  opacity: 0.86,
+                  lineHeight: 1.7,
+                  fontSize: 14,
+                  fontWeight: 650,
+                }}
+              >
                 {c.text}
               </div>
             </div>
@@ -264,33 +322,71 @@ export default function Home() {
         </section>
 
         {/* How it works */}
-        <section id="come-funziona" style={{ marginTop: 22 }}>
-          <div style={{ fontSize: 18, fontWeight: 1000, marginBottom: 10 }}>
-            Come funziona
-          </div>
+        <section id="come-funziona" style={{ marginTop: 34 }}>
+          <SectionTitle title="Come funziona" />
 
-          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+          <div
+            style={{
+              display: "grid",
+              gap: 14,
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            }}
+          >
             {[
-              { n: "1", t: "Crea un evento", d: "Apri il pannello DJ e genera un evento (matrimonio, festa, locale…)." },
-              { n: "2", t: "Stampa o mostra il QR", d: "Lo stampi oppure lo metti su un tablet/telefono all’ingresso." },
-              { n: "3", t: "Gli ospiti inviano brani + dedica", d: "Arriva tutto in lista: tu scegli, ordini, fai partire." },
+              {
+                n: "1",
+                t: "Crea un evento",
+                d: "Apri il pannello DJ e genera un evento (matrimonio, festa, locale…).",
+              },
+              {
+                n: "2",
+                t: "Stampa o mostra il QR",
+                d: "Lo stampi oppure lo metti su un tablet/telefono all’ingresso.",
+              },
+              {
+                n: "3",
+                t: "Gli ospiti inviano brani + dedica",
+                d: "Arriva tutto in lista: tu scegli, ordini, fai partire.",
+              },
             ].map((s) => (
               <div
                 key={s.n}
                 style={{
-                  borderRadius: 22,
-                  padding: 16,
+                  borderRadius: 24,
+                  padding: 18,
                   background: "rgba(0,0,0,0.22)",
                   border: "1px solid rgba(255,255,255,0.10)",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                  <div style={{ fontSize: 26, fontWeight: 1000, color: "rgba(255,215,0,0.95)" }}>
+                  <div
+                    style={{
+                      fontSize: 28,
+                      fontWeight: 1000,
+                      color: "rgba(255,215,0,0.95)",
+                    }}
+                  >
                     {s.n}
                   </div>
-                  <div style={{ fontSize: 15.5, fontWeight: 1000 }}>{s.t}</div>
+                  <div
+                    style={{
+                      fontSize: 16.6,
+                      fontWeight: 1000,
+                      letterSpacing: -0.15,
+                    }}
+                  >
+                    {s.t}
+                  </div>
                 </div>
-                <div style={{ marginTop: 8, opacity: 0.82, lineHeight: 1.6, fontSize: 13.5 }}>
+                <div
+                  style={{
+                    marginTop: 10,
+                    opacity: 0.88,
+                    lineHeight: 1.75,
+                    fontSize: 14.2,
+                    fontWeight: 650,
+                  }}
+                >
                   {s.d}
                 </div>
               </div>
@@ -299,16 +395,20 @@ export default function Home() {
         </section>
 
         {/* Use cases */}
-        <section id="casi" style={{ marginTop: 22 }}>
-          <div style={{ fontSize: 18, fontWeight: 1000, marginBottom: 10 }}>
-            Dove la usi (idee che vendono)
-          </div>
+        <section id="casi" style={{ marginTop: 34 }}>
+          <SectionTitle title="Dove la usi (idee che vendono)" />
 
-          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+          <div
+            style={{
+              display: "grid",
+              gap: 14,
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            }}
+          >
             {[
               {
                 title: "Matrimoni",
-                text: "Dediche agli sposi, momenti speciali, richieste “eleganti” senza caos.",
+                text: "Dediche agli sposi, momenti speciali, richieste eleganti senza caos.",
                 icon: "💍",
               },
               {
@@ -328,7 +428,7 @@ export default function Home() {
               },
               {
                 title: "Eventi aziendali",
-                text: "Musica “safe”, dediche, atmosfera — tutto ordinato.",
+                text: "Musica safe, dediche, atmosfera — tutto ordinato.",
                 icon: "🏢",
               },
               {
@@ -340,8 +440,8 @@ export default function Home() {
               <div
                 key={u.title}
                 style={{
-                  borderRadius: 22,
-                  padding: 16,
+                  borderRadius: 24,
+                  padding: 18,
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.10)",
                 }}
@@ -350,8 +450,8 @@ export default function Home() {
                   <div
                     aria-hidden="true"
                     style={{
-                      width: 38,
-                      height: 38,
+                      width: 40,
+                      height: 40,
                       borderRadius: 14,
                       display: "grid",
                       placeItems: "center",
@@ -361,9 +461,17 @@ export default function Home() {
                   >
                     {u.icon}
                   </div>
-                  <div style={{ fontWeight: 1000, fontSize: 15.5 }}>{u.title}</div>
+                  <div style={{ fontWeight: 1000, fontSize: 16.2 }}>{u.title}</div>
                 </div>
-                <div style={{ marginTop: 10, opacity: 0.82, lineHeight: 1.6, fontSize: 13.5 }}>
+                <div
+                  style={{
+                    marginTop: 12,
+                    opacity: 0.86,
+                    lineHeight: 1.72,
+                    fontSize: 14,
+                    fontWeight: 650,
+                  }}
+                >
                   {u.text}
                 </div>
               </div>
@@ -371,16 +479,23 @@ export default function Home() {
           </div>
         </section>
 
-        {/* “Screenshots” placeholders */}
-        <section style={{ marginTop: 22 }}>
-          <div style={{ fontSize: 18, fontWeight: 1000, marginBottom: 10 }}>
-            Un assaggio dell’app
-          </div>
+        {/* Screenshots */}
+        <section style={{ marginTop: 34 }}>
+          <SectionTitle title="Un assaggio dell’app" />
 
-          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
-            {[1, 2].map((i) => (
+          <div
+            style={{
+              display: "grid",
+              gap: 14,
+              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            }}
+          >
+            {[
+              { src: "/screen-dj.png", label: "Pannello DJ / Party" },
+              { src: "/screen-event.png", label: "Schermata Ospiti (Event)" },
+            ].map((img) => (
               <div
-                key={i}
+                key={img.src}
                 style={{
                   borderRadius: 26,
                   padding: 14,
@@ -389,38 +504,35 @@ export default function Home() {
                   overflow: "hidden",
                 }}
               >
-                <div
-                  aria-hidden="true"
+                <img
+                  src={img.src}
+                  alt={img.label}
                   style={{
-                    height: 220,
+                    width: "100%",
+                    height: 280,
+                    objectFit: "cover",
                     borderRadius: 18,
-                    background:
-                      "radial-gradient(700px 260px at 20% 10%, rgba(255,215,0,0.16), transparent 60%)," +
-                      "radial-gradient(700px 260px at 80% 30%, rgba(0,255,200,0.10), transparent 58%)," +
-                      "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
                     border: "1px solid rgba(255,255,255,0.10)",
+                    background: "rgba(255,255,255,0.04)",
                   }}
                 />
-                <div style={{ marginTop: 10, fontSize: 12.5, opacity: 0.75 }}>
-                  Screenshot {i} (qui puoi mettere una foto vera quando vuoi).
+                <div style={{ marginTop: 10, fontSize: 12.8, opacity: 0.8 }}>
+                  {img.label}
+                </div>
+                <div style={{ marginTop: 6, fontSize: 12, opacity: 0.62 }}>
+                  (Metti i file in <strong>/public</strong> con questi nomi:
+                  <strong> screen-dj.png</strong> e <strong> screen-event.png</strong>)
                 </div>
               </div>
             ))}
           </div>
-
-          <div style={{ marginTop: 8, fontSize: 12, opacity: 0.65 }}>
-            Se vuoi: metti 2 immagini in <strong>/public</strong> (es: <strong>screen-dj.png</strong> e <strong>screen-event.png</strong>)
-            e le sostituiamo ai placeholder.
-          </div>
         </section>
 
         {/* FAQ */}
-        <section id="faq" style={{ marginTop: 22 }}>
-          <div style={{ fontSize: 18, fontWeight: 1000, marginBottom: 10 }}>
-            FAQ
-          </div>
+        <section id="faq" style={{ marginTop: 34 }}>
+          <SectionTitle title="FAQ" />
 
-          <div style={{ display: "grid", gap: 12 }}>
+          <div style={{ display: "grid", gap: 14 }}>
             {[
               {
                 q: "Gli ospiti devono installare l’app?",
@@ -431,21 +543,33 @@ export default function Home() {
                 a: "Nella versione attuale no. Nella fase successiva possiamo aggiungere accesso premium e gestione eventi.",
               },
               {
+                q: "Cos’è la modalità Party?",
+                a: "È la modalità festa: autoplay YouTube, spettro grafico e accesso rapido ai link. Tu gestisci la serata senza impazzire.",
+              },
+              {
                 q: "Si integra con Rekordbox / console DJ?",
-                a: "Non direttamente: AskDJ serve per raccogliere richieste e dediche. In futuro: export playlist CSV.",
+                a: "Non direttamente: AskDJ serve per raccogliere richieste e dediche. In futuro: export playlist CSV per portarti la lista dove vuoi.",
               },
             ].map((f) => (
               <div
                 key={f.q}
                 style={{
-                  borderRadius: 22,
-                  padding: 16,
+                  borderRadius: 24,
+                  padding: 18,
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.10)",
                 }}
               >
-                <div style={{ fontWeight: 1000 }}>{f.q}</div>
-                <div style={{ marginTop: 6, opacity: 0.82, lineHeight: 1.6, fontSize: 13.5 }}>
+                <div style={{ fontWeight: 1000, fontSize: 15.5 }}>{f.q}</div>
+                <div
+                  style={{
+                    marginTop: 8,
+                    opacity: 0.86,
+                    lineHeight: 1.72,
+                    fontSize: 14,
+                    fontWeight: 650,
+                  }}
+                >
                   {f.a}
                 </div>
               </div>
@@ -456,10 +580,10 @@ export default function Home() {
         {/* Footer */}
         <footer
           style={{
-            marginTop: 22,
-            padding: "18px 4px",
-            opacity: 0.55,
-            fontSize: 12,
+            marginTop: 34,
+            padding: "22px 4px",
+            opacity: 0.58,
+            fontSize: 12.5,
             textAlign: "center",
           }}
         >
