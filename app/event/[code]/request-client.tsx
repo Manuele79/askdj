@@ -294,75 +294,40 @@ function FakeSpectrumWide() {
       <div className="pointer-events-none absolute top-32 left-[-140px] h-[420px] w-[420px] rounded-full bg-cyan-400/10 blur-[110px]" />
 
       <div className="mx-auto max-w-2xl px-4 py-8">
-        <header className="mb-8 text-center">
-          <div className="mx-auto mb-3 flex h-20 w-20 items-center justify-center">
-            <svg
-              viewBox="0 0 64 64"
-              className="h-20 w-20 drop-shadow-[0_0_18px_rgba(34,211,238,0.25)]"
-            >
-              <defs>
-                <linearGradient id="mvGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#22d3ee" />
-                  <stop offset="100%" stopColor="#fb7185" />
-                </linearGradient>
-              </defs>
+      <header className="mb-8 text-center">
+  <div className="flex items-center justify-center gap-3">
 
-              {/* arco cuffie */}
-              <path
-                d="M12 34c0-12 8-22 20-22s20 10 20 22"
-                fill="none"
-                stroke="url(#mvGrad)"
-                strokeWidth="5"
-                strokeLinecap="round"
-              />
+    <div className="h-12 w-12 rounded-2xl bg-yellow-400 grid place-items-center shadow-[0_0_25px_rgba(250,204,21,0.6)]">
+      🎧
+    </div>
 
-              {/* pad sinistra */}
-              <rect x="6" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
-              {/* pad destra */}
-              <rect x="48" y="32" width="10" height="20" rx="4" fill="url(#mvGrad)" />
+    <div className="leading-tight text-left">
+      <div className="text-xl font-black tracking-tight">
+        <span className="text-yellow-400">Ask</span>
+        <span className="text-white">DJ</span>
+      </div>
+      <div className="text-xs text-zinc-400">
+        Music Requests
+      </div>
+    </div>
 
-              {/* MV centrato e leggibile */}
-              <text
-                x="32"
-                y="45"
-                textAnchor="middle"
-                fontSize="26"
-                fontWeight="900"
-                fontFamily="Arial, sans-serif"
-                fill="#e5e7eb"
-              >
-                M
-              </text>
-              <text
-                x="32"
-                y="45"
-                textAnchor="middle"
-                fontSize="26"
-                fontWeight="900"
-                fontFamily="Arial, sans-serif"
-                fill="#fb7185"
-                opacity="0.95"
-              >
-                V
-              </text>
-            </svg>
-          </div>
+  </div>
 
-          <h2 className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-pink-300 drop-shadow-[0_0_16px_rgba(34,211,238,0.18)]">
-            AskDJ
-          </h2>
+  <div className="mx-auto mt-4 h-1 w-20 bg-yellow-400 rounded-full shadow-[0_0_20px_rgba(250,204,21,0.7)]"></div>
+</header>
 
-          <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-emerald-200 to-pink-200">
-            RICHIEDI UNA CANZONE...
-          </h1>
-          <FakeSpectrumWide />
-          <p className="mt-3 text-base font-semibold text-cyan-600">
-            EVENTO :
-            <span className="ml-2 inline-flex items-center rounded-full px-3 py-1 font-mono text-sm text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_20px_rgba(34,211,238,0.18)]">
-              {code}
-            </span>
-          </p>
-        </header>
+      <FakeSpectrumWide />
+
+<div className="mt-4 h-1 w-24 bg-yellow-400 rounded-full shadow-[0_0_20px_rgba(250,204,21,0.7)]"></div>
+
+<p className="mt-3 text-base font-semibold text-cyan-600">
+  EVENTO :
+  <span className="ml-2 ...">
+    {code}
+  </span>
+</p>
+
+
 
         <section className="rounded-3xl border border-yellow-400 bg-zinc-900/50 p-5 shadow-[0_18px_60px_rgba(0,0,0,0.35)] ring-1 ring-white/5">
           <div className="space-y-4">
