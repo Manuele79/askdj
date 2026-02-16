@@ -262,6 +262,30 @@ const platform = (serverPlatform as Platform) || fallbackPlatform;
     }
   }
 
+function FakeSpectrumWide() {
+  return (
+    <div className="mt-4 flex items-end justify-center gap-2 h-10">
+      {Array.from({ length: 28 }).map((_, i) => (
+        <span
+          key={i}
+          className="w-2 rounded-full bg-gradient-to-t from-amber-400 via-orange-400 to-pink-400 opacity-80 animate-[eqwide_1.4s_ease-in-out_infinite]"
+          style={{ animationDelay: `${i * 60}ms` }}
+        />
+      ))}
+
+      <style jsx>{`
+        @keyframes eqwide {
+          0%   { height: 20%; opacity: .5; }
+          25%  { height: 100%; opacity: 1; }
+          50%  { height: 40%; opacity: .6; }
+          75%  { height: 90%; opacity: .9; }
+          100% { height: 20%; opacity: .5; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
       {/* glow blobs */}
@@ -331,7 +355,7 @@ const platform = (serverPlatform as Platform) || fallbackPlatform;
           <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-emerald-200 to-pink-200">
             RICHIEDI UNA CANZONE...
           </h1>
-
+          <FakeSpectrumWide />
           <p className="mt-3 text-base font-semibold text-cyan-600">
             EVENTO :
             <span className="ml-2 inline-flex items-center rounded-full px-3 py-1 font-mono text-sm text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_20px_rgba(34,211,238,0.18)]">
