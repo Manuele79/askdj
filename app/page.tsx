@@ -8,209 +8,463 @@ export default function Home() {
     <main
       style={{
         minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 24,
+        padding: "28px 18px",
         background:
-          "radial-gradient(900px 400px at 20% 10%, rgba(109, 94, 252, 0.40), transparent 60%)," +
-          "radial-gradient(700px 360px at 80% 20%, rgba(0, 209, 178, 0.28), transparent 55%)," +
-          "radial-gradient(700px 360px at 60% 90%, rgba(255, 184, 0, 0.18), transparent 55%)," +
-          "linear-gradient(180deg, #07070c 0%, #111124 100%)",
+          // “foto” finta (glow + texture)
+          "radial-gradient(900px 520px at 15% 15%, rgba(255, 215, 0, 0.18), transparent 60%)," +
+          "radial-gradient(800px 520px at 85% 20%, rgba(0, 255, 200, 0.10), transparent 58%)," +
+          "radial-gradient(900px 520px at 60% 95%, rgba(255, 70, 120, 0.08), transparent 60%)," +
+          "linear-gradient(180deg, #07070b 0%, #0b0b14 55%, #090913 100%)",
         color: "white",
         fontFamily:
-          "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+          "var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
       }}
     >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 620,
-          borderRadius: 20,
-          padding: 22,
-          background: "rgba(255,255,255,0.07)",
-          border: "1px solid rgba(255,255,255,0.14)",
-          boxShadow: "0 18px 55px rgba(0,0,0,0.55)",
-          backdropFilter: "blur(10px)",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* glow lines */}
+      <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+        {/* Top bar */}
         <div
-          aria-hidden="true"
           style={{
-            position: "absolute",
-            inset: -2,
-            background:
-              "linear-gradient(90deg, rgba(109,94,252,0.35), rgba(0,209,178,0.25), rgba(255,184,0,0.18))",
-            filter: "blur(22px)",
-            opacity: 0.55,
-            pointerEvents: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            marginBottom: 18,
           }}
-        />
-
-        <div style={{ position: "relative" }}>
-          {/* header */}
+        >
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div
+              aria-hidden="true"
               style={{
-                width: 50,
-                height: 50,
-                borderRadius: 16,
-                background:
-                  "linear-gradient(135deg, rgba(109,94,252,0.95), rgba(0,209,178,0.80))",
+                width: 46,
+                height: 46,
+                borderRadius: 14,
                 display: "grid",
                 placeItems: "center",
-                fontSize: 22,
-                boxShadow: "0 12px 22px rgba(0,0,0,0.30)",
+                background:
+                  "linear-gradient(135deg, rgba(255,215,0,0.92), rgba(255,255,255,0.06))",
+                border: "1px solid rgba(255,215,0,0.30)",
+                boxShadow: "0 14px 40px rgba(0,0,0,0.45)",
               }}
-              aria-hidden="true"
               title="AskDJ"
             >
               🎧
             </div>
 
-            <div style={{ minWidth: 0 }}>
-              <div
-                style={{
-                  fontSize: 26,
-                  fontWeight: 950,
-                  letterSpacing: 0.2,
-                  lineHeight: 1.1,
-                }}
-              >
+            <div style={{ lineHeight: 1.1 }}>
+              <div style={{ fontSize: 18, fontWeight: 950, letterSpacing: 0.2 }}>
                 AskDJ
               </div>
-              <div style={{ opacity: 0.86, fontSize: 13.5 }}>
-                Richieste musicali al DJ via QR (senza sbatti).
+              <div style={{ fontSize: 12.5, opacity: 0.72 }}>
+                QR per richieste musicali & dediche — stile pro, zero caos.
               </div>
             </div>
           </div>
 
-          {/* main text */}
-          <div style={{ marginTop: 18, opacity: 0.95, lineHeight: 1.65 }}>
-            <div
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <a
+              href="#come-funziona"
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "8px 12px",
-                borderRadius: 999,
-                background: "rgba(0,0,0,0.25)",
-                border: "1px solid rgba(255,255,255,0.10)",
-                fontWeight: 900,
-                letterSpacing: 0.4,
+                textDecoration: "none",
+                color: "rgba(255,255,255,0.78)",
+                fontWeight: 800,
                 fontSize: 12.5,
               }}
             >
-              ✅ SOLO PER DJ
-              <span style={{ opacity: 0.7, fontWeight: 700 }}>
+              Come funziona
+            </a>
+            <a
+              href="#casi"
+              style={{
+                textDecoration: "none",
+                color: "rgba(255,255,255,0.78)",
+                fontWeight: 800,
+                fontSize: 12.5,
+              }}
+            >
+              Eventi
+            </a>
+            <a
+              href="#faq"
+              style={{
+                textDecoration: "none",
+                color: "rgba(255,255,255,0.78)",
+                fontWeight: 800,
+                fontSize: 12.5,
+              }}
+            >
+              FAQ
+            </a>
+          </div>
+        </div>
+
+        {/* Hero */}
+        <section
+          style={{
+            borderRadius: 26,
+            padding: 22,
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            boxShadow: "0 22px 70px rgba(0,0,0,0.60)",
+            backdropFilter: "blur(10px)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* subtle “photo” layer */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: -2,
+              background:
+                "linear-gradient(90deg, rgba(255,215,0,0.24), rgba(255,255,255,0.02), rgba(0,255,200,0.12))",
+              filter: "blur(22px)",
+              opacity: 0.55,
+              pointerEvents: "none",
+            }}
+          />
+
+          <div style={{ position: "relative" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                gap: 10,
+                alignItems: "center",
+                padding: "8px 12px",
+                borderRadius: 999,
+                background: "rgba(0,0,0,0.30)",
+                border: "1px solid rgba(255,215,0,0.22)",
+                fontWeight: 900,
+                letterSpacing: 0.3,
+                fontSize: 12.5,
+              }}
+            >
+              ✨ Wedding • DJ • Party
+              <span style={{ opacity: 0.75, fontWeight: 800 }}>
                 (gli ospiti entrano solo via QR)
               </span>
             </div>
 
-            <div style={{ marginTop: 12, fontWeight: 900, fontSize: 16 }}>
-              Come funziona (in 20 secondi):
+            <h1
+              style={{
+                margin: "14px 0 8px",
+                fontSize: 36,
+                lineHeight: 1.08,
+                fontWeight: 1000,
+                letterSpacing: -0.2,
+              }}
+            >
+              Il modo elegante per raccogliere
+              <span style={{ color: "rgba(255,215,0,0.95)" }}> richieste & dediche </span>
+              al DJ.
+            </h1>
+
+            <div style={{ fontSize: 15.5, opacity: 0.86, lineHeight: 1.65, maxWidth: 760 }}>
+              Con un QR gli ospiti inviano brani (YouTube / Spotify / Apple / Amazon / TIDAL)
+              e una dedica. Tu da DJ hai una lista pulita, aggregata e pronta.
+              Niente “url sparsi” in chat. Niente caos.
             </div>
 
-            <ol style={{ margin: 10, paddingLeft: 18 }}>
-              <li style={{ marginBottom: 6 }}>
-                Apri <strong>DJ / Party</strong> e crea un evento (es:{" "}
-                <strong>MATRIMONIO-1513</strong>).
-              </li>
-              <li style={{ marginBottom: 6 }}>
-                L’app genera un <strong>QR</strong> per quell’evento (stampalo o
-                mostrala sul telefono).
-              </li>
-              <li style={{ marginBottom: 6 }}>
-                Gli invitati <strong>scansionano il QR</strong> e finiscono
-                direttamente su <strong>Event</strong> per inviare canzoni e
-                dediche.
-              </li>
-            </ol>
+            <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 10 }}>
+              {/* Nota: per ora lascio /dj/TEST123 per non rompere. Quando crei /dj/page.tsx lo cambi a /dj */}
+              <Link
+                href="/dj/TEST123"
+                style={{
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 10,
+                  background: "linear-gradient(135deg, rgba(255,215,0,0.95), rgba(255,255,255,0.10))",
+                  color: "#0b0b14",
+                  padding: "14px 16px",
+                  borderRadius: 16,
+                  fontWeight: 950,
+                  boxShadow: "0 18px 38px rgba(255,215,0,0.14)",
+                  border: "1px solid rgba(255,215,0,0.32)",
+                  minWidth: 210,
+                }}
+              >
+                🎛️ Apri pannello DJ
+              </Link>
 
+              <InstallButton />
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "12px 14px",
+                  borderRadius: 16,
+                  background: "rgba(0,0,0,0.24)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  color: "rgba(255,255,255,0.80)",
+                  fontSize: 12.5,
+                  fontWeight: 800,
+                }}
+              >
+                ✅ PWA installabile • ✅ QR stampa • ✅ titoli ok
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Benefit cards */}
+        <section style={{ marginTop: 18, display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
+          {[
+            {
+              title: "Zero caos",
+              text: "Gli ospiti non ti bombardano WhatsApp: tutto entra in lista, ordinato e leggibile.",
+              icon: "🧠",
+            },
+            {
+              title: "Dediche incluse",
+              text: "Una canzone + un messaggio. Perfetto per sposi, compleanni, momenti speciali.",
+              icon: "💛",
+            },
+            {
+              title: "Multi-piattaforma",
+              text: "Link o titolo da YouTube, Spotify, Apple Music, Amazon Music e TIDAL.",
+              icon: "🌍",
+            },
+          ].map((c) => (
             <div
+              key={c.title}
               style={{
-                marginTop: 10,
-                padding: 12,
-                borderRadius: 16,
-                background: "rgba(0,0,0,0.22)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                fontSize: 12.8,
-                opacity: 0.95,
+                borderRadius: 22,
+                padding: 16,
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                boxShadow: "0 18px 55px rgba(0,0,0,0.45)",
               }}
             >
-              ⚠️ Gli ospiti <strong>NON</strong> devono entrare da qui.
-              <br />
-              Se uno apre questa pagina: sta facendo il DJ per sbaglio 😄
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div
+                  aria-hidden="true"
+                  style={{
+                    width: 38,
+                    height: 38,
+                    borderRadius: 14,
+                    display: "grid",
+                    placeItems: "center",
+                    background: "rgba(255,215,0,0.10)",
+                    border: "1px solid rgba(255,215,0,0.20)",
+                  }}
+                >
+                  {c.icon}
+                </div>
+                <div style={{ fontWeight: 1000, fontSize: 15.5 }}>{c.title}</div>
+              </div>
+              <div style={{ marginTop: 10, opacity: 0.82, lineHeight: 1.6, fontSize: 13.5 }}>
+                {c.text}
+              </div>
             </div>
+          ))}
+        </section>
+
+        {/* How it works */}
+        <section id="come-funziona" style={{ marginTop: 22 }}>
+          <div style={{ fontSize: 18, fontWeight: 1000, marginBottom: 10 }}>
+            Come funziona
           </div>
 
-          {/* actions */}
-          <div style={{ marginTop: 18, display: "grid", gap: 10 }}>
-            <Link
-              href="/dj/TEST123"
-              style={{
-                textDecoration: "none",
-                display: "block",
-                background: "linear-gradient(135deg, #6d5efc, #00d1b2)",
-                color: "white",
-                padding: "14px 16px",
-                borderRadius: 16,
-                fontWeight: 900,
-                textAlign: "center",
-                boxShadow: "0 14px 30px rgba(109,94,252,0.25)",
-              }}
-            >
-              🎛️ Apri DJ / Party
-            </Link>
+          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+            {[
+              { n: "1", t: "Crea un evento", d: "Apri il pannello DJ e genera un evento (matrimonio, festa, locale…)." },
+              { n: "2", t: "Stampa o mostra il QR", d: "Lo stampi oppure lo metti su un tablet/telefono all’ingresso." },
+              { n: "3", t: "Gli ospiti inviano brani + dedica", d: "Arriva tutto in lista: tu scegli, ordini, fai partire." },
+            ].map((s) => (
+              <div
+                key={s.n}
+                style={{
+                  borderRadius: 22,
+                  padding: 16,
+                  background: "rgba(0,0,0,0.22)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                  <div style={{ fontSize: 26, fontWeight: 1000, color: "rgba(255,215,0,0.95)" }}>
+                    {s.n}
+                  </div>
+                  <div style={{ fontSize: 15.5, fontWeight: 1000 }}>{s.t}</div>
+                </div>
+                <div style={{ marginTop: 8, opacity: 0.82, lineHeight: 1.6, fontSize: 13.5 }}>
+                  {s.d}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-            <InstallButton />
-
-            <div
-              style={{
-                marginTop: 2,
-                fontSize: 12,
-                opacity: 0.72,
-                textAlign: "center",
-              }}
-            >
-              (Questo è il pannello “da DJ” per creare eventi e generare il QR)
-            </div>
+        {/* Use cases */}
+        <section id="casi" style={{ marginTop: 22 }}>
+          <div style={{ fontSize: 18, fontWeight: 1000, marginBottom: 10 }}>
+            Dove la usi (idee che vendono)
           </div>
 
-          {/* iphone help */}
-          <div
-            style={{
-              marginTop: 16,
-              padding: 12,
-              borderRadius: 16,
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.10)",
-            }}
-          >
-            <div style={{ fontWeight: 950, marginBottom: 6 }}>
-              📱 Installazione su iPhone (Safari)
-            </div>
-            <ol style={{ margin: 0, paddingLeft: 18, fontSize: 12.8, opacity: 0.9 }}>
-              <li>Apri questo sito in Safari</li>
-              <li>Tocca <strong>Condividi</strong> (quadrato con freccia ↑)</li>
-              <li>Seleziona <strong>Aggiungi a Home</strong></li>
-            </ol>
+          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+            {[
+              {
+                title: "Matrimoni",
+                text: "Dediche agli sposi, momenti speciali, richieste “eleganti” senza caos.",
+                icon: "💍",
+              },
+              {
+                title: "Compleanni (anche bimbi)",
+                text: "I piccoli scelgono le canzoni. Gli adulti non impazziscono.",
+                icon: "🎂",
+              },
+              {
+                title: "DJ set & locali",
+                text: "Raccogli richieste, fai votare e tieni la pista viva senza perdere controllo.",
+                icon: "🎧",
+              },
+              {
+                title: "Karaoke / YouTube video",
+                text: "Invio rapido dei video e gestione lista senza fogli o chat infinite.",
+                icon: "🎤",
+              },
+              {
+                title: "Eventi aziendali",
+                text: "Musica “safe”, dediche, atmosfera — tutto ordinato.",
+                icon: "🏢",
+              },
+              {
+                title: "Dedica a distanza",
+                text: "Condividi un link: qualcuno dall’altra parte del mondo invia una canzone con messaggio.",
+                icon: "🌍",
+              },
+            ].map((u) => (
+              <div
+                key={u.title}
+                style={{
+                  borderRadius: 22,
+                  padding: 16,
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div
+                    aria-hidden="true"
+                    style={{
+                      width: 38,
+                      height: 38,
+                      borderRadius: 14,
+                      display: "grid",
+                      placeItems: "center",
+                      background: "rgba(255,215,0,0.10)",
+                      border: "1px solid rgba(255,215,0,0.18)",
+                    }}
+                  >
+                    {u.icon}
+                  </div>
+                  <div style={{ fontWeight: 1000, fontSize: 15.5 }}>{u.title}</div>
+                </div>
+                <div style={{ marginTop: 10, opacity: 0.82, lineHeight: 1.6, fontSize: 13.5 }}>
+                  {u.text}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* “Screenshots” placeholders */}
+        <section style={{ marginTop: 22 }}>
+          <div style={{ fontSize: 18, fontWeight: 1000, marginBottom: 10 }}>
+            Un assaggio dell’app
           </div>
 
-          <div
-            style={{
-              marginTop: 14,
-              fontSize: 11.5,
-              opacity: 0.55,
-              textAlign: "center",
-            }}
-          >
-            © {new Date().getFullYear()} AskDJ — Manuele Martino
+          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
+            {[1, 2].map((i) => (
+              <div
+                key={i}
+                style={{
+                  borderRadius: 26,
+                  padding: 14,
+                  background: "rgba(0,0,0,0.22)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  aria-hidden="true"
+                  style={{
+                    height: 220,
+                    borderRadius: 18,
+                    background:
+                      "radial-gradient(700px 260px at 20% 10%, rgba(255,215,0,0.16), transparent 60%)," +
+                      "radial-gradient(700px 260px at 80% 30%, rgba(0,255,200,0.10), transparent 58%)," +
+                      "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                  }}
+                />
+                <div style={{ marginTop: 10, fontSize: 12.5, opacity: 0.75 }}>
+                  Screenshot {i} (qui puoi mettere una foto vera quando vuoi).
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+
+          <div style={{ marginTop: 8, fontSize: 12, opacity: 0.65 }}>
+            Se vuoi: metti 2 immagini in <strong>/public</strong> (es: <strong>screen-dj.png</strong> e <strong>screen-event.png</strong>)
+            e le sostituiamo ai placeholder.
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section id="faq" style={{ marginTop: 22 }}>
+          <div style={{ fontSize: 18, fontWeight: 1000, marginBottom: 10 }}>
+            FAQ
+          </div>
+
+          <div style={{ display: "grid", gap: 12 }}>
+            {[
+              {
+                q: "Gli ospiti devono installare l’app?",
+                a: "No. Gli ospiti entrano da browser scansionando il QR. L’installazione è utile soprattutto al DJ.",
+              },
+              {
+                q: "Serve login o account?",
+                a: "Nella versione attuale no. Nella fase successiva possiamo aggiungere accesso premium e gestione eventi.",
+              },
+              {
+                q: "Si integra con Rekordbox / console DJ?",
+                a: "Non direttamente: AskDJ serve per raccogliere richieste e dediche. In futuro: export playlist CSV.",
+              },
+            ].map((f) => (
+              <div
+                key={f.q}
+                style={{
+                  borderRadius: 22,
+                  padding: 16,
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                }}
+              >
+                <div style={{ fontWeight: 1000 }}>{f.q}</div>
+                <div style={{ marginTop: 6, opacity: 0.82, lineHeight: 1.6, fontSize: 13.5 }}>
+                  {f.a}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer
+          style={{
+            marginTop: 22,
+            padding: "18px 4px",
+            opacity: 0.55,
+            fontSize: 12,
+            textAlign: "center",
+          }}
+        >
+          © {new Date().getFullYear()} AskDJ — Manuele Martino
+        </footer>
       </div>
     </main>
   );
