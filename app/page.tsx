@@ -323,7 +323,7 @@ export default function Home() {
 
         {/* How it works */}
         <section id="come-funziona" style={{ marginTop: 34 }}>
-          <SectionTitle title="Come funziona" />
+          <SectionTitle title="Come funziona:" />
 
           <div
             style={{
@@ -340,7 +340,7 @@ export default function Home() {
               },
               {
                 n: "2",
-                t: "Stampa o mostra il QR",
+                t: "Stampa o condividi il QR",
                 d: "Lo stampi oppure lo metti su un tablet/telefono all’ingresso.",
               },
               {
@@ -396,7 +396,7 @@ export default function Home() {
 
         {/* Use cases */}
         <section id="casi" style={{ marginTop: 34 }}>
-          <SectionTitle title="Dove la usi (idee che vendono)" />
+          <SectionTitle title="Dove la usi:" />
 
           <div
             style={{
@@ -540,11 +540,11 @@ export default function Home() {
               },
               {
                 q: "Serve login o account?",
-                a: "Nella versione attuale no. Nella fase successiva possiamo aggiungere accesso premium e gestione eventi.",
+                a: "Nella versione attuale no.",
               },
               {
                 q: "Cos’è la modalità Party?",
-                a: "È la modalità festa: autoplay YouTube, spettro grafico e accesso rapido ai link. Tu gestisci la serata senza impazzire.",
+                a: "È la modalità festa: autoplay YouTube, e accesso rapido ai link. Tu gestisci la serata senza impazzire.",
               },
               {
                 q: "Si integra con Rekordbox / console DJ?",
