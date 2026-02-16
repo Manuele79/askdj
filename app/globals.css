@@ -34,13 +34,14 @@ body {
     visibility: visible;
   }
 
-  #print-qr {
-    position: fixed;
-    left: 50%;
-    top: 0;
-    transform: translate(-50%, -50%) scale(1.50);   
-    margin: 0;
-    padding: 0;
-    display: block;
-  }
+#print-qr {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(1.50);
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
 }
