@@ -23,6 +23,11 @@ body {
 
 @page { margin: 0; }
 
+/* default: a schermo */
+.print-only { display: none !important; }
+.no-print { display: block !important; }
+
+
 @media print {
   html, body { height: 100%; background: #fff !important; }
 
