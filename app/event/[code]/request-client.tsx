@@ -294,41 +294,31 @@ function FakeSpectrumWide() {
       <div className="pointer-events-none absolute top-32 left-[-140px] h-[420px] w-[420px] rounded-full bg-cyan-400/10 blur-[110px]" />
 
       <div className="mx-auto max-w-2xl px-4 py-8">
-      <header className="mb-8 text-center">
+    <header className="mb-6 text-center">
   <div className="flex items-center justify-center gap-3">
-
-    <div className="h-12 w-12 rounded-2xl bg-yellow-400 grid place-items-center shadow-[0_0_25px_rgba(250,204,21,0.6)]">
+    <div className="h-11 w-11 rounded-2xl bg-yellow-400 grid place-items-center shadow-[0_0_25px_rgba(250,204,21,0.55)]">
       🎧
     </div>
 
     <div className="leading-tight text-left">
-      <div className="text-xl font-black tracking-tight">
-        <span className="text-yellow-400">Ask</span>
-        <span className="text-white">DJ</span>
+      <div className="text-lg font-black tracking-tight">
+        <span className="text-yellow-400">Ask</span><span className="text-white">DJ</span>
       </div>
-      <div className="text-xs text-zinc-400">
-        Music Requests
-      </div>
+      <div className="text-[11px] text-zinc-400">Music Requests</div>
     </div>
-
   </div>
 
-  <div className="mx-auto mt-4 h-1 w-20 bg-yellow-400 rounded-full shadow-[0_0_20px_rgba(250,204,21,0.7)]"></div>
+  <div className="mt-4">
+    <FakeSpectrumWide />
+  </div>
+
+  <div className="mt-3 flex items-center justify-center gap-2">
+    <span className="text-xs font-bold text-cyan-400">EVENTO</span>
+    <span className="rounded-full px-3 py-1 text-xs font-black text-zinc-950 bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 shadow-[0_0_18px_rgba(34,211,238,0.25)]">
+      {code}
+    </span>
+  </div>
 </header>
-
-      <FakeSpectrumWide />
-
-<div className="mt-4 h-1 w-24 bg-yellow-400 rounded-full shadow-[0_0_20px_rgba(250,204,21,0.7)]"></div>
-
-<p className="mt-3 text-base font-semibold text-cyan-600">
-  EVENTO :
-  <span className="ml-2 ...">
-    {code}
-  </span>
-</p>
-
-
-
         <section className="rounded-3xl border border-yellow-400 bg-zinc-900/50 p-5 shadow-[0_18px_60px_rgba(0,0,0,0.35)] ring-1 ring-white/5">
           <div className="space-y-4">
             <div>
