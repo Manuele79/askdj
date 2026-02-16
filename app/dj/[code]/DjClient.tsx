@@ -310,18 +310,41 @@ async function joinExistingEvent() {
         <div className="mb-6 flex flex-col gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-3">
-              {/* Logo MV */}
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-emerald-400 to-pink-400 shadow-[0_0_20px_rgba(34,211,238,0.35)]">
-                <span className="text-3xl font-black text-zinc-950">MV</span>
-              </div>
+             {/* Logo AskDJ (animato) */}
+<div className="flex items-center gap-3">
+  <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
+    {/* glow animato dietro */}
+    <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/40 blur-xl animate-pulse" />
+    <div className="pointer-events-none absolute -inset-1 rounded-2xl border border-yellow-300/60 animate-pulse" />
+
+    {/* icon */}
+    <span className="relative text-2xl drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]">
+      🎧
+    </span>
+  </div>
+
+  <div className="leading-tight">
+    <div className="text-3xl font-black tracking-tight">
+      <span className="text-yellow-400">Ask</span>
+      <span className="text-white">DJ</span>
+    </div>
+    <div className="text-xs text-zinc-400 tracking-wide">
+      Music Requests
+    </div>
+  </div>
+</div>
+
 
               {/* Titolo */}
               <div>
-                <div className="text-4xl sm:text-x2 font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-400 drop-shadow-[0_0_12px_rgba(34,211,238,0.25)]">
-                  🎧 AskDJ
-                </div>
+                <div className="text-5xl sm:text-4xl font-black tracking-tight text-white">
+  Console DJ
+</div>
 
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Music Requests</div>
+<div className="text-sm text-zinc-400 tracking-wide">
+  Gestisci richieste e dediche in tempo reale
+</div>
+
               </div>
             </div>
 
@@ -341,16 +364,20 @@ async function joinExistingEvent() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
 
             <div>
-              <h1 className="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-pink-400">
-                Richieste Musicali...
+              <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+              Gestisci le richieste <span className="text-yellow-400">senza caos</span>
               </h1>
-              <FakeSpectrumWide />
+
+               <FakeSpectrumWide />
 
 
+            <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
+              Crea un evento, mostra il QR e ricevi brani + dediche in una lista ordinata.
+               Tu decidi cosa far partire.
+            </p>
 
-              <p className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                Gestisci la coda e manda il link agli ospiti con il QR. 
-              </p>
+            <div className="mt-4 h-1 w-24 bg-yellow-400 rounded-full shadow-[0_0_20px_rgba(250,204,21,0.7)]"></div>
+
               {/* INIZIA QUI */}
             {code ! == "TEST123" && (           
              <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
