@@ -7,6 +7,8 @@ import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 export default function EventQr({ eventCode }: { eventCode: string }) {
   const [copied, setCopied] = useState(false);
   const [url, setUrl] = useState("");
+  const [printPng, setPrintPng] = useState<string>("");
+
 
   useEffect(() => {
     setUrl(`${window.location.origin}/event/${encodeURIComponent(eventCode)}`);
@@ -49,13 +51,19 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 
       <div className="rounded-2xl border border-cyan-400/50 bg-white p-3 inline-block print:border-0 print:bg-transparent print:p-0">
   <div className="print-only">
-  <QRCodeSVG value={url} width={360} height={360} />
+  {printPng ? (
+    <img src={printPng} alt="QR" style={{ width: 360, height: 360 }} />
+  ) : (
+    <div style={{ width: 360, height: 360 }} />
+  )}
 </div>
 
 
+
   <div className="no-print">
-    <QRCodeCanvas value={url} size={200} />
-  </div>
+  <QRCodeCanvas id="qr-canvas" value={url} size={200} />
+</div>
+
 </div>
 
 
@@ -81,7 +89,14 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           </button>
 
           <button
-            onClick={() => window.print()}
+            onClick={() => {
+  const canvas = document.getElementById("qr-canvas") as HTMLCanvasElement | null;
+  if (canvas) {
+    setPrintPng(canvas.toDataURL("image/png"));
+  }
+  setTimeout(() => window.print(), 50);
+}}
+
             className="
               rounded-xl px-4 py-2 text-xs font-extrabold text-zinc-100
               border border-yellow-400/45 bg-zinc-900/50
