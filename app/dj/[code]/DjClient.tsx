@@ -616,14 +616,13 @@ async function joinExistingEvent() {
 
           {/* RIGHT: QR */}
           <aside className="lg:col-span-1">
-            <div className="sticky top-4 p-[1px] rounded-3xl bg-gradient-to-br from-yellow-400/40 via-white/5 to-pink-400/20 shadow-[0_22px_60px_rgba(0,0,0,0.45)]">
+            <div className="sticky top-4 p-[1px] rounded-3xloverflow-hidden bg-gradient-to-br from-yellow-400/40 via-white/5 to-pink-400/20 shadow-[0_22px_60px_rgba(0,0,0,0.45)]">
 
              <div className="rounded-3xl 
                 border border-yellow-400/80 
                 bg-zinc-900/40 
                 backdrop-blur 
-                p-4 
-                shadow-[0_0_20px_rgba(250,204,21,0.25)]">
+                p-4 overflow-hidden shadow-[0_0_20px_rgba(250,204,21,0.25)]">
 
 
               <div className="mb-3">
@@ -633,7 +632,7 @@ async function joinExistingEvent() {
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-600 to-pink-400">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
               </div>
 
-              <div className="mt-3 flex justify-center">
+              <div className="mw-full overflow-hiddenr">
   <EventQr eventCode={code} />
 </div>
 
