@@ -376,7 +376,9 @@ async function joinExistingEvent() {
                Tu decidi cosa far partire.
             </p>
 
-            <div className="mt-4 h-1 w-24 bg-yellow-400 rounded-full shadow-[0_0_20px_rgba(250,204,21,0.7)]"></div>
+            <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+            <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+
 
               {/* INIZIA QUI */}
             {code ! == "TEST123" && (           
@@ -473,7 +475,7 @@ async function joinExistingEvent() {
     {/* Spiegazione DJ / Party (mostra solo prima che esista un evento vero) */}
 {code === "TEST123" && (
   <div className="mt-3 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] p-3 text-center">
-    <div className="text-xs font-extrabold text-cyan-300">👆    Cosa cambia?    👆</div>
+    <div className="text-xs font-extrabold text-cyan-300"> 🎧 👆   - Cosa cambia -   👆 🎉 </div>
 
     <div className="mt-2 text-xs text-zinc-200">
       <span className="font-bold">DJ:</span> gestisci la coda, apri i link e decidi cosa suonare.
