@@ -519,7 +519,7 @@ async function joinExistingEvent() {
                 </div>
               </section>
             ) : (
-              <section className="mt-3 rounded-3xl border-yellow-500/80 bg-emerald-400/8 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
+              <section className="mt-3 rounded-3xl border border-yellow-400 bg-emerald-400/8 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
   
                   <div className="min-w-0">
