@@ -473,7 +473,7 @@ async function joinExistingEvent() {
     {/* Spiegazione DJ / Party (mostra solo prima che esista un evento vero) */}
 {code === "TEST123" && (
   <div className="mt-3 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] p-3 text-center">
-    <div className="text-xs font-extrabold text-cyan-300">👆   Cosa cambia?   👆</div>
+    <div className="text-xs font-extrabold text-cyan-300">👆    Cosa cambia?    👆</div>
 
     <div className="mt-2 text-xs text-zinc-200">
       <span className="font-bold">DJ:</span> gestisci la coda, apri i link e decidi cosa suonare.
@@ -519,7 +519,7 @@ async function joinExistingEvent() {
                 </div>
               </section>
             ) : (
-              <section className="mt-3 rounded-3xl border-yellow-400/80 bg-emerald-200/20 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
+              <section className="mt-3 rounded-3xl border-yellow-500/80 bg-emerald-400/8 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
   
                   <div className="min-w-0">
