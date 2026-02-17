@@ -335,28 +335,42 @@ async function joinExistingEvent() {
 </div>
 
 
-              {/* Titolo */}
-              <div>
-                <div className="text-5xl sm:text-4xl font-black tracking-tight text-white">
-  Console DJ
-</div>
 
-<div className="text-sm text-zinc-400 tracking-wide">
-  Gestisci richieste e dediche in tempo reale
-</div>
+{/* Titolo */}
+<div className="min-w-0">
+  <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight break-words">
+    Console DJ
+  </div>
 
-              </div>
-            </div>
+  <div className="mt-1 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
+    Gestisci richieste e dediche in tempo reale
+  </div>
+  </div>
 
+   </div>
+{code && code !== "TEST123" && (
+  <div className="mt-2 flex flex-wrap items-center gap-2">
+    <span className="text-cyan-400 font-extrabold tracking-widest text-xs sm:text-sm">
+      EVENTO:
+    </span>
 
-            {code !== "TEST123" && (
-  <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-    <span className="text-cyan-600">EVENTO:</span>
-    <span className="ml-2 inline-flex items-center rounded-full px-4">
+    <span
+      className="
+        inline-flex items-center
+        px-4 py-1.5
+        rounded-full
+        text-sm sm:text-base
+        font-black tracking-wide
+        bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-300
+        text-zinc-900
+        shadow-[0_0_18px_rgba(34,211,238,0.35)]
+      "
+    >
       {code}
     </span>
   </div>
 )}
+
 
 
           </div>
@@ -602,10 +616,10 @@ async function joinExistingEvent() {
 
           {/* RIGHT: QR */}
           <aside className="lg:col-span-1">
-            <div className="sticky top-4 p-[1px] rounded-3xl bg-gradient-to-br from-emerald-400/40 via-cyan-300/25 to-pink-400/40 shadow-[0_22px_60px_rgba(0,0,0,0.45)]">
+            <div className="sticky top-4 p-[1px] rounded-3xl bg-gradient-to-br from-emerald-200/40 via-cyan-200/25 to-pink-200/40 shadow-[0_22px_60px_rgba(0,0,0,0.45)]">
              <div className="rounded-3xl 
                 border border-yellow-400/80 
-                bg-zinc-950/55 
+                bg-zinc-900/40 
                 backdrop-blur 
                 p-4 
                 shadow-[0_0_20px_rgba(250,204,21,0.25)]">
