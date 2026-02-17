@@ -313,8 +313,9 @@ function FakeSpectrumWide() {
  <h1 className="mt-6 text-3xl sm:text-4xl font-black tracking-tight text-white">
   Richiedi una <span className="text-yellow-400">canzone...</span>
 </h1>
-  <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
-  <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+  <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+<div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+
 
 
 
