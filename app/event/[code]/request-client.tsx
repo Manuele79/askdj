@@ -301,7 +301,7 @@ function FakeSpectrumWide() {
      <span className="relative text-2xl drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]">🎧</span>
     </div>
 
-     <div className="leading-tight text-left">
+     <div className="leading-tight text-center">
      <div className="text-xl sm:text-2xl font-black tracking-tight">
       <span className="text-yellow-400">Ask</span><span className="text-white">DJ</span>
     </div>
@@ -310,10 +310,11 @@ function FakeSpectrumWide() {
 </div>
 
 
- <h1 className="mt-6 text-3xl sm:text-4xl font-black tracking-tight text-white">
+ <h1 className="mt-6 text-3xl sm:text-4xl font-black tracking-tight text-white">"
   Richiedi una <span className="text-yellow-400">canzone</span>
 </h1>
-<div className="mx-auto mt-3 h-1 w-16 bg-yellow-400 rounded-full shadow-[0_0_15px_rgba(250,204,21,0.7)]"></div>
+<div className="mt-3 h-1.5 w-28 rounded-full bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_18px_rgba(250,204,21,0.6)] mx-auto" />
+
 
 
 
@@ -325,7 +326,7 @@ function FakeSpectrumWide() {
    {code && code !== "TEST123" && (
   <div className="mt-5 flex items-center justify-center gap-3">
     <span className="text-sm sm:text-base font-extrabold text-cyan-300 tracking-widest">
-      EVENTO
+      EVENTO:
     </span>
 
     <span className="rounded-full px-4 py-2 text-base sm:text-lg font-black text-zinc-950
@@ -450,12 +451,19 @@ function FakeSpectrumWide() {
         </section>
 
         <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-300">
-              Richieste inviate da questo telefono:
-            </h2>
-            <span className="rounded-full bg-zinc-800 px-2 py-1 text-xs text-zinc-300">{sent.length}</span>
-          </div>
+          <div className="flex items-center justify-between gap-3">
+           <div>
+           <h2 className="text-base sm:text-lg font-black tracking-wide text-white">
+            Le tue richieste
+           </h2>
+          <div className="mt-2 h-1 w-16 rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 shadow-[0_0_12px_rgba(250,204,21,0.6)]" />
+         </div>
+
+         <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+         {sent.length}
+        </span>
+      </div>
+
 
           {sent.length === 0 ? (
             <p className="mt-3 text-sm text-zinc-400">Nessuna richiesta</p>
