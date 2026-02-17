@@ -119,7 +119,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       </div>
 
 
-      <div className="rounded-2xl border border-cyan-400/50 bg-white p-3 inline-block print:border-0 print:bg-transparent print:p-0">
+      <div className="rounded-2xl border border-cyan-400/50 bg-white p-3 print:border-0 print:bg-transparent print:p-0">
   <div className="print-only">
   {printPng ? (
     <img src={printPng} alt="QR" style={{ width: 360, height: 360 }} />
