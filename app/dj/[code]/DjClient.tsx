@@ -620,7 +620,7 @@ async function joinExistingEvent() {
 
              <div className="rounded-3xl 
                 border border-yellow-400/80 
-                bg-zinc-900/40 
+                bg-zinc-800/40 
                 backdrop-blur 
                 p-4 overflow-hidden shadow-[0_0_20px_rgba(250,204,21,0.25)]">
 
@@ -632,9 +632,10 @@ async function joinExistingEvent() {
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-600 to-pink-400">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
               </div>
 
-              <div className="mw-full overflow-hiddenr">
-  <EventQr eventCode={code} />
-</div>
+              <div className="w-full max-w-full overflow-hidden">
+
+               {code && <EventQr eventCode={code} />}
+              </div>
 
               <p className="mt-3 text-xs text-yellow-300 text-center">
                ⚠️ Gli ospiti NON entrano da DJ/Party.  
