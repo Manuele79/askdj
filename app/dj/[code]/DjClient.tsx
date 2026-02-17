@@ -616,7 +616,8 @@ async function joinExistingEvent() {
 
           {/* RIGHT: QR */}
           <aside className="lg:col-span-1">
-            <div className="sticky top-4 p-[1px] rounded-3xl bg-gradient-to-br from-emerald-200/40 via-cyan-200/25 to-pink-200/40 shadow-[0_22px_60px_rgba(0,0,0,0.45)]">
+            <div className="sticky top-4 p-[1px] rounded-3xl bg-gradient-to-br from-yellow-400/40 via-white/5 to-pink-400/20 shadow-[0_22px_60px_rgba(0,0,0,0.45)]">
+
              <div className="rounded-3xl 
                 border border-yellow-400/80 
                 bg-zinc-900/40 
@@ -632,7 +633,10 @@ async function joinExistingEvent() {
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-600 to-pink-400">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
               </div>
 
-              <EventQr eventCode={code} />
+              <div className="mt-3 flex justify-center">
+  <EventQr eventCode={code} />
+</div>
+
               <p className="mt-3 text-xs text-yellow-300 text-center">
                ⚠️ Gli ospiti NON entrano da DJ/Party.  
                Devono scansionare questo QR.
