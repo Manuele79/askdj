@@ -519,11 +519,11 @@ async function joinExistingEvent() {
                 </div>
               </section>
             ) : (
-              <section className="mt-3 rounded-3xl border-yellow-400/80 bg-emerald-300/20 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
+              <section className="mt-3 rounded-3xl border-yellow-400/80 bg-emerald-200/20 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
   
                   <div className="min-w-0">
-                    <div className="pl-4 pt-2 text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+                    <div className="pl-4 pt-2 text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-cyan-400 to-pink-400">
                       CONSOLE DJ:
                     </div>
                     <div className="pl-4 pt-1 text-xs text-amber-300">
@@ -613,7 +613,7 @@ async function joinExistingEvent() {
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-cyan-300 to-pink-400">
                   INVITA GLI OSPITI (QR):
                 </div>
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-600 to-pink-400">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
               </div>
 
               <EventQr eventCode={code} />
