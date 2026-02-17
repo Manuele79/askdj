@@ -140,13 +140,14 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 </div>
 
 
-      {eventCode !== "TEST123" && (
-      <div className="mt-3 rounded-2xl border border-yellow-400/25 bg-zinc-900/40 p-3">
-       <p className="font-mono text-xs text-cyan-200 break-all">
-       {url}
-      </p>
-      </div>
-      )}
+   {eventCode !== "TEST123" && (
+  <div className="mt-3 w-full text-center">
+    <span className="inline-block max-w-full font-mono text-xs text-cyan-200 break-all rounded-lg bg-zinc-900/60 px-3 py-2">
+      {url}
+    </span>
+  </div>
+)}
+
      </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
