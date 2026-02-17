@@ -637,7 +637,7 @@ async function joinExistingEvent() {
               </div>
 
 
-              <p className="mt-3 text-xs text-yellow-300 text-center">
+               <p className="mt-3 text-xs text-yellow-300 text-center">
                ⚠️ Gli ospiti NON entrano da DJ/Party.  
                Devono scansionare questo QR.
               </p>
