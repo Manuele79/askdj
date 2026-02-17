@@ -95,7 +95,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
     <div
       id="print-qr"
       className="
-        rounded-3xl border border-yellow-400/80 bg-pink-400/20 backdrop-blur p-4
+        rounded-3xl border border-yellow-400/80 bg-zinc-400/20 backdrop-blur p-4
         shadow-[0_0_20px_rgba(250,204,21,0.18)]
       "
       >
@@ -141,11 +141,24 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 
 {eventCode !== "TEST123" && (
   <div className="mt-3 w-full flex justify-center">
-    <span className="block max-w-[260px] sm:max-w-full text-center font-mono text-xs text-cyan-200 break-all rounded-lg bg-zinc-900/60 px-3 py-2">
+    <span className="
+      block
+      w-fit
+      max-w-[260px]
+      text-center
+      font-mono
+      text-xs
+      text-cyan-200
+      break-all
+      rounded-lg
+      bg-zinc-900/60
+      px-3 py-2
+    ">
       {url}
     </span>
   </div>
 )}
+
 
 
      </div>
