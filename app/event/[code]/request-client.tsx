@@ -310,10 +310,12 @@ function FakeSpectrumWide() {
 </div>
 
 
- <h1 className="mt-6 text-3xl sm:text-4xl font-black tracking-tight text-white">"
-  Richiedi una <span className="text-yellow-400">canzone</span>
+ <h1 className="mt-6 text-3xl sm:text-4xl font-black tracking-tight text-white">
+  Richiedi una <span className="text-yellow-400">canzone...</span>
 </h1>
-<div className="mt-3 h-1.5 w-28 rounded-full bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 shadow-[0_0_18px_rgba(250,204,21,0.6)] mx-auto" />
+  <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+  <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+
 
 
 
@@ -456,8 +458,9 @@ function FakeSpectrumWide() {
            <h2 className="text-base sm:text-lg font-black tracking-wide text-white">
             Le tue richieste
            </h2>
-          <div className="mt-2 h-1 w-16 rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 shadow-[0_0_12px_rgba(250,204,21,0.6)]" />
-         </div>
+           <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+           <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+          </div>
 
          <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
          {sent.length}
