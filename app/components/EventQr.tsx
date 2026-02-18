@@ -95,7 +95,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
     <div
       id="print-qr"
       className="
-        rounded-3xl border border-yellow-400/80 bg-zinc-400/20 backdrop-blur p-4
+       rounded-3xl border border-yellow-400/70 bg-zinc-950/55 backdrop-blur p-4
         shadow-[0_0_20px_rgba(250,204,21,0.18)]
       "
       >
@@ -131,7 +131,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 
 
 <div className="no-print flex justify-center">
-  <div id="qr-canvas">
+  <div id="qr-canvas" className="flex justify-center" >
     <QRCodeCanvas value={url} size={200} />
   </div>
 </div>
