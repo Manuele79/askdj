@@ -119,14 +119,14 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       </div>
 
 
-      <div className="rounded-2xl border border-cyan-300/25 bg-white/95 p-3 print:border-0 print:bg-transparent print:p-0">
-  <div className="print-only">
-  {printPng ? (
+     <div className="rounded-2xl border border-yellow-400/20 bg-white/90 p-3 print:border-0 print:bg-transparent print:p-0">
+     <div className="print-only">
+     \ {printPng ? (
     <img src={printPng} alt="QR" style={{ width: 360, height: 360 }} />
-  ) : (
+     ) : (
     <div style={{ width: 360, height: 360 }} />
-  )}
-</div>
+     )}
+    </div>
 
 
 
@@ -160,14 +160,17 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 )}
 
 
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-3 justify-center">
           <button
             onClick={copy}
             className="
-              rounded-xl px-5 py-6 text-xs font-extrabold text-zinc-950
-              bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300
-              shadow-[0_10px_25px_rgba(0,0,0,0.25)]
-            "
+  rounded-xl px-6 py-5 text-xs font-extrabold
+  text-yellow-300 border border-yellow-400/35
+  bg-zinc-950/60 backdrop-blur
+  hover:bg-zinc-950/75 transition
+  shadow-[0_10px_25px_rgba(0,0,0,0.25)]
+"
+
           >
             {copied ? "COPIATO!" : "Copia link"}
           </button>
@@ -176,11 +179,13 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
             onClick={printQr}
 
             className="
-              rounded-xl px-5 py-6 text-xs font-extrabold text-zinc-100
-              border border-yellow-400/45 bg-zinc-900/50
-              hover:bg-zinc-900/70 transition
-              shadow-[0_10px_25px_rgba(0,0,0,0.25)]
-            "
+  rounded-xl px-6 py-5 text-xs font-extrabold
+  text-yellow-300 border border-yellow-400/35
+  bg-zinc-950/60 backdrop-blur
+  hover:bg-zinc-950/75 transition
+  shadow-[0_10px_25px_rgba(0,0,0,0.25)]
+"
+
           >
             Stampa QR
           </button>
