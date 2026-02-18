@@ -119,7 +119,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       </div>
 
 
-      <div className="rounded-2xl border border-cyan-400/50 bg-white p-3 print:border-0 print:bg-transparent print:p-0">
+      <div className="rounded-2xl border border-cyan-300/25 bg-white/95 p-3 print:border-0 print:bg-transparent print:p-0">
   <div className="print-only">
   {printPng ? (
     <img src={printPng} alt="QR" style={{ width: 360, height: 360 }} />
@@ -130,7 +130,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 
 
 
-<div className="no-print">
+<div className="no-print flex justify-center">
   <div id="qr-canvas">
     <QRCodeCanvas value={url} size={200} />
   </div>
@@ -161,7 +161,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 
 
 
-     </div>
+   
 
         <div className="mt-3 flex flex-wrap gap-2">
           <button
@@ -187,6 +187,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           >
             Stampa QR
           </button>
+        </div>
         </div>
        </>
     
