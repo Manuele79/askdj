@@ -626,7 +626,7 @@ async function joinExistingEvent() {
 
 
               <div className="mb-3">
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-cyan-300 to-pink-400">
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-800 via-cyan-800 to-pink-400">
                   INVITA GLI OSPITI (QR):
                 </div>
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-600 to-pink-400">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
