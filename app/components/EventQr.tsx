@@ -160,9 +160,6 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
 )}
 
 
-
-   
-
         <div className="mt-3 flex flex-wrap gap-2">
           <button
             onClick={copy}
