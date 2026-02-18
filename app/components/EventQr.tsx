@@ -167,7 +167,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
           <button
             onClick={copy}
             className="
-              rounded-xl px-4 py-2 text-xs font-extrabold text-zinc-950
+              rounded-xl px-5 py-6 text-xs font-extrabold text-zinc-950
               bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300
               shadow-[0_10px_25px_rgba(0,0,0,0.25)]
             "
@@ -179,7 +179,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
             onClick={printQr}
 
             className="
-              rounded-xl px-4 py-2 text-xs font-extrabold text-zinc-100
+              rounded-xl px-5 py-6 text-xs font-extrabold text-zinc-100
               border border-yellow-400/45 bg-zinc-900/50
               hover:bg-zinc-900/70 transition
               shadow-[0_10px_25px_rgba(0,0,0,0.25)]
