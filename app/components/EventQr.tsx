@@ -100,10 +100,10 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       "
       >
       <div className="mb-3">
-        <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300">
+        <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-cyan-500 to-pink-300">
           QR per Invitare gli Ospiti
         </div>
-        <div className="text-xs text-cyan-400">
+        <div className="text-xs text-cyan-200">
           Scansionano e mandano le richieste al DJ:
         </div>
       </div>
@@ -119,7 +119,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       </div>
 
 
-     <div className="rounded-2xl border border-yellow-400/20 bg-white/90 p-3 print:border-0 print:bg-transparent print:p-0">
+     <div className="rounded-2xl border border-yellow-400/15 bg-white/10 p-3 print:border-0 print:bg-transparent print:p-0">
      <div className="print-only">
      \ {printPng ? (
     <img src={printPng} alt="QR" style={{ width: 360, height: 360 }} />
