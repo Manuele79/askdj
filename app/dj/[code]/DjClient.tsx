@@ -616,10 +616,10 @@ async function joinExistingEvent() {
 
           {/* RIGHT: QR */}
           <aside className="lg:col-span-1">
-            <div className="sticky top-4 p-[1px] rounded-3xloverflow-hidden bg-gradient-to-br from-pink-400/20 via-cyan-400/15 to-emerald-400/20 shadow-[0_12px_35px_rgba(0,0,0,0.35)]">
+            <div className="sticky top-4 p-[1px] rounded-3xloverflow-hidden bg-gradient-to-br from-zinc-900/80 via-zinc-900/70 to-zinc-900/80 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
 
              <div className="rounded-3xl 
-                border border-yellow-400/60 
+                border border-yellow-400/80 
                 bg-zinc-800/40 
                 backdrop-blur 
                 p-4 overflow-hidden shadow-[0_0_20px_rgba(250,204,21,0.25)]">
