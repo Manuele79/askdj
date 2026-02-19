@@ -97,6 +97,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       className="
        rounded-3xl border border-yellow-400/70 bg-zinc-950/55 backdrop-blur p-4
         shadow-[0_0_20px_rgba(250,204,21,0.18)]
+        overflow-hidden
       "
       >
       <div className="mb-3">
