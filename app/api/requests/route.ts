@@ -352,6 +352,47 @@ const nowMs = Date.now();
     }
   }
 
+  // MERGE: stesso link (url) per altre piattaforme nello stesso evento -> +1 voto
+if (platform !== "youtube" && cleanUrl) {
+  const { data: existing, error: exErr } = await supabase
+    .from("requests")
+    .select("*")
+    .eq("event_code", eventCode)
+    .eq("platform", platform)
+    .eq("url", cleanUrl)
+    .limit(1);
+
+  if (exErr) {
+    console.error("SUPABASE MERGE READ ERROR:", exErr);
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
+
+  const row = existing?.[0];
+  if (row) {
+    const newVotes = Number(row.votes || 0) + 1;
+
+    const { data: upd, error: e2 } = await supabase
+      .from("requests")
+      .update({
+        votes: newVotes,
+        updated_at: nowMs,
+        title: finalTitle || row.title,
+        dedication: row.dedication || dedication || "",
+      })
+      .eq("id", row.id)
+      .select("*")
+      .single();
+
+    if (e2) {
+      console.error("SUPABASE MERGE UPDATE ERROR:", e2);
+      return NextResponse.json({ ok: false }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true, merged: true, request: mapRow(upd) });
+  }
+}
+
+
   // INSERT nuova richiesta
   const { data, error } = await supabase
     .from("requests")
