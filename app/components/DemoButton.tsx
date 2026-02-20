@@ -17,10 +17,13 @@ export default function DemoButton() {
     <button
       onClick={startDemo}
       className="
-        rounded-xl px-5 py-3 text-sm font-extrabold text-zinc-950
-        bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300
-        shadow-[0_10px_25px_rgba(0,0,0,0.25)]
-      "
+  rounded-xl px-5 py-3 text-sm font-extrabold
+  bg-zinc-900/60
+  border border-yellow-400/40
+  text-yellow-300
+  hover:bg-zinc-900/80
+  transition
+"
     >
       Prova Demo (20 min)
     </button>
