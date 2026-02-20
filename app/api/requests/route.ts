@@ -228,6 +228,22 @@ export async function GET(req: Request) {
 
   if (!eventCode) return NextResponse.json({ requests: [] });
 
+    // evento deve esistere ed essere non scaduto (anche per GET)
+  const { data: ev, error: evErr } = await supabase
+    .from("events")
+    .select("event_code, expires_at")
+    .eq("event_code", eventCode)
+    .single();
+
+  if (evErr || !ev) {
+    return NextResponse.json({ ok: false, error: "Evento non valido", requests: [] }, { status: 404 });
+  }
+
+  const exp = ev.expires_at ? Date.parse(ev.expires_at) : 0;
+  if (exp && Date.now() > exp) {
+    return NextResponse.json({ ok: false, error: "Evento scaduto", requests: [] }, { status: 410 });
+  }
+
   const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
 
   const { data, error } = await supabase
@@ -375,16 +391,34 @@ export async function PATCH(req: Request) {
 
   if (!id) return NextResponse.json({ ok: false }, { status: 400 });
 
-  const { data: row, error: e1 } = await supabase
-    .from("requests")
-    .select("votes")
-    .eq("id", id)
-    .single();
+ const { data: row, error: e1 } = await supabase
+  .from("requests")
+  .select("votes, event_code")
+  .eq("id", id)
+  .single();
 
-  if (e1) {
-    console.error("SUPABASE READ FOR VOTE ERROR:", e1);
-    return NextResponse.json({ ok: false }, { status: 500 });
-  }
+if (e1 || !row) {
+  console.error("SUPABASE READ FOR VOTE ERROR:", e1);
+  return NextResponse.json({ ok: false }, { status: 500 });
+}
+
+const eventCode = (row as any).event_code;
+
+// BLOCCO se evento scaduto
+const { data: ev, error: evErr } = await supabase
+  .from("events")
+  .select("expires_at")
+  .eq("event_code", eventCode)
+  .single();
+
+if (evErr || !ev) {
+  return NextResponse.json({ ok: false, error: "Evento non valido" }, { status: 404 });
+}
+
+const exp = ev.expires_at ? Date.parse(ev.expires_at) : 0;
+if (exp && Date.now() > exp) {
+  return NextResponse.json({ ok: false, error: "Evento scaduto" }, { status: 410 });
+}
 
   const newVotes = Math.max(0, Number((row as any).votes || 0) + delta);
   const nowMs = Date.now();
