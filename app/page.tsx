@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import InstallButton from "./components/InstallButton";
+import DemoButton from "./components/DemoButton";
+
 
 function SectionTitle({ title }: { title: string }) {
   return (
@@ -243,6 +245,8 @@ export default function Home() {
               >
                 🎛️ Apri pannello DJ
               </Link>
+
+              <DemoButton />
 
               <InstallButton />
 
