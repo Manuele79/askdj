@@ -392,6 +392,27 @@ if (platform !== "youtube" && cleanUrl) {
   }
 }
 
+const isDemo = eventCode.startsWith("DEMO-");
+
+if (isDemo) {
+  const { count, error: cErr } = await supabase
+    .from("requests")
+    .select("id", { count: "exact", head: true })
+    .eq("event_code", eventCode);
+
+  if (cErr) {
+    return NextResponse.json({ ok: false, error: "DB error" }, { status: 500 });
+  }
+
+  // max 2 richieste (righe) in demo
+  if ((count ?? 0) >= 2) {
+    return NextResponse.json(
+      { ok: false, error: "Demo finita: massimo 2 canzoni." },
+      { status: 429 }
+    );
+  }
+}
+
 
   // INSERT nuova richiesta
   const { data, error } = await supabase
