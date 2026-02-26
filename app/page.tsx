@@ -340,7 +340,7 @@ export default function Home() {
               {
                 n: "1",
                 t: "Crea un evento",
-                d: "Apri il pannello DJ e genera un evento ( matrimonio, festa, locale… ).",
+                d: "Apri il pannello DJ e genera un evento (matrimonio, festa, locale…).",
               },
               {
                 n: "2",
