@@ -499,3 +499,26 @@ if (exp && Date.now() > exp) {
 
   return NextResponse.json({ ok: true, request: mapRow(data) });
 }
+
+// DELETE /api/requests  body: { id }
+export async function DELETE(req: Request) {
+  const denied = requireSecret(req);
+  if (denied) return denied;
+
+  const body = await req.json().catch(() => ({} as any));
+  const id = String(body.id || "").trim();
+
+  if (!id) return NextResponse.json({ ok: false }, { status: 400 });
+
+  const { error } = await supabase
+    .from("requests")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("SUPABASE DELETE ERROR:", error);
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}
