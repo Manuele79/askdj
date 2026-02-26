@@ -105,7 +105,7 @@ export default function Home() {
                 <span style={{ color: "rgba(255,215,0,0.95)" }}>Ask</span>DJ
               </div>
               <div style={{ fontSize: 12.8, opacity: 0.72, fontWeight: 700 }}>
-                AskDJ è un’app per DJ che permette di raccogliere richieste musicali e dediche tramite QR code durante matrimoni, feste private ed eventi, zero caos.
+                un’app di supporto al DJ che permette di raccogliere richieste musicali e dediche tramite QR code durante matrimoni, feste ed eventi.
               </div>
             </div>
           </div>
@@ -340,7 +340,7 @@ export default function Home() {
               {
                 n: "1",
                 t: "Crea un evento",
-                d: "Apri il pannello DJ e genera un evento (matrimonio, festa, locale…).",
+                d: "Apri il pannello DJ e genera un evento ( matrimonio, festa, locale… ).",
               },
               {
                 n: "2",
@@ -349,7 +349,7 @@ export default function Home() {
               },
               {
                 n: "3",
-                t: "Gli ospiti inviano brani + dedica",
+                t: "Gli ospiti entrano con il QR, e inviano brani + dedica",
                 d: "Arriva tutto in lista: tu scegli, ordini, fai partire.",
               },
             ].map((s) => (
