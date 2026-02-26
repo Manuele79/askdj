@@ -298,6 +298,23 @@ async function joinExistingEvent() {
   }
 }
 
+const deleteRequest = async (id: string) => {
+  if (!confirm("Cancellare questa richiesta?")) return;
+
+  const r = await fetch("/api/requests", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
+
+  if (!r.ok) {
+    alert("Errore cancellazione");
+    return;
+  }
+
+  window.location.reload();
+};
+
 
 
   return (
@@ -602,6 +619,15 @@ async function joinExistingEvent() {
                             </span>
 
                             <PlatformButton r={r} />
+
+                            
+                          <button
+                          onClick={() => deleteRequest(r.id)}
+                          className="ml-2 rounded-md px-2 py-1 text-xs opacity-60 hover:opacity-100 hover:text-red-400"
+                           title="Elimina"
+                          >
+                         🗑️
+                        </button>
 
                             
                           </div>
