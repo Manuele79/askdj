@@ -105,7 +105,7 @@ export default function Home() {
                 <span style={{ color: "rgba(255,215,0,0.95)" }}>Ask</span>DJ
               </div>
               <div style={{ fontSize: 12.8, opacity: 0.72, fontWeight: 700 }}>
-                QR per richieste musicali & dediche — stile pro, zero caos.
+                AskDJ è un’app per DJ che permette di raccogliere richieste musicali e dediche tramite QR code durante matrimoni, feste private ed eventi, zero caos.
               </div>
             </div>
           </div>
@@ -269,7 +269,7 @@ export default function Home() {
           {[
             {
               title: "Zero caos",
-              text: "Gli ospiti non ti bombardano WhatsApp: tutto entra in lista, ordinato e leggibile.",
+              text: "Gli ospiti non ti bombardano mentre suoni: tutto entra in lista, ordinato e leggibile.",
               icon: "🧠",
             },
             {
@@ -416,8 +416,8 @@ export default function Home() {
                 icon: "💍",
               },
               {
-                title: "Compleanni (anche bimbi)",
-                text: "I piccoli scelgono le canzoni. Gli adulti non impazziscono.",
+                title: "Compleanni (anche bimbi, modalità PARTY)",
+                text: "I piccoli scelgono le canzoni. Gli adulti non impazziscono, autoplay da YOUTUBE.",
                 icon: "🎂",
               },
               {
