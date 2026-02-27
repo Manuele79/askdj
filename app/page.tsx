@@ -590,7 +590,7 @@ export default function Home() {
             textAlign: "center",
           }}
         >
-          © {new Date().getFullYear()} AskDJ — Manuele Martino
+          © {new Date().getFullYear()} info@askdj.app — Manuele Martino
         </footer>
       </div>
     </main>
