@@ -165,7 +165,32 @@ export default function DjClient({ code }: { code: string }) {
     } catch {}
   }
 
+  const [bpmDraft, setBpmDraft] = useState<string>("");
+const [bpmTarget, setBpmTarget] = useState<number | null>(null);
 
+const confirmBpmTarget = () => {
+  const n = Number(bpmDraft);
+  if (!Number.isFinite(n) || n <= 0 || n > 300) return;
+  setBpmTarget(Math.round(n));
+};
+
+const targetZone = (bpm: number | null) => {
+  if (!bpm) return "neutral";
+  if (bpm < 90) return "low";       // verde
+  if (bpm < 128) return "mid";      // giallo
+  if (bpm < 140) return "high";     // blu
+  return "peak";                   // rosso
+};
+
+const zoneClass = (zone: string) => {
+  switch (zone) {
+    case "low":  return "bg-green-500/25 ring-2 ring-green-400";
+    case "mid":  return "bg-yellow-500/25 ring-2 ring-yellow-400";
+    case "high": return "bg-sky-500/25 ring-2 ring-sky-400";
+    case "peak": return "bg-red-500/25 ring-2 ring-red-400";
+    default:     return "bg-zinc-900 ring-1 ring-yellow-400/30";
+  }
+};
 
   const sorted = useMemo(() => {
     return [...items].sort(
@@ -609,6 +634,28 @@ const saveBpm = async (id: string) => {
                       Classifica: 👇 - Voti: 🔥 - Link: 🎵  
                     </div>
 
+                    <div className="flex items-center gap-2">
+  <span className="text-xs opacity-70">BPM attuale</span>
+
+  <input
+    type="number"
+    inputMode="numeric"
+    value={bpmDraft}
+    onChange={(e) => setBpmDraft(e.target.value)}
+    onKeyDown={(e) => { if (e.key === "Enter") confirmBpmTarget(); }}
+    placeholder={bpmTarget ? String(bpmTarget) : "Es. 128"}
+    className={`w-20 rounded-xl px-2 py-1 text-xs ${zoneClass(targetZone(bpmTarget))}`}
+  />
+
+  <button
+    onClick={confirmBpmTarget}
+    className="rounded-lg bg-yellow-500/20 px-2 py-1 text-xs hover:bg-yellow-500/40"
+    title="Conferma BPM"
+  >
+    OK
+  </button>
+</div>
+
                     <button
                       onClick={printPlaylist}
                       className="rounded-lg px-3 py-1 text-xs font-bold text-zinc-900 bg-gradient-to-r from-amber-300 to-yellow-400 hover:opacity-90"
@@ -634,6 +681,9 @@ const saveBpm = async (id: string) => {
                 ) : (
                   <ul className="space-y-3">
                     {sorted.map((r, idx) => (
+
+
+
                       <li
                         key={r.id}
                         className="rounded-3xl overflow-hidden border border-cyan-400 bg-zinc-950/55 p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
@@ -670,16 +720,44 @@ const saveBpm = async (id: string) => {
 
 {/* BPM UX: badge se salvato, input solo quando serve */}
 {(() => {
-  const saved = typeof (r as any).bpm === "number" ? Math.round((r as any).bpm) : null;
+
+const saved = typeof (r as any).bpm === "number" ? Math.round((r as any).bpm) : null;
+
+let songBpmClass = "bg-cyan-500/20"; // neutro
+
+if (bpmTarget && saved !== null) {
+  const diff = Math.abs(saved - bpmTarget);
+  const zone = targetZone(bpmTarget);
+
+  if (diff <= 5) {
+    // match forte
+    songBpmClass =
+      zone === "low"  ? "bg-green-500/35 ring-2 ring-green-400"
+    : zone === "mid"  ? "bg-yellow-500/35 ring-2 ring-yellow-400"
+    : zone === "high" ? "bg-sky-500/35 ring-2 ring-sky-400"
+    :                 "bg-red-500/35 ring-2 ring-red-400";
+  } else if (diff <= 10) {
+    // match soft
+    songBpmClass =
+      zone === "low"  ? "bg-green-500/20 ring-1 ring-green-400/60"
+    : zone === "mid"  ? "bg-yellow-500/20 ring-1 ring-yellow-400/60"
+    : zone === "high" ? "bg-sky-500/20 ring-1 ring-sky-400/60"
+    :                 "bg-red-500/20 ring-1 ring-red-400/60";
+  } else {
+    songBpmClass = "bg-zinc-800/40"; // fuori range → neutro scuro
+  }
+}
+
+
   const editing = Object.prototype.hasOwnProperty.call(bpmEdit, r.id); // true se l'utente ha "aperto" l'edit
 
   // caso 1: BPM salvato e NON in edit -> badge + bottone modifica
   if (saved !== null && !editing) {
     return (
       <>
-        <span className="text-xs bg-cyan-500/20 px-2 py-1 rounded-md">
-          {saved} BPM
-        </span>
+        <span className={`text-xs px-2 py-1 rounded-md ${songBpmClass}`}>
+  {saved} BPM
+</span>
         <button
           onClick={() => setBpmEdit((prev) => ({ ...prev, [r.id]: saved }))}
           className="rounded-md bg-zinc-800/60 px-2 py-1 text-xs hover:bg-zinc-800"
