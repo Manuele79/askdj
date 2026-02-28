@@ -154,7 +154,8 @@ export default function DjClient({ code }: { code: string }) {
   const [eventName, setEventName] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [joinMsg, setJoinMsg] = useState("");
-  
+  const [currentBpm, setCurrentBpm] = useState<number | "">("");
+  const [bpmEdit, setBpmEdit] = useState<Record<string, number | "">>({});
 
   function resetPartyUnlock() {
     try {
@@ -315,6 +316,19 @@ const deleteRequest = async (id: string) => {
   window.location.reload();
 };
 
+const saveBpm = async (id: string) => {
+  const v = bpmEdit[id];
+  if (v === "" || v === undefined) return;
+
+  const r = await fetch("/api/requests", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, bpm: v }),
+  });
+
+  if (!r.ok) { alert("Errore BPM"); return; }
+  window.location.reload(); // come hai fatto per delete, easy
+};
 
 
   return (
@@ -566,8 +580,24 @@ const deleteRequest = async (id: string) => {
 
                   <div className="flex items-center gap-3">
                     <div className="whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-200 to-cyan-200">
-                      Classifica: 👇 - Voti: 🔥 - Link: 🎵
-                      
+                      Classifica: 👇 - Voti: 🔥 - Link: 🎵  
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                     <span className="text-xs opacity-70">BPM attuale</span>
+                     <input
+                       type="number"
+                       value={currentBpm}
+                       onChange={(e) => {
+                       const raw = e.target.value;
+                       if (raw === "") return setCurrentBpm("");
+                       const n = Number(raw);
+                       if (!Number.isFinite(n)) return;
+                       setCurrentBpm(n);
+                       }}
+                       placeholder="124"
+                       className="w-20 rounded-xl border border-yellow-400/30 bg-zinc-950/40 px-2 py-1 text-sm"
+                     />
                     </div>
 
                     <button
@@ -619,6 +649,39 @@ const deleteRequest = async (id: string) => {
                             </span>
 
                             <PlatformButton r={r} />
+
+                          <div className="flex items-center gap-2 ml-2">
+  {/* mostra bpm salvato se c'è */}
+  {typeof (r as any).bpm === "number" && (
+    <span className="text-xs bg-cyan-500/20 px-2 py-1 rounded-md">
+      {Math.round((r as any).bpm)} BPM
+    </span>
+  )}
+
+  {/* input bpm per questa richiesta */}
+  <input
+    type="number"
+    inputMode="numeric"
+    value={bpmEdit[r.id] ?? ((r as any).bpm ?? "")}
+    onChange={(e) =>
+      setBpmEdit((prev) => ({
+        ...prev,
+        [r.id]: e.target.value === "" ? "" : Number(e.target.value),
+      }))
+    }
+    placeholder="BPM"
+    className="w-16 rounded-md border border-yellow-400/30 bg-zinc-900 px-2 py-1 text-xs"
+  />
+
+  <button
+    onClick={() => saveBpm(r.id)}
+    className="rounded-md bg-yellow-500/20 px-2 py-1 text-xs hover:bg-yellow-500/40"
+    title="Salva BPM"
+  >
+    OK
+  </button>
+</div>
+
 
                             
                           <button
