@@ -583,23 +583,6 @@ const saveBpm = async (id: string) => {
                       Classifica: 👇 - Voti: 🔥 - Link: 🎵  
                     </div>
 
-                    <div className="flex items-center gap-2">
-                     <span className="text-xs opacity-70">BPM attuale</span>
-                     <input
-                       type="number"
-                       value={currentBpm}
-                       onChange={(e) => {
-                       const raw = e.target.value;
-                       if (raw === "") return setCurrentBpm("");
-                       const n = Number(raw);
-                       if (!Number.isFinite(n)) return;
-                       setCurrentBpm(n);
-                       }}
-                       placeholder="124"
-                       className="w-20 rounded-xl border border-yellow-400/30 bg-zinc-950/40 px-2 py-1 text-sm"
-                     />
-                    </div>
-
                     <button
                       onClick={printPlaylist}
                       className="rounded-lg px-3 py-1 text-xs font-bold text-zinc-900 bg-gradient-to-r from-amber-300 to-yellow-400 hover:opacity-90"
