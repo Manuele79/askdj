@@ -413,6 +413,36 @@ if (isDemo) {
   }
 }
 
+  // 🔁 RIUSO BPM: se esiste già un BPM per lo stesso brano (anche in altri eventi), lo copio
+  let seedBpm: number | null = null;
+
+  if (platform === "youtube" && youtubeVideoId) {
+    const { data: prev } = await supabase
+      .from("requests")
+      .select("bpm, updated_at")
+      .eq("platform", "youtube")
+      .eq("youtube_video_id", youtubeVideoId)
+      .not("bpm", "is", null)
+      .order("updated_at", { ascending: false })
+      .limit(1);
+
+    const row = prev?.[0];
+    if (row?.bpm !== null && row?.bpm !== undefined) seedBpm = Number(row.bpm);
+  } else if (cleanUrl) {
+    const { data: prev } = await supabase
+      .from("requests")
+      .select("bpm, updated_at")
+      .eq("platform", platform)
+      .eq("url", cleanUrl)
+      .not("bpm", "is", null)
+      .order("updated_at", { ascending: false })
+      .limit(1);
+
+    const row = prev?.[0];
+    if (row?.bpm !== null && row?.bpm !== undefined) seedBpm = Number(row.bpm);
+  }
+
+
 
   // INSERT nuova richiesta
   const { data, error } = await supabase
@@ -425,6 +455,7 @@ if (isDemo) {
       platform,
       youtube_video_id: youtubeVideoId,
       votes: 1,
+      bpm: seedBpm,
       updated_at: nowMs,
       // created_at: default now() in DB
     })
