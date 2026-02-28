@@ -448,7 +448,7 @@ export async function PATCH(req: Request) {
   const body = await req.json().catch(() => ({} as any));
   const id = String(body.id || "").trim();
   const delta = Number(body.delta ?? 1);
-
+  const bpm = body.bpm; // può essere number o string
 
 
   if (!id) return NextResponse.json({ ok: false }, { status: 400 });
@@ -466,6 +466,7 @@ if (e1 || !row) {
 
 const eventCode = (row as any).event_code;
 
+
 // BLOCCO se evento scaduto
 const { data: ev, error: evErr } = await supabase
   .from("events")
@@ -480,6 +481,29 @@ if (evErr || !ev) {
 const exp = ev.expires_at ? Date.parse(ev.expires_at) : 0;
 if (exp && Date.now() > exp) {
   return NextResponse.json({ ok: false, error: "Evento scaduto" }, { status: 410 });
+}
+
+// update BPM (solo DJ)
+if (bpm !== undefined && bpm !== null) {
+  const bpmNum = Number(bpm);
+  if (!Number.isFinite(bpmNum) || bpmNum <= 0 || bpmNum > 300) {
+    return NextResponse.json({ ok: false, error: "BPM non valido" }, { status: 400 });
+  }
+
+  const nowMs = Date.now();
+  const { data, error } = await supabase
+    .from("requests")
+    .update({ bpm: Math.round(bpmNum), updated_at: nowMs })
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error("SUPABASE BPM UPDATE ERROR:", error);
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true, request: mapRow(data) });
 }
 
   const newVotes = Math.max(0, Number((row as any).votes || 0) + delta);
