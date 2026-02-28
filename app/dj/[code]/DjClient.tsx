@@ -184,10 +184,10 @@ const targetZone = (bpm: number | null) => {
 
 const zoneClass = (zone: string) => {
   switch (zone) {
-    case "low":  return "bg-green-500/25 ring-2 ring-green-400";
-    case "mid":  return "bg-yellow-500/25 ring-2 ring-yellow-400";
-    case "high": return "bg-sky-500/25 ring-2 ring-sky-400";
-    case "peak": return "bg-red-500/25 ring-2 ring-red-400";
+    case "low":  return "bg-green-400/50 ring-2 ring-green-400";
+    case "mid":  return "bg-yellow-400/50 ring-2 ring-yellow-400";
+    case "high": return "bg-sky-400/50 ring-2 ring-sky-400";
+    case "peak": return "bg-red-400/50 ring-2 ring-red-400";
     default:     return "bg-zinc-900 ring-1 ring-yellow-400/30";
   }
 };
@@ -635,7 +635,7 @@ const saveBpm = async (id: string) => {
                     </div>
 
                     <div className="flex items-center gap-2">
-  <span className="text-xs opacity-70">BPM attuale</span>
+  <span className="text-xs opacity-80">BPM attuale:</span>
 
   <input
     type="number"
@@ -644,7 +644,7 @@ const saveBpm = async (id: string) => {
     onChange={(e) => setBpmDraft(e.target.value)}
     onKeyDown={(e) => { if (e.key === "Enter") confirmBpmTarget(); }}
     placeholder={bpmTarget ? String(bpmTarget) : "Es. 128"}
-    className={`w-20 rounded-xl px-2 py-1 text-xs ${zoneClass(targetZone(bpmTarget))}`}
+    className={`w-20 rounded-xl px-2 py-1 text-xs text-cente ${zoneClass(targetZone(bpmTarget))}`}
   />
 
   <button
