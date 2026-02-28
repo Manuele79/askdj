@@ -567,7 +567,7 @@ const saveBpm = async (id: string) => {
               </section>
             ) : (
               <section className="mt-3 rounded-3xl border border-yellow-400 bg-emerald-400/8 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
-                <div className="flex flex-wrap items-center justify-between gap-3">
+               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
   
                   <div className="min-w-0">
                     <div className="pl-4 pt-2 text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-cyan-400 to-pink-400">
