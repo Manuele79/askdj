@@ -346,7 +346,7 @@ function FakeSpectrumWide() {
           <div className="space-y-4">
             <div>
               <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
-                SCRIVI IL TITOLO DELLA CANZONE...
+                SCRIVI IL TITOLO DELLA CANZONE NON RIPRODUCIBILE SU PARTY.
               </label>
               <input
                 value={title}
@@ -358,7 +358,7 @@ function FakeSpectrumWide() {
 
             <div>
               <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
-                COPIA IL LINK DA: YouTube/Spotify/Apple/Amazon/Tidal…
+                COPIA IL LINK DA: YouTube(AUTOPLAY SU PARTY)/Spotify/Apple/Amazon/Tidal…
               </label>
               <input
                 value={link}
