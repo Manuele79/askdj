@@ -318,16 +318,42 @@ const deleteRequest = async (id: string) => {
 
 const saveBpm = async (id: string) => {
   const v = bpmEdit[id];
+
+  // niente valore -> non fare nulla
   if (v === "" || v === undefined) return;
+
+  const bpmNum = Number(v);
+  if (!Number.isFinite(bpmNum) || bpmNum <= 0 || bpmNum > 300) {
+    alert("BPM non valido");
+    return;
+  }
 
   const r = await fetch("/api/requests", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, bpm: v }),
+    body: JSON.stringify({ id, bpm: Math.round(bpmNum) }),
   });
 
-  if (!r.ok) { alert("Errore BPM"); return; }
-  window.location.reload(); // come hai fatto per delete, easy
+  if (!r.ok) {
+    const txt = await r.text().catch(() => "");
+    alert("Errore BPM" + (txt ? `: ${txt}` : ""));
+    return;
+  }
+
+  const data = await r.json().catch(() => null);
+  const updated = data?.request; // <- backend ti ritorna request aggiornata
+
+  // aggiorna lista in memoria (niente reload)
+  setItems((prev) =>
+    prev.map((x) => (x.id === id ? { ...x, ...(updated ?? {}), bpm: Math.round(bpmNum) } : x))
+  );
+
+  // chiudi l'edit (sparisce input, resta badge)
+  setBpmEdit((prev) => {
+    const copy = { ...prev };
+    delete copy[id];
+    return copy;
+  });
 };
 
 
@@ -612,59 +638,103 @@ const saveBpm = async (id: string) => {
                         key={r.id}
                         className="rounded-3xl overflow-hidden border border-cyan-400 bg-zinc-950/55 p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <div className="text-xs text-zinc-500">#{idx + 1}</div>
-                            <div className="truncate text-base font-extrabold text-zinc-100">
-                              {r.title}
-                            </div>
-                            {r.dedication && (
-                            <div className="mt-1 truncate text-xs text-rose-400 italic">
-                             💬 DEDICA: {r.dedication}
-                            </div>
-                           )}
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                       {/* SINISTRA: titolo */}
+                       <div className="min-w-0 flex-1">
+                        <div className="text-xs text-zinc-500">#{idx + 1}</div>
 
-                          </div>
+                       <div className="truncate text-base font-extrabold text-zinc-100">
+                        {r.title}
+                       </div>
 
-                          <div className="flex items-center gap-2">
-                            <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs font-extrabold text-zinc-200 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
-                              🔥 {r.votes}
-                            </span>
+                      {r.dedication && (
+                      <div className="mt-1 truncate text-xs text-rose-400 italic">
+                      💬 DEDICA: {r.dedication}
+                     </div>
+                    )}
+                   </div>
 
-                            <PlatformButton r={r} />
+          {/* DESTRA: pillole/bottoni */}
+          <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:justify-end sm:shrink-0">
+           <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs font-extrabold text-zinc-200 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
+           🔥 {r.votes}
+            </span>
 
-                          <div className="flex items-center gap-2 ml-2">
-  {/* mostra bpm salvato se c'è */}
-  {typeof (r as any).bpm === "number" && (
-    <span className="text-xs bg-cyan-500/20 px-2 py-1 rounded-md">
-      {Math.round((r as any).bpm)} BPM
-    </span>
-  )}
+            <PlatformButton r={r} />
 
-  {/* input bpm per questa richiesta */}
-  <input
-    type="number"
-    inputMode="numeric"
-    value={bpmEdit[r.id] ?? ((r as any).bpm ?? "")}
-    onChange={(e) =>
-      setBpmEdit((prev) => ({
-        ...prev,
-        [r.id]: e.target.value === "" ? "" : Number(e.target.value),
-      }))
-    }
-    placeholder="BPM"
-    className="w-16 rounded-md border border-yellow-400/30 bg-zinc-900 px-2 py-1 text-xs"
-  />
 
-  <button
-    onClick={() => saveBpm(r.id)}
-    className="rounded-md bg-yellow-500/20 px-2 py-1 text-xs hover:bg-yellow-500/40"
-    title="Salva BPM"
-  >
-    OK
-  </button>
+          <div className="flex items-center gap-2 ml-2">
+
+
+
+
+{/* BPM UX: badge se salvato, input solo quando serve */}
+{(() => {
+  const saved = typeof (r as any).bpm === "number" ? Math.round((r as any).bpm) : null;
+  const editing = Object.prototype.hasOwnProperty.call(bpmEdit, r.id); // true se l'utente ha "aperto" l'edit
+
+  // caso 1: BPM salvato e NON in edit -> badge + bottone modifica
+  if (saved !== null && !editing) {
+    return (
+      <>
+        <span className="text-xs bg-cyan-500/20 px-2 py-1 rounded-md">
+          {saved} BPM
+        </span>
+        <button
+          onClick={() => setBpmEdit((prev) => ({ ...prev, [r.id]: saved }))}
+          className="rounded-md bg-zinc-800/60 px-2 py-1 text-xs hover:bg-zinc-800"
+          title="Modifica BPM"
+        >
+          ✏️
+        </button>
+      </>
+    );
+  }
+
+  // caso 2: BPM mancante oppure in edit -> input + OK (+ annulla se c'era già)
+  return (
+    <>
+      <input
+        type="number"
+        inputMode="numeric"
+        value={bpmEdit[r.id] ?? ""}   // quando entri in edit lo settiamo noi sopra
+        onChange={(e) =>
+          setBpmEdit((prev) => ({
+            ...prev,
+            [r.id]: e.target.value === "" ? "" : Number(e.target.value),
+          }))
+        }
+        placeholder="BPM"
+        className="w-16 rounded-md border border-yellow-400/30 bg-zinc-900 px-2 py-1 text-xs"
+      />
+
+      <button
+        onClick={() => saveBpm(r.id)}
+        className="rounded-md bg-yellow-500/20 px-2 py-1 text-xs hover:bg-yellow-500/40"
+        title="Salva BPM"
+      >
+        OK
+      </button>
+
+      {saved !== null && (
+        <button
+          onClick={() =>
+            setBpmEdit((prev) => {
+              const copy = { ...prev };
+              delete copy[r.id];
+              return copy;
+            })
+          }
+          className="rounded-md bg-zinc-800/60 px-2 py-1 text-xs hover:bg-zinc-800"
+          title="Annulla"
+        >
+          ✖
+        </button>
+      )}
+    </>
+  );
+})()}
 </div>
-
 
                             
                           <button
