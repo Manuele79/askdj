@@ -630,11 +630,11 @@ const saveBpm = async (id: string) => {
                   </div>
 
                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div className="sm:whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-cyan-600">
+                    <div className="whitespace-nowrap text-sm font-bold text-cyan-600">
                       Classifica: 👇 - Voti: 🔥 - Link: 🎵  
                     </div>
 
-                   <div className="flex items-center gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
+                   <div className="flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
   <span className="text-xs opacity-70">BPM attuale:</span>
 
   <input
