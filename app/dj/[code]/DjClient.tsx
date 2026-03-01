@@ -655,14 +655,14 @@ const saveBpm = async (id: string) => {
     OK
   </button>
 </div>
-
-                    <button
-                      onClick={printPlaylist}
-                      className="rounded-lg px-3 py-1 text-xs font-bold text-zinc-900 bg-gradient-to-r from-amber-300 to-yellow-400 hover:opacity-90"
-                    >
-                      🖨 Stampa Playlist ▼
-                    </button>
-                  </div>
+<div className="mt-2 flex justify-center sm:mt-0 sm:justify-end sm:ml-3 pt-2 border-t border-yellow-400/20 sm:pt-0 sm:border-t-0">
+  <button
+    onClick={printPlaylist}
+    className="rounded-md px-3 py-1 text-xs leading-none font-bold text-zinc-900 bg-gradient-to-r from-amber-300 to-yellow-400 hover:opacity-90"
+  >
+    🖨️ Stampa Playlist ▼
+  </button>
+</div>
 
 
                 </div>
