@@ -666,7 +666,7 @@ const saveBpm = async (id: string) => {
 
 
                 </div>
-
+</div>
 
                 {sorted.length === 0 ? (
                   <div className="rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 pt-6 text-sm text-zinc-300 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
