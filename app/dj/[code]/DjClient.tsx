@@ -618,7 +618,7 @@ const saveBpm = async (id: string) => {
               </section>
             ) : (
               <section className="mt-3 rounded-3xl border border-yellow-400 bg-emerald-400/8 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
-               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+               <div className="flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between">
   
                   <div className="min-w-0">
                     <div className="pl-4 pt-2 text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-cyan-400 to-pink-400">
@@ -630,11 +630,11 @@ const saveBpm = async (id: string) => {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <div className="whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-200 to-cyan-200">
+                    <div className="sm:whitespace-nowrap text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-200 to-cyan-200">
                       Classifica: 👇 - Voti: 🔥 - Link: 🎵  
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
   <span className="text-xs opacity-80">BPM attuale:</span>
 
   <input
@@ -644,7 +644,7 @@ const saveBpm = async (id: string) => {
     onChange={(e) => setBpmDraft(e.target.value)}
     onKeyDown={(e) => { if (e.key === "Enter") confirmBpmTarget(); }}
     placeholder={bpmTarget ? String(bpmTarget) : "Es. 128"}
-    className={`w-20 rounded-xl px-2 py-1 text-xs text-cente ${zoneClass(targetZone(bpmTarget))}`}
+    className={`w-20 rounded-xl px-2 py-1 text-xs text-center ${zoneClass(targetZone(bpmTarget))}`}
   />
 
   <button
