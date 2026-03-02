@@ -468,8 +468,8 @@ const saveBpm = async (id: string) => {
 
 
             <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
-              Crea un evento, mostra il QR e ricevi brani + dediche in una lista ordinata.
-               Tu decidi cosa MIXARE...
+              Crea un EVENTO, poi mostra il QR e ricevi i brani e dediche in una lista ordinata...
+               Tu decidi cosa suonare...
             </p>
 
             <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
@@ -631,11 +631,11 @@ const saveBpm = async (id: string) => {
 
                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div className="whitespace-nowrap text-sm font-bold text-cyan-600">
-                      Classifica: 👇 - Voti: 🔥 - Link: 🎵  
+                     -Classifica:👇 -Voti:🔥 -Link:🎵  
                     </div>
 
                    <div className="flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
-  <span className="text-xs opacity-70">Cerca x BPM :</span>
+  <span className="text-xs opacity-70">TROVA BPM:</span>
 
   <input
     type="number"
