@@ -608,7 +608,7 @@ const saveBpm = async (id: string) => {
                  </div>
 
 
-                <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-950">
+                <div className="overflow-hidden rounded-3xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm shadow-[0_0_25px_rgba(0,0,0,0.45)]">
                   <iframe
                     src={`/party/${code}`}
                     className="h-[82vh] w-full"
