@@ -631,7 +631,7 @@ const saveBpm = async (id: string) => {
 
                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div className="whitespace-nowrap text-sm font-bold text-cyan-600">
-                     -Classifica:👇 -Voti:🔥 -Link:🎵  
+                     -Classifica:👇 -Voti:🔥 -Link:🎵 -  
                     </div>
 
                    <div className="flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
