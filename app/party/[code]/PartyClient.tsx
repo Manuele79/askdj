@@ -552,7 +552,7 @@ function resetParty() {
             <button
               type="button"
               onClick={resetParty}
-              className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-zinc-950 bg-gradient-to-r from-yellow-400 to-amber-500 shadow-[0_0_25px_rgba(255,255,255,0.20)] hover:brightness-110 transition"
+              className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-extrabold text-zinc-950 ring-2 ring-yellow-300/40 bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg hover:brightness-110 transition"
               title="Reset Party"
             >
              <span>🎉</span>
