@@ -388,92 +388,99 @@ const saveBpm = async (id: string) => {
       <div className="pointer-events-none absolute -bottom-56 right-[-160px] h-[600px] w-[600px] rounded-full bg-pink-400/20 blur-[140px]" />
 
       <div className="mx-auto max-w-6xl px-4 py-8">
-        {/* HEADER TOP */}
-        <div className="mb-6 flex flex-col gap-4 md:gap-8">
-          <div className="flex flex-wrap items-center gap-3 md:justify-center  ">
-            <div className="flex items-center gap-3 md:justify-center">
-             {/* Logo AskDJ (animato) */}
-<div className="flex items-center gap-3">
-  <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
-    {/* glow animato dietro */}
-    <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/40 blur-xl animate-pulse" />
-    <div className="pointer-events-none absolute -inset-1 rounded-2xl border border-yellow-300/60 animate-pulse" />
 
-    {/* icon */}
-    <span className="relative text-2xl drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]">
-      🎧
-    </span>
-  </div>
+{/* HEADER TOP */}
+<div className="mb-6 flex flex-col gap-4 md:gap-8">
 
-  <div className="leading-tight">
-    <div className="text-3xl font-black tracking-tight">
-      <span className="text-yellow-400">Ask</span>
-      <span className="text-white">DJ</span>
-    </div>
-    <div className="text-xs text-zinc-400 tracking-wide">
-      Music Requests
-    </div>
-  </div>
-</div>
+  {/* RIGA TOP: logo sx + evento dx */}
+  <div className="flex items-start justify-between gap-3">
 
+    {/* SINISTRA: Logo AskDJ */}
+    <div className="flex items-center gap-3">
+      {/* Logo AskDJ (animato) */}
+      <div className="flex items-center gap-3">
+        <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
+          {/* glow animato dietro */}
+          <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/40 blur-xl animate-pulse" />
+          <div className="pointer-events-none absolute -inset-1 rounded-2xl border border-yellow-300/60 animate-pulse" />
 
+          {/* icon */}
+          <span className="relative text-2xl drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]">
+            🎧
+          </span>
+        </div>
 
-{/* Titolo */}
-<div className="min-w-0 md:text-center">
-  <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight break-words">
-    Console DJ
-  </div>
-
-  <div className="mt-1 md:mt-3 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
-    Richieste e dediche in tempo reale
-  </div>
-  </div>
-
-   </div>
-{code && code !== "TEST123" && (
-  <div className="mt-2 flex flex-wrap items-center gap-2">
-    <span className="text-cyan-400 font-extrabold tracking-widest text-xs sm:text-sm">
-      EVENTO:
-    </span>
-
-    <span
-      className="
-        inline-flex items-center
-        px-4 py-1.5
-        rounded-full
-        text-sm sm:text-base
-        font-black tracking-wide
-        bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-300
-        text-zinc-900
-        shadow-[0_0_18px_rgba(34,211,238,0.35)]
-      "
-    >
-      {code}
-    </span>
-  </div>
-)}
-
-
-
+        <div className="leading-tight">
+          <div className="text-3xl font-black tracking-tight">
+            <span className="text-yellow-400">Ask</span>
+            <span className="text-white">DJ</span>
           </div>
+          <div className="text-xs text-zinc-400 tracking-wide">
+            Music Requests
+          </div>
+        </div>
+      </div>
+    </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6 ">
+    {/* DESTRA: Evento */}
+    <div className="ml-auto">
+      {code && code !== "TEST123" && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-cyan-400 font-extrabold tracking-widest text-xs sm:text-sm">
+            EVENTO:
+          </span>
 
-            <div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight">
-              Gestisci le richieste <span className="text-yellow-400">senza caos</span>
-              </h1>
+          <span
+            className="
+              inline-flex items-center
+              px-4 py-1.5
+              rounded-full
+              text-sm sm:text-base
+              font-black tracking-wide
+              bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-300
+              text-zinc-900
+              shadow-[0_0_18px_rgba(34,211,238,0.35)]
+            "
+          >
+            {code}
+          </span>
+        </div>
+      )}
+    </div>
 
-               <FakeSpectrumWide />
+  </div>
+
+  {/* CENTRO (SOLO DESKTOP): Console DJ + sottotitolo */}
+  <div className="hidden md:flex w-full flex-col items-center text-center -mt-2">
+    <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight break-words">
+      Console DJ
+    </div>
+
+    <div className="mt-3 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
+      Richieste e dediche in tempo reale
+    </div>
+  </div>
+
+  {/* RESTO HEADER: titolo grande + descrizione + barre */}
+  <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6">
+
+    <div>
+      <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+        Gestisci le richieste <span className="text-yellow-400">senza caos</span>
+      </h1>
+
+      <FakeSpectrumWide />
+
+      <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
+        Crea un EVENTO, poi mostra il QR e ricevi i brani e dediche in una lista ordinata...
+        Tu decidi cosa suonare...
+      </p>
+
+      <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+      <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+    
 
 
-            <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
-              Crea un EVENTO, poi mostra il QR e ricevi i brani e dediche in una lista ordinata...
-               Tu decidi cosa suonare...
-            </p>
-
-            <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
-            <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
 
 
               {/* INIZIA QUI */}
@@ -847,7 +854,7 @@ if (bpmTarget && saved !== null) {
 
 
               <div className="mb-3">
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-cyan-400 to-pink-200">
+                <div className="text-lg font-extrabold text-yellow-400">
                   INVITA GLI OSPITI (QR):
                 </div>
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-100 via-cyan-400 to-pink-200">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
