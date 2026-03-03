@@ -592,7 +592,7 @@ function resetParty() {
           </div>
         </header>
 
-        <section className="rounded-2xl border border-yellow-400/40 bg-zinc-900 p-4">
+        <section className="rounded-2xl border border-yellow-400/40 bg-zinc-950/70 p-4">
           {playable.length === 0 ? (
             <p className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
               Nessun YouTube in coda (video o playlist).
