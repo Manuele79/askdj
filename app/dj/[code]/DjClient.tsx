@@ -425,7 +425,7 @@ const saveBpm = async (id: string) => {
   </div>
 
   <div className="mt-1 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
-    Gestisci richieste e dediche in tempo reale
+    Richieste e dediche in tempo reale
   </div>
   </div>
 
