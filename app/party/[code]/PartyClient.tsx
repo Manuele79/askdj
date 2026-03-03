@@ -582,7 +582,7 @@ function resetParty() {
             ].join(" ")}
 
             >
-              🔁 Loop {loopEnabled ? "ON" : "OFF"}
+              🔁Loop {loopEnabled ? "ON" : "OFF"}
             </button>
 
             <button
