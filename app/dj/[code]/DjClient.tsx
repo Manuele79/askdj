@@ -594,7 +594,7 @@ const saveBpm = async (id: string) => {
           {/* LEFT */}
           <div className="lg:col-span-2">
             {mode === "party" ? (
-              <section className="rounded-3xl border border-yellow-400 bg-zinc-950 shadow-[0_0_35px_rgba(253,224,71,0.35)] p-2 sm:p-3 ">
+              <section className="rounded-3xl border border-yellow-400/40 bg-zinc-950/70 shadow-[0_0_35px_rgba(253,224,71,0.35)] p-2 sm:p-3 ">
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-4 text-xs text-cyan-400">
                   <span className="pl-4 min-w-0 truncate">Modalità Party:Autoplay YouTube</span>
                   <a
@@ -608,7 +608,7 @@ const saveBpm = async (id: string) => {
                  </div>
 
 
-                <div className="rounded-3xl border border-yellow-400/40 bg-zinc-950 p-2 overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.45)]">
+                <div className="rounded-3xl border border-yellow-400/40 bg-zinc-950/70 p-2 overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.45)]">
                    <iframe
                     src={`/party/${code}`}
                   className="h-[82vh] w-full rounded-2xl bg-zinc-950"
