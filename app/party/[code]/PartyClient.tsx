@@ -544,7 +544,7 @@ function resetParty() {
 
   return (
     <div className="relative min-h-screen bg-zinc-950 text-zinc-100">
-      <div className="pointer-events-none absolute top-[-120px] right-[-60px] h-[420px] w-[420px] rounded-full bg-amber-400/20 blur-[120px]" />
+      <div className="pointer-events-none absolute top-[-120px] right-[-100px] h-[420px] w-[420px] rounded-full bg-amber-400/10 blur-[120px]" />
 
       <div className="mx-auto max-w-4xl px-4 py-8">
         <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -552,7 +552,7 @@ function resetParty() {
             <button
               type="button"
               onClick={resetParty}
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold text-zinc-950 bg-gradient-to-r from-emerald-400 to-pink-400 shadow-[0_0_25px_rgba(255,255,255,0.08)] hover:brightness-110 transition"
+              className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-zinc-950 bg-gradient-to-r from-yellow-400 to-amber-500 shadow-[0_0_25px_rgba(255,255,255,0.20)] hover:brightness-110 transition"
               title="Reset Party"
             >
              <span>🎉</span>
@@ -562,19 +562,22 @@ function resetParty() {
             <h1 className="mt-4 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
               Riproduzione Automatica Solo YouTube
             </h1>
-            <p className="mt-2 text-sm text-cyan-500">
-              Evento: <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">{code}</span>
+
+            {code && code !== "TEST123" && (
+            <p className="mt-2 text-lg text-cyan-500">
+             Evento: <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">{code}</span>
             </p>
+             )}
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={() => setLoopEnabled((v) => !v)}
               className={[
-              "rounded-xl px-4 py-2 text-sm font-extrabold transition",
+              "rounded-xl px-6 py-3 text-sm font-extrabold transition",
               "shadow-[0_0_26px_rgba(34,211,238,0.18)]",
             loopEnabled
-              ? "bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 text-zinc-950 hover:brightness-110"
+              ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950 hover:brightness-110"
               : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
             ].join(" ")}
 
@@ -584,7 +587,7 @@ function resetParty() {
 
             <button
               onClick={playNext}
-              className="rounded-xl bg-gradient-to-r from-cyan-300 to-emerald-400 px-4 py-2 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.25)] hover:brightness-110 transition"
+              className="rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 px-6 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.25)] hover:brightness-110 transition"
 
             >
               ⏭ Avanti
