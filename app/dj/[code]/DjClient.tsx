@@ -389,9 +389,9 @@ const saveBpm = async (id: string) => {
 
       <div className="mx-auto max-w-6xl px-4 py-8">
         {/* HEADER TOP */}
-        <div className="mb-6 flex flex-col gap-4">
+        <div className="mb-6 flex flex-col gap-4 md:gap-8">
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 md:justify-center">
              {/* Logo AskDJ (animato) */}
 <div className="flex items-center gap-3">
   <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
@@ -419,12 +419,12 @@ const saveBpm = async (id: string) => {
 
 
 {/* Titolo */}
-<div className="min-w-0">
+<div className="min-w-0 md:text-center">
   <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight break-words">
     Console DJ
   </div>
 
-  <div className="mt-1 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
+  <div className="mt-1 md:mt-3 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
     Richieste e dediche in tempo reale
   </div>
   </div>
@@ -457,7 +457,7 @@ const saveBpm = async (id: string) => {
 
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6 ">
 
             <div>
               <h1 className="text-4xl md:text-5xl font-black tracking-tight">
@@ -636,7 +636,7 @@ const saveBpm = async (id: string) => {
                     </div>
 
                    <div className="flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
-  <span className="text-xs opacity-70">TROVA BPM:</span>
+  <span className="text-xs text-yellow-300">TROVA BPM:</span>
 
   <input
     type="number"
