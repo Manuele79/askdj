@@ -543,7 +543,7 @@ function resetParty() {
 
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-zinc-950 via-amber-950/20 to-zinc-900 text-zinc-100">
+    <div className="relative min-h-screen bg-zinc-950 text-zinc-100">
       <div className="pointer-events-none absolute top-[-120px] right-[-60px] h-[420px] w-[420px] rounded-full bg-amber-400/20 blur-[120px]" />
 
       <div className="mx-auto max-w-4xl px-4 py-8">
@@ -592,7 +592,7 @@ function resetParty() {
           </div>
         </header>
 
-        <section className="rounded-2xl border border-cyan-800 bg-zinc-900/40 p-4">
+        <section className="rounded-2xl border border-yellow-400/40 bg-zinc-900 p-4">
           {playable.length === 0 ? (
             <p className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
               Nessun YouTube in coda (video o playlist).
@@ -638,7 +638,7 @@ function resetParty() {
              )}
 
 
-              <div className="aspect-video w-full overflow-hidden rounded-2xl border border-zinc-800 bg-black">
+              <div className="aspect-video w-full overflow-hidden rounded-2xl border border-yellow-400/40 bg-black">
                 <div id={playerContainerId.current} className="h-full w-full" />
               </div>
 
