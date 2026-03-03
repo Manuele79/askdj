@@ -390,7 +390,7 @@ const saveBpm = async (id: string) => {
       <div className="mx-auto max-w-6xl px-4 py-8">
         {/* HEADER TOP */}
         <div className="mb-6 flex flex-col gap-4 md:gap-8">
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 md:justify-center  ">
             <div className="flex items-center gap-3 md:justify-center">
              {/* Logo AskDJ (animato) */}
 <div className="flex items-center gap-3">
@@ -626,7 +626,7 @@ const saveBpm = async (id: string) => {
                       CONSOLE DJ:
                     </div>
                     <div className="pl-4 pt-1 text-xs text-amber-300">
-                      Gestione richieste in tempo reale:
+                      Gestione richieste:
                     </div>
                   </div>
 
