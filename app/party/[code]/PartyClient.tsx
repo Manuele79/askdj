@@ -649,7 +649,7 @@ function resetParty() {
           )}
         </section>
 
-        <section className="mt-6 rounded-2xl border border-cyan-800 bg-zinc-900/40 p-4">
+        <section className="mt-6 rounded-2xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: YouTube</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
@@ -661,8 +661,8 @@ function resetParty() {
             {playable.map((r) => (
               <li
                 key={r.id}
-                className={`rounded-2xl border border-cyan-800/80 px-4 py-3 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
-                r._key === currentKey ? "bg-zinc-900/60 ring-1 ring-cyan-400/20" : "bg-zinc-950/40"
+                className={`rounded-2xl border border-zinc-700/40 px-4 py-3 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.25)] hover:bg-zinc-900/60 transition-colors  ${
+                r._key === currentKey ? "bg-zinc-900/70 ring-1 ring-cyan-400/30" : "bg-zinc-950/50" 
               }`}
 
               >
@@ -689,7 +689,7 @@ function resetParty() {
         </section>
 
         {/* --- SPOTIFY QUEUE (solo lista + link) --- */}
-        <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+        <section className="mt-6 rounded-2xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: Spotify</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
@@ -732,7 +732,7 @@ function resetParty() {
         </section>
 
                 {/* --- TIDAL QUEUE (solo lista + link) --- */}
-        <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+        <section className="mt-6 rounded-2xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: TIDAL</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
@@ -775,7 +775,7 @@ function resetParty() {
         </section>
 
         {/* --- APPLE MUSIC QUEUE (solo lista + link) --- */}
-          <section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+          <section className="mt-6 rounded-2xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm p-4">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                 Coda: Apple Music
@@ -820,7 +820,7 @@ function resetParty() {
   </section>
 
           {/* --- AMAZON MUSIC QUEUE (solo lista + link) --- */}
-<section className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+<section className="mt-6 rounded-2xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm p-4">
   <div className="mb-3 flex items-center justify-between">
     <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
       Coda: Amazon Music
