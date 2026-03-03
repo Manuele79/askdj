@@ -621,7 +621,7 @@ function resetParty() {
               
 
              {!userStarted && (
-               <div className="mb-3 rounded-2xl border border-zinc-800/80 bg-zinc-950/50 p-4 ring-1 ring-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
+               <div className="mb-3 rounded-2xl border border-yellow-400/40 bg-zinc-950 p-4 ring-1 ring-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                  📱 Mobile: 1 tap per sbloccare l’autoplay
                 </div>
@@ -642,14 +642,14 @@ function resetParty() {
                 <div id={playerContainerId.current} className="h-full w-full" />
               </div>
 
-              <p className="mt-3 text-xs text-zinc-500">
+              <p className="mt-3 text-xs text-zinc-400">
                 Tip: evita fullscreen su mobile se vuoi che il “next” sia affidabile.
               </p>
             </>
           )}
         </section>
 
-        <section className="mt-6 rounded-2xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm p-4">
+        <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: YouTube</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
@@ -689,7 +689,7 @@ function resetParty() {
         </section>
 
         {/* --- SPOTIFY QUEUE (solo lista + link) --- */}
-        <section className="mt-6 rounded-2xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm p-4">
+        <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: Spotify</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
@@ -732,7 +732,7 @@ function resetParty() {
         </section>
 
                 {/* --- TIDAL QUEUE (solo lista + link) --- */}
-        <section className="mt-6 rounded-2xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm p-4">
+        <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: TIDAL</h2>
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
@@ -775,7 +775,7 @@ function resetParty() {
         </section>
 
         {/* --- APPLE MUSIC QUEUE (solo lista + link) --- */}
-          <section className="mt-6 rounded-2xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm p-4">
+          <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
                 Coda: Apple Music
@@ -820,7 +820,7 @@ function resetParty() {
   </section>
 
           {/* --- AMAZON MUSIC QUEUE (solo lista + link) --- */}
-<section className="mt-6 rounded-2xl border border-cyan-400/25 bg-zinc-950/30 backdrop-blur-sm p-4">
+<section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
   <div className="mb-3 flex items-center justify-between">
     <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
       Coda: Amazon Music
