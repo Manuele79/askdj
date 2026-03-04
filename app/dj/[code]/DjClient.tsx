@@ -477,7 +477,7 @@ const saveBpm = async (id: string) => {
 
 
               {/* INIZIA QUI */}
-            {code !== "TEST123" && (           
+            {code ! == "TEST123" && (           
              <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
             <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
              INIZIA QUI 👇
