@@ -387,132 +387,157 @@ const saveBpm = async (id: string) => {
       <div className="pointer-events-none absolute -top-48 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-emerald-400/20 blur-[140px]" />
       <div className="pointer-events-none absolute -bottom-56 right-[-160px] h-[600px] w-[600px] rounded-full bg-pink-400/20 blur-[140px]" />
 
- <div className="mx-auto max-w-6xl px-4 py-8">
-  {/* HEADER TOP */}
-  <div className="mb-6 flex flex-col gap-4 md:gap-8">
-    {/* Riga top: logo+scritte a sinistra, evento a destra */}
-    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      {/* SINISTRA: Logo + titolo + sottotitolo (più spazio, ma resta a sinistra) */}
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
-        {/* Logo AskDJ (animato) */}
-        <div className="flex items-center gap-3">
-          <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
-            <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/40 blur-xl animate-pulse" />
-            <div className="pointer-events-none absolute -inset-1 rounded-2xl border border-yellow-300/60 animate-pulse" />
-            <span className="relative text-2xl drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]">🎧</span>
-          </div>
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        {/* HEADER TOP */}
+        <div className="mb-6 flex flex-col gap-4 md:gap-8">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-3 md:justify-center">
+             {/* Logo AskDJ (animato) */}
+<div className="flex items-center gap-3">
+  <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
+    {/* glow animato dietro */}
+    <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/40 blur-xl animate-pulse" />
+    <div className="pointer-events-none absolute -inset-1 rounded-2xl border border-yellow-300/60 animate-pulse" />
 
-          <div className="leading-tight">
-            <div className="text-3xl font-black tracking-tight">
-              <span className="text-yellow-400">Ask</span>
-              <span className="text-white">DJ</span>
-            </div>
-            <div className="text-xs text-zinc-400 tracking-wide">Music Requests</div>
-          </div>
-        </div>
+    {/* icon */}
+    <span className="relative text-2xl drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]">
+      🎧
+    </span>
+  </div>
 
-        {/* Console DJ (resta vicino al logo, NON centrato pagina) */}
-       <div className="min-w-0 md:ml-2 lg:ml-4">
-         <div className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight break-words">
-            Console <span className="text-yellow-400">DJ</span>
-          </div>
-          <div className="mt-1 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
-            Richieste e dediche in tempo reale
-          </div>
-        </div>
-      </div>
-
-      {/* DESTRA: Evento */}
-      {code && code !== "TEST123" && (
-        <div className="flex items-center gap-2">
-          <span className="text-yellow-400 font-extrabold tracking-widest text-xs sm:text-sm">
-            EVENTO:
-          </span>
-          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm sm:text-base font-black tracking-wide bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-300 text-zinc-900 shadow-[0_0_18px_rgba(34,211,238,0.35)]">
-            {code}
-          </span>
-        </div>
-      )}
+  <div className="leading-tight">
+    <div className="text-3xl font-black tracking-tight">
+      <span className="text-yellow-400">Ask</span>
+      <span className="text-white">DJ</span>
     </div>
+    <div className="text-xs text-zinc-400 tracking-wide">
+      Music Requests
+    </div>
+  </div>
+</div>
 
-    {/* Sotto: testo sinistra + form destra (desktop), colonna (mobile) */}
-    <div className="mt-2 grid gap-6 md:grid-cols-[1fr_360px] md:items-start">
-      {/* SINISTRA: hook */}
-      <div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tight">
-          Gestisci le richieste <span className="text-yellow-400">senza caos</span>
-        </h1>
 
-        <div className="mt-2 md:mt-0 scale-90 md:scale-100 origin-left">
-         <FakeSpectrumWide />
-        </div>
 
-        <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
-          Crea un EVENTO, poi mostra il QR e ricevi i brani e dediche in una lista ordinata...
-          Tu decidi cosa suonare...
-        </p>
+{/* Titolo */}
+<div className="min-w-0 md:text-center">
+  <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight break-words">
+   Console <span className="text-yellow-400">DJ</span>
+  </div>
 
-        <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
-        <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+  <div className="mt-1 md:mt-3 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
+    Richieste e dediche in tempo reale
+  </div>
+  </div>
 
-        {/* INIZIA QUI (solo quando NON c'è un evento reale) */}
-        {(!code || code === "TEST123") && (
-          <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-3 py-3 md:px-4 md:py-4">
-            <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
-              INIZIA QUI 👇
+   </div>
+{code && code !== "TEST123" && (
+  <div className="mt-2 flex flex-wrap items-center gap-2">
+    <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm">
+      EVENTO:
+    </span>
+
+    <span
+      className="
+        inline-flex items-center
+        px-4 py-1.5
+        rounded-full
+        text-sm sm:text-base
+        font-black tracking-wide
+        bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-300
+        text-zinc-900
+        shadow-[0_0_18px_rgba(34,211,238,0.35)]
+      "
+    >
+      {code}
+    </span>
+  </div>
+)}
+
+
+
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6 ">
+
+            <div>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+              Gestisci le richieste <span className="text-yellow-400">senza caos</span>
+              </h1>
+
+               <FakeSpectrumWide />
+
+
+            <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
+              Crea un EVENTO, poi mostra il QR e ricevi i brani e dediche in una lista ordinata...
+               Tu decidi cosa suonare...
             </p>
 
-            <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
-              <li>Scrivi un nome evento e premi <b>Crea Evento</b></li>
-              <li>Quando l’evento è attivo, <b>stampa il QR</b></li>
-              <li>Gli ospiti lo scansionano e inviano richieste</li>
-            </ol>
+            <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+            <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+
+
+              {/* INIZIA QUI */}
+            {code ! == "TEST123" && (           
+             <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
+            <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
+             INIZIA QUI 👇
+             </p>
+
+             <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
+             <li>Scrivi un nome evento e premi <b>Crea Evento</b></li>
+             <li>Quando l’evento è attivo, <b>stampa il QR</b></li>
+             <li>Gli ospiti lo scansionano e inviano richieste</li>
+             </ol>
 
             <div className="mt-3 text-xs text-yellow-300 leading-snug">
-              ⚠️ Gli ospiti NON entrano da questa pagina. Entrano solo scansionando il QR dell’evento.
+             ⚠️ Gli ospiti NON entrano da questa pagina.  
+              Entrano solo scansionando il QR dell’evento.
             </div>
           </div>
+         )}
+        </div>
+
+            {/* create event */}
+            <div className="flex flex-col gap-2 sm:flex-col sm:items-end">
+              <input
+                value={eventName}
+                onChange={(e) => setEventName(e.target.value)}
+                placeholder="Scrivi: Nome Nuovo Evento..."
+                className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
+
+              />
+              <button
+                onClick={createEvent}
+                className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
+
+              >
+                CREA NUOVO EVENTO
+              </button>
+            </div>
+          </div>
+          {/* join event */}
+          <div className="flex flex-col gap-2 sm:flex-col sm:items-end mt-4">
+            <input
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+              placeholder="Scrivi: Nome Evento Esistente..."
+              className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
+
+            />
+            <button
+              onClick={joinExistingEvent}
+              className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
+
+            >
+              RIENTRA IN EVENTO 
+            </button>
+          </div>
+
+           {joinMsg && (
+          <div className="mt-2 text-sm text-zinc-400">
+          {joinMsg}
+         </div>
         )}
-      </div>
-
-      {/* DESTRA: create + join */}
-      <div>
-        {/* create event */}
-        <div className="flex flex-col gap-2 sm:items-end">
-          <input
-            value={eventName}
-            onChange={(e) => setEventName(e.target.value)}
-            placeholder="Scrivi: Nome Nuovo Evento..."
-            className="w-full max-w-sm rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
-          />
-          <button
-            onClick={createEvent}
-            className="w-full max-w-sm rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
-          >
-            CREA NUOVO EVENTO
-          </button>
-        </div>
-
-        {/* join event */}
-        <div className="mt-4 flex flex-col gap-2 sm:items-end">
-          <input
-            value={joinCode}
-            onChange={(e) => setJoinCode(e.target.value)}
-            placeholder="Scrivi: Nome Evento Esistente..."
-            className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
-          />
-          <button
-            onClick={joinExistingEvent}
-            className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
-          >
-            RIENTRA IN EVENTO
-          </button>
-        </div>
-
-        {joinMsg && <div className="mt-2 text-sm text-zinc-400">{joinMsg}</div>}
-      </div>
-    </div>
-  
 
 
           {/* mode buttons */}
@@ -601,7 +626,7 @@ const saveBpm = async (id: string) => {
                       CONSOLE DJ:
                     </div>
                     <div className="pl-4 pt-1 text-xs text-amber-300">
-                      Gestione richieste:
+                      Gestione richieste in tempo reale:
                     </div>
                   </div>
 
@@ -822,7 +847,7 @@ if (bpmTarget && saved !== null) {
 
 
               <div className="mb-3">
-                <div className="text-lg font-extrabold text-yellow-400">
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-cyan-400 to-pink-200">
                   INVITA GLI OSPITI (QR):
                 </div>
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-100 via-cyan-400 to-pink-200">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
