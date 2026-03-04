@@ -391,9 +391,9 @@ const saveBpm = async (id: string) => {
   {/* HEADER TOP */}
   <div className="mb-6 flex flex-col gap-4 md:gap-8">
     {/* Riga top: logo+scritte a sinistra, evento a destra */}
-    <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       {/* SINISTRA: Logo + titolo + sottotitolo (più spazio, ma resta a sinistra) */}
-      <div className="flex items-center gap-6">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
         {/* Logo AskDJ (animato) */}
         <div className="flex items-center gap-3">
           <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
@@ -412,9 +412,9 @@ const saveBpm = async (id: string) => {
         </div>
 
         {/* Console DJ (resta vicino al logo, NON centrato pagina) */}
-        <div className="min-w-0">
-          <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-            Console DJ
+       <div className="min-w-0 md:ml-2 lg:ml-4">
+         <div className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight break-words">
+            Console <span className="text-yellow-400">DJ</span>
           </div>
           <div className="mt-1 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
             Richieste e dediche in tempo reale
@@ -425,7 +425,7 @@ const saveBpm = async (id: string) => {
       {/* DESTRA: Evento */}
       {code && code !== "TEST123" && (
         <div className="flex items-center gap-2">
-          <span className="text-cyan-400 font-extrabold tracking-widest text-xs sm:text-sm">
+          <span className="text-yellow-400 font-extrabold tracking-widest text-xs sm:text-sm">
             EVENTO:
           </span>
           <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm sm:text-base font-black tracking-wide bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-300 text-zinc-900 shadow-[0_0_18px_rgba(34,211,238,0.35)]">
@@ -443,7 +443,9 @@ const saveBpm = async (id: string) => {
           Gestisci le richieste <span className="text-yellow-400">senza caos</span>
         </h1>
 
-        <FakeSpectrumWide />
+        <div className="mt-2 md:mt-0 scale-90 md:scale-100 origin-left">
+         <FakeSpectrumWide />
+        </div>
 
         <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
           Crea un EVENTO, poi mostra il QR e ricevi i brani e dediche in una lista ordinata...
@@ -455,7 +457,7 @@ const saveBpm = async (id: string) => {
 
         {/* INIZIA QUI (solo quando NON c'è un evento reale) */}
         {(!code || code === "TEST123") && (
-          <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
+          <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-3 py-3 md:px-4 md:py-4">
             <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
               INIZIA QUI 👇
             </p>
@@ -481,11 +483,11 @@ const saveBpm = async (id: string) => {
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
             placeholder="Scrivi: Nome Nuovo Evento..."
-            className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
+            className="w-full max-w-sm rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
           />
           <button
             onClick={createEvent}
-            className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
+            className="w-full max-w-sm rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
           >
             CREA NUOVO EVENTO
           </button>
