@@ -393,7 +393,7 @@ const saveBpm = async (id: string) => {
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-3 md:justify-center">
              {/* Logo AskDJ (animato) */}
-<div className="flex items-center gap-3">
+<div className="flex items-center gap-4">
   <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
     {/* glow animato dietro */}
     <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/40 blur-xl animate-pulse" />
@@ -420,7 +420,7 @@ const saveBpm = async (id: string) => {
 
 {/* Titolo */}
 <div className="min-w-0 md:text-center">
-  <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight break-words">
+  <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight break-words gap-4 ">
    Console <span className="text-yellow-400">DJ</span>
   </div>
 
@@ -477,7 +477,7 @@ const saveBpm = async (id: string) => {
 
 
               {/* INIZIA QUI */}
-            {code ! == "TEST123" && (           
+            {code !== "TEST123" && (           
              <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
             <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
              INIZIA QUI 👇
@@ -847,7 +847,7 @@ if (bpmTarget && saved !== null) {
 
 
               <div className="mb-3">
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-cyan-400 to-pink-200">
+                <div className="text-lg font-extrabold text-yellow-300">
                   INVITA GLI OSPITI (QR):
                 </div>
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-100 via-cyan-400 to-pink-200">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
