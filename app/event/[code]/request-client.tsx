@@ -386,7 +386,12 @@ function FakeSpectrumWide() {
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
         COPIA IL LINK DA:<span className="text-white">YouTube(AUTOPLAY SU PARTY)/Spotify/Apple/Amazon/Tidal…</span> 
+
+        <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+         <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+
       </label>
+
       <input
         value={link}
         onChange={(e) => setLink(e.target.value)}
