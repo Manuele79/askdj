@@ -385,7 +385,7 @@ function FakeSpectrumWide() {
     {/* Campo link */}
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
-        COPIA IL LINK DA: YouTube(AUTOPLAY SU PARTY)/Spotify/Apple/Amazon/Tidal…
+        COPIA IL LINK DA:<span className="text-white">YouTube(AUTOPLAY SU PARTY)/Spotify/Apple/Amazon/Tidal…</span> 
       </label>
       <input
         value={link}
