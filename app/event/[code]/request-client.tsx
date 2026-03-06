@@ -384,14 +384,14 @@ function FakeSpectrumWide() {
 
     {/* Campo link */}
     <div>
-      <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
+      <label className="text-sm font-bold text-yellow-400/40 bg-clip-text">
         COPIA IL LINK DA: YouTube(AUTOPLAY SU PARTY)/Spotify/Apple/Amazon/Tidal…
       </label>
       <input
         value={link}
         onChange={(e) => setLink(e.target.value)}
         placeholder="Incolla qui il link della canzone"
-        className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+        className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-yellow-400/20"
       />
 
       <div className="mt-2">
@@ -407,7 +407,7 @@ function FakeSpectrumWide() {
 
     {/* Campo titolo */}
     <div>
-      <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-pink-400">
+      <label className="text-sm font-bold text-yellow-400/40 bg-clip-text">
         SCRIVI IL TITOLO DELLA CANZONE NON RIPRODUCIBILE SU PARTY.
       </label>
       <input
@@ -420,13 +420,13 @@ function FakeSpectrumWide() {
 
     {/* Dedica */}
     <div>
-      <label className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-pink-300">
+      <label className="text-sm font-bold text-yellow-400/40 bg-clip-text">
         VUOI SCRIVERE UNA DEDICA CON LA CANZONE SCRIVI QUI SOTTO:
       </label>
       <textarea
         value={dedication}
         onChange={(e) => setDedication(e.target.value)}
-        placeholder="     ❤️  Dedica  ❤️     (viene letta solo in console DJ)"
+        placeholder="  ❤️    ❤️  Dedica  ❤️    ❤️(viene letta solo in console DJ)"
         rows={2}
         className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
       />
