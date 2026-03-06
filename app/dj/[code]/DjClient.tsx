@@ -626,11 +626,11 @@ const saveBpm = async (id: string) => {
                       CONSOLE DJ:
                     </div>
                     <div className="pl-4 pt-1 text-xs text-amber-300">
-                      Gestione richieste in tempo reale:
+                      Richieste in tempo reale:
                     </div>
                   </div>
 
-                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="whitespace-nowrap text-sm font-bold text-cyan-600">
                      -Classifica:👇 -Voti:🔥 -Link:🎵 -  
                     </div>
