@@ -324,7 +324,7 @@ function FakeSpectrumWide() {
   <div className="mt-3 flex items-center justify-center gap-2">
    {code && code !== "TEST123" && (
   <div className="mt-6 flex items-center justify-center gap-3">
-    <span className="text-sm uppercase tracking-widest text-cyan-300">
+    <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm">
       EVENTO:
     </span>
 
