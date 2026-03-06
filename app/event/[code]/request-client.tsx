@@ -40,6 +40,11 @@ function storageKey(eventCode: string) {
   return `djreq_sent:${String(eventCode || "").toUpperCase()}`;
 }
 
+function voteStorageKey(eventCode: string) {
+  return `djreq_votes:${String(eventCode || "").toUpperCase()}`;
+}
+
+
 type Platform = "youtube" | "spotify" | "apple" | "amazon" | "tidal" | "other";
 
   type SentItem = {
@@ -50,6 +55,17 @@ type Platform = "youtube" | "spotify" | "apple" | "amazon" | "tidal" | "other";
   ts: number;
 };
 
+type PublicRequestItem = {
+  id: string;
+  title: string;
+  url: string;
+  platform: Platform;
+  dedication?: string;
+  votes: number;
+  ts?: number;
+};
+
+
 
 export default function RequestClient({ code }: { code: string }) {
   const [title, setTitle] = useState("");
@@ -58,6 +74,10 @@ export default function RequestClient({ code }: { code: string }) {
   const [sent, setSent] = useState<SentItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hint, setHint] = useState("");
+  const [partyRequests, setPartyRequests] = useState<PublicRequestItem[]>([]);
+  const [votedMap, setVotedMap] = useState<Record<string, true>>({});
+
+
 
   // carica storico da localStorage (solo questo telefono)
   useEffect(() => {
@@ -117,6 +137,36 @@ export default function RequestClient({ code }: { code: string }) {
     return title.trim().length > 0 || link.trim().length > 0;
   }, [title, link]);
 
+  useEffect(() => {
+  try {
+    const raw = localStorage.getItem(voteStorageKey(code));
+    if (!raw) return;
+    const obj = JSON.parse(raw);
+    if (obj && typeof obj === "object") {
+      setVotedMap(obj);
+    }
+  } catch {
+    // ignore
+  }
+}, [code]);
+
+
+useEffect(() => {
+  try {
+    localStorage.setItem(voteStorageKey(code), JSON.stringify(votedMap));
+  } catch {
+    // ignore
+  }
+}, [votedMap, code]);
+
+useEffect(() => {
+  loadPartyRequests();
+  const t = setInterval(loadPartyRequests, 8000);
+  return () => clearInterval(t);
+}, [code]);
+
+
+
   async function pasteFromClipboard() {
   setHint("");
   try {
@@ -157,6 +207,30 @@ export default function RequestClient({ code }: { code: string }) {
     setTimeout(() => setHint(""), 1600);
   } catch {
     setHint("⚠️ Permesso negato o non disponibile. Incolla manualmente.");
+  }
+}
+
+async function loadPartyRequests() {
+  try {
+    const resp = await fetch(`/api/requests?eventCode=${encodeURIComponent(code)}`);
+    if (!resp.ok) return;
+
+    const data = await resp.json().catch(() => null);
+    const arr = Array.isArray(data?.requests) ? data.requests : [];
+
+    const normalized: PublicRequestItem[] = arr.map((r: any) => ({
+      id: String(r.id),
+      title: String(r.title || "Richiesta"),
+      url: String(r.url || ""),
+      platform: (String(r.platform || "other") as Platform),
+      dedication: typeof r.dedication === "string" ? r.dedication : "",
+      votes: Number(r.votes || 0),
+      ts: Number(r.updatedAt || r.createdAt || Date.now()),
+    }));
+
+    setPartyRequests(normalized);
+  } catch {
+    // ignore
   }
 }
 
@@ -261,6 +335,33 @@ const platform = (serverPlatform as Platform) || fallbackPlatform;
       setLoading(false);
     }
   }
+
+
+  async function voteGuest(r: PublicRequestItem) {
+  if (!r.id || votedMap[r.id]) return;
+
+  try {
+    const resp = await fetch("/api/requests/vote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: r.id }),
+    });
+
+    if (!resp.ok) {
+      setHint("⚠️ Errore voto. Riprova.");
+      return;
+    }
+
+    setVotedMap((prev) => ({ ...prev, [r.id]: true }));
+    setPartyRequests((prev) =>
+      prev.map((x) =>
+        x.id === r.id ? { ...x, votes: Number(x.votes || 0) + 1 } : x
+      )
+    );
+  } catch {
+    setHint("⚠️ Errore voto. Riprova.");
+  }
+}
 
 function FakeSpectrumWide() {
   return (
@@ -513,6 +614,72 @@ function FakeSpectrumWide() {
 
 
         </section>
+
+<section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
+  <div className="flex items-center justify-between gap-3">
+    <div>
+      <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-400">
+        Richieste degli ospiti 🔥
+      </h2>
+      <div className="mt-2 h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+      <div className="mt-[-3px] h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+    </div>
+
+    <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+      {partyRequests.length}
+    </span>
+  </div>
+
+  {partyRequests.length === 0 ? (
+    <p className="mt-3 text-sm text-zinc-400">Nessuna richiesta del party</p>
+  ) : (
+    <ul className="mt-3 space-y-2">
+      {[...partyRequests]
+        .sort((a, b) => {
+          const byVotes = Number(b.votes || 0) - Number(a.votes || 0);
+          if (byVotes !== 0) return byVotes;
+          return Number(b.ts || 0) - Number(a.ts || 0);
+        })
+        .slice(0, 20)
+        .map((r) => (
+          <li
+            key={r.id}
+            className="rounded-xl border border-yellow-400 bg-zinc-950/50 px-3 py-3 text-sm text-zinc-100"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="font-medium truncate">{r.title}</div>
+
+                <div className="mt-1 flex items-center gap-2 text-[11px] text-zinc-400">
+                  <span>{r.platform}</span>
+                  <span>🔥 {r.votes}</span>
+                </div>
+
+                {r.dedication && r.dedication.trim() && (
+                  <div className="mt-1 text-xs text-zinc-300">
+                    “{r.dedication}”
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={() => voteGuest(r)}
+                disabled={!!votedMap[r.id]}
+                className="shrink-0 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 px-3 py-2 text-xs font-extrabold text-zinc-950 shadow-[0_0_18px_rgba(250,204,21,0.28)] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {votedMap[r.id] ? "✅ Votata" : "👍 Vota"}
+              </button>
+            </div>
+          </li>
+        ))}
+    </ul>
+  )}
+
+  <div className="mt-3 text-xs text-zinc-500">
+    Puoi votare le richieste del party direttamente da qui.
+  </div>
+</section>
+
 
         <footer className="mt-8 text-center text-xs text-zinc-500">
           NESSUN AUDIO VIENE INVIATO. SOLO il LINK canzone/titolo e dedica.
