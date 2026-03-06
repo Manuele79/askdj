@@ -413,7 +413,11 @@ function FakeSpectrumWide() {
     {/* Campo titolo */}
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
-        SCRIVI IL TITOLO DELLA CANZONE NON RIPRODUCIBILE SU PARTY.
+        SCRIVI IL TITOLO DELLA CANZONE:<span className="text-white">NON RIPRODUCIBILE SU PARTY</span> 
+
+      <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+        <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+
       </label>
       <input
         value={title}
@@ -427,6 +431,10 @@ function FakeSpectrumWide() {
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
         VUOI SCRIVERE UNA DEDICA CON LA CANZONE SCRIVI QUI SOTTO:
+
+      <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+       <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+
       </label>
       <textarea
         value={dedication}
