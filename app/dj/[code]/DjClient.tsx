@@ -432,7 +432,7 @@ const saveBpm = async (id: string) => {
    </div>
 {code && code !== "TEST123" && (
   <div className="mt-2 flex flex-wrap items-center gap-4">
-    <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm">
+    <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm gap-4">
       EVENTO:
     </span>
 
