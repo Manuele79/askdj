@@ -451,8 +451,8 @@ function FakeSpectrumWide() {
         <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
           <div className="flex items-center justify-between gap-3">
            <div>
-           <h2 className="text-base sm:text-lg font-black tracking-wide text-white">
-            Le tue richieste
+           <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-400">
+            Le tue richieste:
            </h2>
            <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
            <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
