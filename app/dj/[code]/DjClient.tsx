@@ -443,7 +443,7 @@ const saveBpm = async (id: string) => {
         rounded-full
         text-sm sm:text-base
         font-black tracking-wide
-        bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-300
+        bg-gradient-yellow-400
         text-zinc-900
         shadow-[0_0_18px_rgba(34,211,238,0.35)]
       "
@@ -631,11 +631,11 @@ const saveBpm = async (id: string) => {
                   </div>
 
                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="whitespace-nowrap text-sm font-bold text-cyan-600 gap-2">
-                     -Classifica:👇 -Voti:🔥 -Link:🎵 -  
+                   <div className="pl-2 sm:pl-0 whitespace-nowrap text-sm font-bold text-cyan-600 gap-2">
+                     -Classifica:👇- -Voti:🔥- -Link:🎵-  
                     </div>
 
-                   <div className="flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
+                   <div className="pl-2 sm:pl-0 flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
                    <span className="text-xs text-yellow-300 gap-2">TROVA BPM:</span>
 
   <input
@@ -656,7 +656,7 @@ const saveBpm = async (id: string) => {
     OK
   </button>
 </div>
-<div className="mt-2 flex justify-center sm:mt-0 sm:justify-end sm:ml-3 pt-2 border-t border-yellow-400/20 sm:pt-0 sm:border-t-0">
+<div className="mt-3 px-2 sm:px-0 flex justify-center sm:mt-1 sm:justify-end sm:ml-3 pt-3 border-t border-yellow-400/20 sm:pt-0 sm:border-t-0">
   <button
     onClick={printPlaylist}
     className="rounded-md px-3 py-1 text-xs leading-none font-bold text-zinc-900 bg-gradient-to-r from-amber-300 to-yellow-400 hover:opacity-90"
@@ -664,13 +664,11 @@ const saveBpm = async (id: string) => {
     🖨️ Stampa Playlist ▼
   </button>
 </div>
-
-
                 </div>
-</div>
+                  </div>
 
                 {sorted.length === 0 ? (
-                  <div className="rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 pt-6 text-sm text-zinc-300 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+                  <div className="mx-1 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 pt-6 text-sm text-zinc-300 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
                     <div className="font-semibold text-zinc-100">
                       ⚠️ Evento scaduto o vuoto!
                     </div>
@@ -687,7 +685,7 @@ const saveBpm = async (id: string) => {
 
                       <li
                         key={r.id}
-                        className="rounded-3xl overflow-hidden border border-yellow-400/40 bg-zinc-950 p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
+                        className="mx-1 rounded-3xl overflow-hidden border border-yellow-400/40 bg-zinc-950 p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)]"
                       >
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                        {/* SINISTRA: titolo */}
@@ -715,8 +713,6 @@ const saveBpm = async (id: string) => {
 
 
           <div className="flex items-center gap-2 ml-2">
-
-
 
 
 {/* BPM UX: badge se salvato, input solo quando serve */}
