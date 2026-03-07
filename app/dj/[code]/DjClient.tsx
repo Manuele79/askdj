@@ -700,7 +700,7 @@ const saveBpm = async (id: string) => {
 
                       {r.dedication && (
                       <div className="mt-1 truncate text-xs text-rose-400 italic">
-                      💬 DEDICA: <span className="text-white">{r.dedication}DJ</span>
+                      💬 DEDICA: <span className="text-white">{r.dedication}</span>
                      </div>
                     )}
                    </div>
