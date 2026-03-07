@@ -76,7 +76,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [hint, setHint] = useState("");
   const [partyRequests, setPartyRequests] = useState<PublicRequestItem[]>([]);
   const [votedMap, setVotedMap] = useState<Record<string, true>>({});
-
+  const [showPartyRequests, setShowPartyRequests] = useState(false);
 
 
   // carica storico da localStorage (solo questo telefono)
@@ -540,7 +540,7 @@ function FakeSpectrumWide() {
       <textarea
         value={dedication}
         onChange={(e) => setDedication(e.target.value)}
-        placeholder="  ❤️    ❤️  Dedica  ❤️    ❤️    (viene letta solo in console DJ)"
+        placeholder="  ❤️    ❤️  Dedica  ❤️    ❤️          (viene letta solo in console DJ)"
         rows={2}
         className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
       />
@@ -609,8 +609,8 @@ function FakeSpectrumWide() {
           )}
 
           <p className="mt-4 text-sm text-zinc-400">
-  Invia il tuo brano al DJ in pochi secondi 🎧
-</p>
+            Invia il tuo brano al DJ in pochi secondi 🎧
+        </p>
 
 
         </section>
@@ -633,6 +633,19 @@ function FakeSpectrumWide() {
   {partyRequests.length === 0 ? (
     <p className="mt-3 text-sm text-zinc-400">Nessuna richiesta del party</p>
   ) : (
+    <>
+    
+    <div className="mt-3 flex justify-center">
+  <button
+    onClick={() => setShowPartyRequests((v) => !v)}
+    className="rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 px-4 py-2 text-xs font-extrabold text-black shadow-[0_0_12px_rgba(250,204,21,0.4)] hover:brightness-110 transition"
+  >
+    {showPartyRequests ? "⬆ Nascondi richieste party" : "🔥 Mostra richieste party"}
+  </button>
+</div>
+
+  {showPartyRequests && (
+
     <ul className="mt-3 space-y-2">
       {[...partyRequests]
         .sort((a, b) => {
@@ -653,11 +666,8 @@ function FakeSpectrumWide() {
                 <div className="mt-1 flex items-center gap-2 text-[11px] text-zinc-400">
                   <span>{r.platform}</span>
                   <span>🔥 {r.votes}</span>
-                </div>
-
-               
+                </div>               
               </div>
-
               <button
                 onClick={() => voteGuest(r)}
                 disabled={!!votedMap[r.id]}
@@ -669,7 +679,9 @@ function FakeSpectrumWide() {
           </li>
         ))}
     </ul>
-  )}
+   )}
+  </>
+)}
 
   <div className="mt-3 text-xs text-zinc-500">
     Puoi votare le richieste del party direttamente da qui.
