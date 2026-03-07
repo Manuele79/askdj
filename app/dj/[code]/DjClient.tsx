@@ -442,8 +442,7 @@ const saveBpm = async (id: string) => {
         px-4 py-1.5
         rounded-full
         text-sm sm:text-base
-        font-black tracking-wide
-        bg-gradient-yellow-400
+        font-yellow-400 tracking-wide
         text-zinc-900
         shadow-[0_0_18px_rgba(34,211,238,0.35)]
       "
@@ -632,7 +631,7 @@ const saveBpm = async (id: string) => {
 
                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                    <div className="pl-2 sm:pl-0 whitespace-nowrap text-sm font-bold text-cyan-600 gap-2">
-                     -Classifica:👇- -Voti:🔥- -Link:🎵-  
+                     -Classifica:👇 -Voti:🔥 -Link:🎵-  
                     </div>
 
                    <div className="pl-2 sm:pl-0 flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
