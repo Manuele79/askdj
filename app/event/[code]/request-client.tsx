@@ -486,7 +486,7 @@ function FakeSpectrumWide() {
     {/* Campo link */}
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
-        COPIA IL LINK DA:<span className="text-white">YouTube/Spotify/Apple/Amazon/Tidal…</span> 
+        COPIA IL LINK DA : <span className="text-white">YouTube/Spotify/Apple/Amazon/Tidal…</span> 
 
         <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
          <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -514,7 +514,7 @@ function FakeSpectrumWide() {
     {/* Campo titolo */}
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
-        SCRIVI IL TITOLO DELLA CANZONE:<span className="text-white">non riproducibile su PARTY</span> 
+        SCRIVI IL TITOLO DELLA CANZONE : <span className="text-white"> non riproducibile su PARTY</span> 
 
       <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
         <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -566,7 +566,7 @@ function FakeSpectrumWide() {
           <div className="flex items-center justify-between gap-3">
            <div>
            <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-400">
-            Le tue richieste:
+            Le tue Richieste:
            </h2>
            <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
            <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -619,7 +619,7 @@ function FakeSpectrumWide() {
   <div className="flex items-center justify-between gap-3">
     <div>
       <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-400">
-       🔥 Vota le Richieste degli ospiti 🔥
+       Vota le Richieste degli ospiti 🔥
       </h2>
       <div className="mt-2 h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
       <div className="mt-[-3px] h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
