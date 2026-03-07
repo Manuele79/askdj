@@ -655,11 +655,7 @@ function FakeSpectrumWide() {
                   <span>🔥 {r.votes}</span>
                 </div>
 
-                {r.dedication && r.dedication.trim() && (
-                  <div className="mt-1 text-xs text-zinc-300">
-                    “{r.dedication}”
-                  </div>
-                )}
+               
               </div>
 
               <button
