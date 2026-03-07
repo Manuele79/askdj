@@ -102,10 +102,10 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       >
       <div className="mb-3">
         <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-cyan-500 to-pink-300">
-          QR per Invitare gli Ospiti
+          Usa il QR per Invitare gli Ospiti
         </div>
         <div className="text-xs text-cyan-200">
-          Scansionano e mandano le richieste al DJ:
+          Scansionano e inviano le richieste al DJ:
         </div>
       </div>
       
