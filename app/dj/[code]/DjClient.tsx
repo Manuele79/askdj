@@ -684,7 +684,7 @@ const saveBpm = async (id: string) => {
 
                       <li
                         key={r.id}
-                        className="mx-1 rounded-3xl overflow-hidden border border-yellow-400/40 bg-zinc-950 p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_rgba(0,0,0,0.45)]  "
+                        className="mx-1 rounded-3xl overflow-hidden border border-yellow-400/40 bg-zinc-950 p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_rgba(0,0,0,0.45)] hover:border-yellow-300"
                       >
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                        {/* SINISTRA: titolo */}
