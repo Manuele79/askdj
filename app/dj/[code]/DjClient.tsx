@@ -396,7 +396,7 @@ const saveBpm = async (id: string) => {
 <div className="flex items-center gap-4">
   <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
     {/* glow animato dietro */}
-    <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/20 blur-xl animate-pulse" />
+    <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/50 blur-xl animate-pulse" />
     <div className="pointer-events-none absolute -inset-1 rounded-2xl border border-yellow-300/60 animate-pulse" />
 
     {/* icon */}
@@ -437,14 +437,16 @@ const saveBpm = async (id: string) => {
     </span>
 
     <span
-      className="
-        inline-flex items-center
-        px-4 py-1.5
-        rounded-full
-        text-sm sm:text-base
-        font-yellow-400 tracking-wide
-        text-zinc-900
-        shadow-[0_0_18px_rgba(34,211,238,0.35)]
+     className="
+      inline-flex items-center
+      px-4 py-1.5
+      rounded-full
+      text-sm sm:text-base
+      font-bold
+      tracking-widest
+      bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300
+      text-zinc-900
+      shadow-[0_0_12px_rgba(34,211,238,0.35)]
       "
     >
       {code}
@@ -631,7 +633,7 @@ const saveBpm = async (id: string) => {
 
                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                    <div className="pl-2 sm:pl-0 whitespace-nowrap text-sm font-bold text-cyan-600 gap-2">
-                     -Classifica:👇 -Voti:🔥 -Link:🎵-  
+                    <span className="text-white">-</span>Classifica<span className="text-white">:👇</span><span className="text-white">-</span>Voti<span className="text-white">:🔥</span><span className="text-white">-</span>Link<span className="text-white">:🎵</span>
                     </div>
 
                    <div className="pl-2 sm:pl-0 flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
@@ -654,8 +656,8 @@ const saveBpm = async (id: string) => {
   >
     OK
   </button>
-</div>
-<div className="mt-3 px-2 sm:px-0 flex justify-center sm:mt-1 sm:justify-end sm:ml-3 pt-3 border-t border-yellow-400/20 sm:pt-0 sm:border-t-0">
+  </div>
+  <div className="mt-3 mb-3 px-2 sm:px-0 flex justify-center sm:mt-1 sm:justify-end sm:ml-3 sm:pr-2 md:pr-3 pt-3 sm:pt-0">
   <button
     onClick={printPlaylist}
     className="rounded-md px-3 py-1 text-xs leading-none font-bold text-zinc-900 bg-gradient-to-r from-amber-300 to-yellow-400 hover:opacity-90"
@@ -677,10 +679,8 @@ const saveBpm = async (id: string) => {
                     </div>
                   </div>
                 ) : (
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 pb-3">
                     {sorted.map((r, idx) => (
-
-
 
                       <li
                         key={r.id}
@@ -845,7 +845,7 @@ if (bpmTarget && saved !== null) {
                 <div className="text-lg font-extrabold text-yellow-300">
                   INVITA GLI OSPITI (QR):
                 </div>
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-100 via-cyan-400 to-pink-200">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui.</div>
+                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-100 via-cyan-400 to-pink-200">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui</div>
               </div>
 
              <div className="mt-2 flex justify-center">
