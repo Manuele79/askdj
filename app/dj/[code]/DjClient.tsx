@@ -396,7 +396,7 @@ const saveBpm = async (id: string) => {
 <div className="flex items-center gap-4">
   <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
     {/* glow animato dietro */}
-    <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/40 blur-xl animate-pulse" />
+    <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/20 blur-xl animate-pulse" />
     <div className="pointer-events-none absolute -inset-1 rounded-2xl border border-yellow-300/60 animate-pulse" />
 
     {/* icon */}
@@ -631,12 +631,12 @@ const saveBpm = async (id: string) => {
                   </div>
 
                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="whitespace-nowrap text-sm font-bold text-cyan-600">
+                    <div className="whitespace-nowrap text-sm font-bold text-cyan-600 gap-2">
                      -Classifica:👇 -Voti:🔥 -Link:🎵 -  
                     </div>
 
                    <div className="flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
-  <span className="text-xs text-yellow-300">TROVA BPM:</span>
+                   <span className="text-xs text-yellow-300 gap-2">TROVA BPM:</span>
 
   <input
     type="number"
@@ -700,7 +700,7 @@ const saveBpm = async (id: string) => {
 
                       {r.dedication && (
                       <div className="mt-1 truncate text-xs text-rose-400 italic">
-                      💬 DEDICA: {r.dedication}
+                      💬 DEDICA: <span className="text-white">{r.dedication}DJ</span>
                      </div>
                     )}
                    </div>
