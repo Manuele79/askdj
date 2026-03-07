@@ -632,11 +632,11 @@ const saveBpm = async (id: string) => {
                   </div>
 
                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                   <div className="pl-2 sm:pl-0 whitespace-nowrap text-sm font-bold text-cyan-600 gap-2">
-                    <span className="text-white">-</span>Classifica<span className="text-white">:👇</span><span className="text-white">-</span>Voti<span className="text-white">:🔥</span><span className="text-white">-</span>Link<span className="text-white">:🎵</span>
+                   <div className="pl-3 sm:pl-0 whitespace-nowrap text-sm font-bold text-cyan-600 gap-2">
+                    <span className="text-white">- </span>Classifica<span className="text-white">: 👇</span><span className="text-white">- </span>Voti<span className="text-white">: 🔥</span><span className="text-white">- </span>Link<span className="text-white">: 🎵</span>
                     </div>
 
-                   <div className="pl-2 sm:pl-0 flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
+                   <div className="pl-3 sm:pl-0 flex items-center justify-start gap-3 mt-2 sm:mt-0 sm:justify-end w-full sm:w-auto">
                    <span className="text-xs text-yellow-300 gap-2">TROVA BPM:</span>
 
   <input
@@ -703,7 +703,7 @@ const saveBpm = async (id: string) => {
                    </div>
 
           {/* DESTRA: pillole/bottoni */}
-          <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:justify-end sm:shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 sm:flex-nowrap sm:justify-end sm:shrink-0">
            <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs font-extrabold text-zinc-200 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
            🔥 {r.votes}
             </span>
@@ -813,7 +813,7 @@ if (bpmTarget && saved !== null) {
                             
                           <button
                           onClick={() => deleteRequest(r.id)}
-                          className="ml-2 rounded-md px-2 py-1 text-xs opacity-60 hover:opacity-100 hover:text-red-400"
+                          className="ml-1 rounded-md px-1.5 py-1 text-xs text-zinc-400 opacity-70 hover:opacity-100 hover:text-red-400"
                            title="Elimina"
                           >
                          🗑️
