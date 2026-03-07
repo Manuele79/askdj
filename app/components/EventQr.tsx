@@ -110,7 +110,7 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
       </div>
       
       <div className="mb-4 text-center">
-        <div className="text-xl font-extrabold text-cyan-400">
+        <div className="text-xl font-extrabold text-yellow-400">
           Nome Evento:
          </div>
          <div className="text-2xl font-black tracking-wide text-cyan-500">
