@@ -302,6 +302,12 @@ const shareText = cleanUrl ? stripUrlFromText(rawUrl, cleanUrl) : "";
 const platform = detectPlatform(cleanUrl);
 const youtubeVideoId = platform === "youtube" ? extractYouTubeVideoId(cleanUrl) : "";
 
+let tidalUrl: string | null = null;
+
+if (platform === "tidal") {
+  tidalUrl = cleanUrl;
+}
+
 const isPlaylist =
   (platform === "youtube" && cleanUrl.includes("list=")) ||
   (platform === "spotify" && cleanUrl.toLowerCase().includes("/playlist/"));
@@ -454,6 +460,7 @@ if (isDemo) {
       dedication,
       platform,
       youtube_video_id: youtubeVideoId,
+      tidal_url: tidalUrl,
       votes: 1,
       bpm: seedBpm,
       updated_at: nowMs,
