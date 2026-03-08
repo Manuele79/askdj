@@ -80,13 +80,25 @@ function PlatformButton({ r }: { r: RequestItem }) {
 function TidalSearchButton({ r }: { r: RequestItem }) {
   if (r.platform === "tidal") return null;
 
+  const tidalMatch = false; // per ora sempre false
+
+  const color = tidalMatch
+    ? "bg-green-400 text-black hover:bg-green-300"
+    : "bg-yellow-400 text-black hover:bg-yellow-300";
+
+  const title = tidalMatch ? "Open on Tidal" : "Search Tidal";
+
+  const url = tidalMatch
+    ? r.url
+    : buildTidalSearchUrl(r.title);
+
   return (
     <a
-      href={buildTidalSearchUrl(r.title)}
+      href={url}
       target="_blank"
       rel="noreferrer"
-      title="Search Tidal"
-      className="rounded-xl px-2.5 py-2 text-xs font-semibold text-black bg-yellow-400 hover:bg-yellow-300 transition shadow-[0_6px_18px_rgba(0,0,0,0.25)]"
+      title={title}
+      className={`rounded-xl px-2.5 py-2 text-xs font-semibold transition shadow-[0_6px_18px_rgba(0,0,0,0.25)] ${color}`}
     >
       🔎
     </a>
