@@ -19,6 +19,10 @@ type RequestItem = {
   updatedAt: number;
 };
 
+function buildTidalSearchUrl(title: string) {
+  return `https://listen.tidal.com/search?q=${encodeURIComponent(title)}`;
+}
+
 function PlatformButton({ r }: { r: RequestItem }) {
   if (!r.url) return null;
 
@@ -72,6 +76,23 @@ function PlatformButton({ r }: { r: RequestItem }) {
       );
   }
 }
+
+function TidalSearchButton({ r }: { r: RequestItem }) {
+  if (r.platform === "tidal") return null;
+
+  return (
+    <a
+      href={buildTidalSearchUrl(r.title)}
+      target="_blank"
+      rel="noreferrer"
+      title="Search Tidal"
+      className="rounded-xl px-2.5 py-2 text-xs font-semibold text-black bg-yellow-400 hover:bg-yellow-300 transition shadow-[0_6px_18px_rgba(0,0,0,0.25)]"
+    >
+      🔎
+    </a>
+  );
+}
+
 
 function FakeSpectrumWide() {
   return (
@@ -708,8 +729,8 @@ const saveBpm = async (id: string) => {
            🔥 {r.votes}
             </span>
 
-            <PlatformButton r={r} />
-
+          <PlatformButton r={r} />
+          <TidalSearchButton r={r} />
 
           <div className="flex items-center gap-2 ml-2">
 
@@ -747,23 +768,18 @@ if (bpmTarget && saved !== null) {
 
   const editing = Object.prototype.hasOwnProperty.call(bpmEdit, r.id); // true se l'utente ha "aperto" l'edit
 
-  // caso 1: BPM salvato e NON in edit -> badge + bottone modifica
-  if (saved !== null && !editing) {
-    return (
-      <>
-        <span className={`text-xs px-2 py-1 rounded-md ${songBpmClass}`}>
-  {saved} BPM
-</span>
-        <button
-          onClick={() => setBpmEdit((prev) => ({ ...prev, [r.id]: saved }))}
-          className="rounded-md bg-zinc-800/60 px-2 py-1 text-xs hover:bg-zinc-800"
-          title="Modifica BPM"
-        >
-          ✏️
-        </button>
-      </>
-    );
-  }
+// caso 1: BPM salvato e NON in edit -> badge cliccabile
+if (saved !== null && !editing) {
+  return (
+    <button
+      onClick={() => setBpmEdit((prev) => ({ ...prev, [r.id]: saved }))}
+      className={`text-xs px-2 py-1 rounded-md ${songBpmClass} hover:opacity-90 transition`}
+      title="Modifica BPM"
+    >
+      {saved} BPM
+    </button>
+  );
+}
 
   // caso 2: BPM mancante oppure in edit -> input + OK (+ annulla se c'era già)
   return (
