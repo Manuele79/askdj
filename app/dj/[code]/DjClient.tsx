@@ -230,8 +230,8 @@ function splitDedications(raw: string | null | undefined) {
   if (!raw) return [];
 
   return raw
-    .split("💗")
-    .map((x) => x.trim())
+    .split("\n")
+    .map((x) => x.replace(/^❤️\s*/, "").trim())
     .filter(Boolean);
 }
 
@@ -746,7 +746,7 @@ const saveBpm = async (id: string) => {
   if (count === 1) {
     return (
       <div className="mt-1 text-xs italic text-rose-400">
-        💬 DEDICA: <span className="text-white">💗 {dedications[0]}</span>
+        💬 DEDICA: <span className="text-white">❤️ {dedications[0]}</span>
       </div>
     );
   }
@@ -774,7 +774,7 @@ const saveBpm = async (id: string) => {
           <div className="flex flex-col gap-1">
             {dedications.map((d, i) => (
               <div key={i} className="text-xs italic text-white">
-                💗 {d}
+                ❤️ {d}
               </div>
             ))}
           </div>
