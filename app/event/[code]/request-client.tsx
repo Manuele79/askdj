@@ -693,6 +693,19 @@ function FakeSpectrumWide() {
           NESSUN AUDIO VIENE INVIATO. SOLO il LINK canzone/titolo e dedica.
         </footer>
       </div>
+ {/* Footer */}
+        <footer
+          style={{
+            marginTop: 34,
+            padding: "22px 4px",
+            opacity: 0.58,
+            fontSize: 12.5,
+            textAlign: "center",
+          }}
+        >
+          © {new Date().getFullYear()} info@askdj.app — Manuele Martino
+        </footer>
+
     </div>
   );
 }
