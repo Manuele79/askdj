@@ -729,7 +729,7 @@ const saveBpm = async (id: string) => {
                        </div>
 
                       {r.dedication && (
-                      <div className="mt-1 truncate text-xs text-rose-400 italic">
+                      <div className="mt-1 truncate text-xs text-rose-400 italic" style={{ whiteSpace: "pre-line" }}>
                       💬 DEDICA: <span className="text-white">{r.dedication}</span>
                      </div>
                     )}
