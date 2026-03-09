@@ -764,13 +764,13 @@ const saveBpm = async (id: string) => {
             [r.id]: !prev[r.id],
           }))
         }
-        className="rounded-lg border border-rose-400 bg-rose-500/15 px-2.5 py-1 text-xs font-bold text-rose-400 transition hover:bg-rose-500 hover:border-yellow-400 hover:text-white"
+        className="rounded-lg border border-cyan-400 bg-rose-500 px-2.5 py-1 text-xs font-bold text-cyan-400 transition hover:bg-rose-400 hover:border-yellow-400 hover:text-white"
       >
-        💬 DEDICHE: <span className="font-extrabold text-yellow-400"> {count} s</span> {isOpen ? "▾" : "▸"}
+        💬 DEDICHE: <span className="font-extrabold text-yellow-400"> {count} </span> {isOpen ? "▾" : "▸"}
       </button>
 
       {isOpen && (
-        <div className="mt-2 rounded-xl border border-rose-400/20 bg-zinc-900/60 px-3 py-2">
+        <div className="mt-2 rounded-xl border border-rose-400 bg-zinc-900/60 px-3 py-2">
           <div className="flex flex-col gap-1">
             {dedications.map((d, i) => (
               <div key={i} className="text-xs italic text-white">
