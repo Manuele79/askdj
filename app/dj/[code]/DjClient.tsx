@@ -189,6 +189,7 @@ export default function DjClient({ code }: { code: string }) {
   const [joinMsg, setJoinMsg] = useState("");
   const [currentBpm, setCurrentBpm] = useState<number | "">("");
   const [bpmEdit, setBpmEdit] = useState<Record<string, number | "">>({});
+  const [openDedications, setOpenDedications] = useState<Record<string, boolean>>({});
 
   function resetPartyUnlock() {
     try {
@@ -224,6 +225,15 @@ const zoneClass = (zone: string) => {
     default:     return "bg-zinc-900 ring-1 ring-yellow-400/30";
   }
 };
+
+function splitDedications(raw: string | null | undefined) {
+  if (!raw) return [];
+
+  return raw
+    .split("💗")
+    .map((x) => x.trim())
+    .filter(Boolean);
+}
 
   const sorted = useMemo(() => {
     return [...items].sort(
@@ -727,12 +737,52 @@ const saveBpm = async (id: string) => {
                        <div className="truncate text-base font-extrabold text-zinc-100">
                         {r.title}
                        </div>
+{(() => {
+  const dedications = splitDedications(r.dedication);
+  const count = dedications.length;
 
-                      {r.dedication && (
-                      <div className="mt-1 truncate text-xs text-rose-400 italic" style={{ whiteSpace: "pre-line" }}>
-                      💬 DEDICA: <span className="text-white">{r.dedication}</span>
-                     </div>
-                    )}
+  if (count === 0) return null;
+
+  if (count === 1) {
+    return (
+      <div className="mt-1 text-xs italic text-rose-400">
+        💬 DEDICA: <span className="text-white">💗 {dedications[0]}</span>
+      </div>
+    );
+  }
+
+  const isOpen = !!openDedications[r.id];
+
+  return (
+    <div className="mt-2">
+      <button
+        type="button"
+        title="Apri"
+        onClick={() =>
+          setOpenDedications((prev) => ({
+            ...prev,
+            [r.id]: !prev[r.id],
+          }))
+        }
+        className="rounded-lg border border-rose-400/30 bg-rose-500/10 px-2 py-1 text-xs font-semibold text-rose-300 transition hover:bg-rose-500/20 hover:border-rose-300 hover:text-rose-200"
+      >
+        💬 DEDICHE: <span className="text-white">{count}</span> {isOpen ? "▾" : "▸"}
+      </button>
+
+      {isOpen && (
+        <div className="mt-2 rounded-xl border border-rose-400/20 bg-zinc-900/60 px-3 py-2">
+          <div className="flex flex-col gap-1">
+            {dedications.map((d, i) => (
+              <div key={i} className="text-xs italic text-white">
+                💗 {d}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+})()}
                    </div>
 
           {/* DESTRA: pillole/bottoni */}
