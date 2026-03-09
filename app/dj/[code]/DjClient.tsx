@@ -764,7 +764,7 @@ const saveBpm = async (id: string) => {
             [r.id]: !prev[r.id],
           }))
         }
-        className="rounded-lg border border-cyan-400 bg-rose-500 px-2.5 py-1 text-xs font-bold text-cyan-400 transition hover:bg-rose-400 hover:border-yellow-400 hover:text-white"
+        className="rounded-lg border border-rose-400 bg-rose-500 px-2.5 py-1 text-xs font-bold text-rose-400 transition hover:bg-rose-500/25 hover:border-rose-300 hover:text-white"
       >
         💬 DEDICHE: <span className="font-extrabold text-yellow-400"> {count} </span> {isOpen ? "▾" : "▸"}
       </button>
