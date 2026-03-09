@@ -263,6 +263,19 @@ export async function GET(req: Request) {
   return NextResponse.json({ requests: (data || []).map(mapRow) });
 }
 
+function appendDedication(existing: string, incoming: string) {
+  const oldText = String(existing || "").trim();
+  const newText = String(incoming || "").trim();
+
+  if (!newText) return oldText;
+
+  const formattedNew = `❤️ ${newText}`;
+
+  if (!oldText) return formattedNew;
+
+  return `${oldText}\n${formattedNew}`;
+}
+
 // POST /api/requests  body: { eventCode, title, url }
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({} as any));
@@ -342,12 +355,19 @@ const nowMs = Date.now();
     const row = existing?.[0];
     if (row) {
       const newVotes = Number(row.votes || 0) + 1;
-      const { data: upd, error: e2 } = await supabase
-        .from("requests")
-        .update({ votes: newVotes, updated_at: nowMs, title: finalTitle })
-        .eq("id", row.id)
-        .select("*")
-        .single();
+      const mergedDedication = appendDedication(row.dedication || "", dedication);
+
+const { data: upd, error: e2 } = await supabase
+  .from("requests")
+  .update({
+    votes: newVotes,
+    updated_at: nowMs,
+    title: finalTitle,
+    dedication: mergedDedication,
+  })
+  .eq("id", row.id)
+  .select("*")
+  .single();
 
       if (e2) {
         console.error("SUPABASE MERGE UPDATE ERROR:", e2);
@@ -377,17 +397,19 @@ if (platform !== "youtube" && cleanUrl) {
   if (row) {
     const newVotes = Number(row.votes || 0) + 1;
 
-    const { data: upd, error: e2 } = await supabase
-      .from("requests")
-      .update({
-        votes: newVotes,
-        updated_at: nowMs,
-        title: finalTitle || row.title,
-        dedication: row.dedication || dedication || "",
-      })
-      .eq("id", row.id)
-      .select("*")
-      .single();
+    const mergedDedication = appendDedication(row.dedication || "", dedication);
+
+const { data: upd, error: e2 } = await supabase
+  .from("requests")
+  .update({
+    votes: newVotes,
+    updated_at: nowMs,
+    title: finalTitle || row.title,
+    dedication: mergedDedication,
+  })
+  .eq("id", row.id)
+  .select("*")
+  .single();
 
     if (e2) {
       console.error("SUPABASE MERGE UPDATE ERROR:", e2);
@@ -457,7 +479,7 @@ if (isDemo) {
       event_code: eventCode,
       title: finalTitle,
       url: cleanUrl,
-      dedication,
+      dedication: dedication ? `❤️ ${dedication}` : "",
       platform,
       youtube_video_id: youtubeVideoId,
       tidal_url: tidalUrl,
