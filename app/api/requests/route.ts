@@ -337,22 +337,43 @@ const finalTitle =
     ? safeTitle.trim()
     : shareText || `Richiesta ${platform === "amazon" ? "Amazon Music" : platform === "apple" ? "Apple Music" : platform === "tidal" ? "TIDAL" : "Music"}`;
 
+const titleTail = finalTitle.includes("-")
+  ? finalTitle.split("-").pop()?.trim() || finalTitle
+  : finalTitle;
+
 if (platform !== "tidal" && finalTitle) {
-  const { data: libMatch, error: libErr } = await supabase
+  let libMatch: any[] | null = null;
+
+  const { data: libByFull, error: libErr1 } = await supabase
     .from("music_library")
     .select("tidal_url, title")
     .ilike("title", `%${finalTitle}%`)
     .limit(1);
 
-  if (libErr) {
-    console.error("MUSIC_LIBRARY MATCH ERROR:", libErr);
-  } else if (libMatch?.[0]?.tidal_url) {
+  if (libErr1) {
+    console.error("MUSIC_LIBRARY FULL MATCH ERROR:", libErr1);
+  } else if (libByFull?.[0]?.tidal_url) {
+    libMatch = libByFull;
+  }
+
+  if (!libMatch?.[0]?.tidal_url && titleTail && titleTail !== finalTitle) {
+    const { data: libByTail, error: libErr2 } = await supabase
+      .from("music_library")
+      .select("tidal_url, title")
+      .ilike("title", `%${titleTail}%`)
+      .limit(1);
+
+    if (libErr2) {
+      console.error("MUSIC_LIBRARY TAIL MATCH ERROR:", libErr2);
+    } else if (libByTail?.[0]?.tidal_url) {
+      libMatch = libByTail;
+    }
+  }
+
+  if (libMatch?.[0]?.tidal_url) {
     tidalUrl = libMatch[0].tidal_url;
   }
 }
-
-
-
 
 const nowMs = Date.now();
 
