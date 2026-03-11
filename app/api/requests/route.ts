@@ -337,6 +337,22 @@ const finalTitle =
     ? safeTitle.trim()
     : shareText || `Richiesta ${platform === "amazon" ? "Amazon Music" : platform === "apple" ? "Apple Music" : platform === "tidal" ? "TIDAL" : "Music"}`;
 
+if (platform !== "tidal" && finalTitle) {
+  const { data: libMatch, error: libErr } = await supabase
+    .from("music_library")
+    .select("tidal_url, title")
+    .ilike("title", `%${finalTitle}%`)
+    .limit(1);
+
+  if (libErr) {
+    console.error("MUSIC_LIBRARY MATCH ERROR:", libErr);
+  } else if (libMatch?.[0]?.tidal_url) {
+    tidalUrl = libMatch[0].tidal_url;
+  }
+}
+
+
+
 
 const nowMs = Date.now();
 
