@@ -11,12 +11,12 @@ type RequestItem = {
   title: string;
   url: string;
   dedication: string;
-
   platform: Platform;
   youtubeVideoId: string;
   votes: number;
   createdAt: number;
   updatedAt: number;
+  tidal_url?: string | null;
 };
 
 function buildTidalSearchUrl(title: string) {
@@ -80,7 +80,7 @@ function PlatformButton({ r }: { r: RequestItem }) {
 function TidalSearchButton({ r }: { r: RequestItem }) {
   if (r.platform === "tidal") return null;
 
-  const tidalMatch = false; // per ora sempre false
+  const tidalMatch = !!r.tidal_url;
 
   const color = tidalMatch
     ? "bg-green-400 text-black hover:bg-green-300"
@@ -89,7 +89,7 @@ function TidalSearchButton({ r }: { r: RequestItem }) {
   const title = tidalMatch ? "Open on Tidal" : "Search Tidal";
 
   const url = tidalMatch
-    ? r.url
+    ? r.tidal_url!
     : buildTidalSearchUrl(r.title);
 
   return (
