@@ -215,6 +215,7 @@ function mapRow(r: any) {
     platform: String(r.platform ?? "other"),
     youtubeVideoId: String(r.youtube_video_id ?? ""),
     votes: Number(r.votes ?? 0),
+    tidal_url: r.tidal_url ?? null,
     bpm: r.bpm === null || r.bpm === undefined ? null : Number(r.bpm), 
     createdAt: r.created_at ? Date.parse(r.created_at) : 0,
     updatedAt: Number(r.updated_at ?? 0),
