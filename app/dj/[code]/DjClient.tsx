@@ -733,9 +733,9 @@ const saveBpm = async (id: string) => {
         key={r.id}
         className={`mx-1 rounded-3xl overflow-hidden border p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_rgba(0,0,0,0.45)] ${
           r.tidal_url
-            ? "border-green-400 bg-green-500/10 shadow-[0_0_12px_rgba(34,197,94,0.35)] hover:border-green-300"
+            ? "border-green-400 bg-green-500/10 shadow-[0_0_12px_rgba(34,197,94,0.35)] hover:border-green-200 hover:shadow-[0_0_18px_rgba(74,222,128,0.55)]"
             : "border-yellow-400/40 bg-zinc-950 hover:border-yellow-300"
-        } ${isNew ? "animate-pulse border-yellow-300" : ""}`}
+        } ${isNew ? "animate-[pulse_1.2s_ease-out_2] border-yellow-300" : ""}`}
       >
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           {/* SINISTRA: titolo */}
