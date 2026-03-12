@@ -381,7 +381,7 @@ const deleteRequest = async (id: string) => {
     return;
   }
 
-  window.location.reload();
+  setItems((prev) => prev.filter((x) => x.id !== id));
 };
 
 const saveBpm = async (id: string) => {
