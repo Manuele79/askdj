@@ -722,195 +722,196 @@ const saveBpm = async (id: string) => {
                     </div>
                   </div>
                 ) : (
-                  <ul className="space-y-3 pb-3">
-                    {sorted.map((r, idx) => (
 
-                      <li
-                        key={r.id}
-                        className={`mx-1 rounded-3xl overflow-hidden border p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_rgba(0,0,0,0.45)] ${
-                       r.tidal_url
-                       ? "border-green-400 bg-green-500/10 shadow-[0_0_12px_rgba(34,197,94,0.35)] hover:border-green-300"
-                      : "border-yellow-400/40 bg-zinc-950 hover:border-yellow-300"
-                    }`}
-                      >
-                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                       {/* SINISTRA: titolo */}
-                       <div className="min-w-0 flex-1">
-                        <div className="text-xs text-zinc-500">#{idx + 1}</div>
 
-                       <div className="truncate text-base font-extrabold text-zinc-100">
-                        {r.title}
-                       </div>
-{(() => {
-  const dedications = splitDedications(r.dedication);
-  const count = dedications.length;
+  <ul className="space-y-3 pb-3">
+  {sorted.map((r, idx) => {
+    const isNew = Date.now() - r.updatedAt < 2000;
 
-  if (count === 0) return null;
-
-  if (count === 1) {
     return (
-      <div className="mt-1 text-xs italic text-rose-400">
-        💬 DEDICA: <span className="text-white">❤️ {dedications[0]}</span>
-      </div>
-    );
-  }
-
-  const isOpen = !!openDedications[r.id];
-
-  return (
-    <div className="mt-2">
-      <button
-        type="button"
-        title="Apri"
-        onClick={() =>
-          setOpenDedications((prev) => ({
-            ...prev,
-            [r.id]: !prev[r.id],
-          }))
-        }
-       className="rounded-lg border border-rose-400/30 bg-rose-500/10 px-2 py-1 text-xs font-semibold text-rose-300 transition hover:bg-rose-500/20 hover:border-rose-300 hover:text-rose-200"
+      <li
+        key={r.id}
+        className={`mx-1 rounded-3xl overflow-hidden border p-4 pt-6 shadow-[0_14px_45px_rgba(0,0,0,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_rgba(0,0,0,0.45)] ${
+          r.tidal_url
+            ? "border-green-400 bg-green-500/10 shadow-[0_0_12px_rgba(34,197,94,0.35)] hover:border-green-300"
+            : "border-yellow-400/40 bg-zinc-950 hover:border-yellow-300"
+        } ${isNew ? "animate-pulse border-yellow-300" : ""}`}
       >
-        💬 DEDICHE: <span className="font-extrabold text-yellow-400"> {count} </span> {isOpen ? "▾" : "▸"}
-      </button>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          {/* SINISTRA: titolo */}
+          <div className="min-w-0 flex-1">
+            <div className="text-xs text-zinc-500">#{idx + 1}</div>
 
-      {isOpen && (
-        <div className="mt-2 rounded-xl border border-rose-400 bg-zinc-900/60 px-3 py-2">
-          <div className="flex flex-col gap-1">
-            {dedications.map((d, i) => (
-              <div key={i} className="text-xs italic text-white">
-                ❤️ {d}
-              </div>
-            ))}
+            <div className="truncate text-base font-extrabold text-zinc-100">
+              {r.title}
+            </div>
+
+            {(() => {
+              const dedications = splitDedications(r.dedication);
+              const count = dedications.length;
+
+              if (count === 0) return null;
+
+              if (count === 1) {
+                return (
+                  <div className="mt-1 text-xs italic text-rose-400">
+                    💬 DEDICA: <span className="text-white">❤️ {dedications[0]}</span>
+                  </div>
+                );
+              }
+
+              const isOpen = !!openDedications[r.id];
+
+              return (
+                <div className="mt-2">
+                  <button
+                    type="button"
+                    title="Apri"
+                    onClick={() =>
+                      setOpenDedications((prev) => ({
+                        ...prev,
+                        [r.id]: !prev[r.id],
+                      }))
+                    }
+                    className="rounded-lg border border-rose-400/30 bg-rose-500/10 px-2 py-1 text-xs font-semibold text-rose-300 transition hover:bg-rose-500/20 hover:border-rose-300 hover:text-rose-200"
+                  >
+                    💬 DEDICHE: <span className="font-extrabold text-yellow-400">{count}</span> {isOpen ? "▾" : "▸"}
+                  </button>
+
+                  {isOpen && (
+                    <div className="mt-2 rounded-xl border border-rose-400 bg-zinc-900/60 px-3 py-2">
+                      <div className="flex flex-col gap-1">
+                        {dedications.map((d, i) => (
+                          <div key={i} className="text-xs italic text-white">
+                            ❤️ {d}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
-        </div>
-      )}
-    </div>
-  );
-})()}
-                   </div>
 
           {/* DESTRA: pillole/bottoni */}
           <div className="flex items-center gap-1.5 sm:gap-2 sm:flex-nowrap sm:justify-end sm:shrink-0">
-           <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs font-extrabold text-zinc-200 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
-           🔥 {r.votes}
+            <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs font-extrabold text-zinc-200 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
+              🔥 {r.votes}
             </span>
 
-          <PlatformButton r={r} />
-          <TidalSearchButton r={r} />
+            <PlatformButton r={r} />
+            <TidalSearchButton r={r} />
 
-          <div className="flex items-center gap-2 ml-2">
+            <div className="ml-2 flex items-center gap-2">
+              {/* BPM UX: badge se salvato, input solo quando serve */}
+              {(() => {
+                const saved = typeof (r as any).bpm === "number" ? Math.round((r as any).bpm) : null;
 
+                let songBpmClass = "bg-cyan-500/20";
 
-{/* BPM UX: badge se salvato, input solo quando serve */}
-{(() => {
+                if (bpmTarget && saved !== null) {
+                  const diff = Math.abs(saved - bpmTarget);
+                  const zone = targetZone(bpmTarget);
 
-const saved = typeof (r as any).bpm === "number" ? Math.round((r as any).bpm) : null;
+                  if (diff <= 5) {
+                    songBpmClass =
+                      zone === "low"
+                        ? "bg-green-500/35 ring-2 ring-green-400"
+                        : zone === "mid"
+                        ? "bg-yellow-500/35 ring-2 ring-yellow-400"
+                        : zone === "high"
+                        ? "bg-sky-500/35 ring-2 ring-sky-400"
+                        : "bg-red-500/35 ring-2 ring-red-400";
+                  } else if (diff <= 10) {
+                    songBpmClass =
+                      zone === "low"
+                        ? "bg-green-500/20 ring-1 ring-green-400/60"
+                        : zone === "mid"
+                        ? "bg-yellow-500/20 ring-1 ring-yellow-400/60"
+                        : zone === "high"
+                        ? "bg-sky-500/20 ring-1 ring-sky-400/60"
+                        : "bg-red-500/20 ring-1 ring-red-400/60";
+                  } else {
+                    songBpmClass = "bg-zinc-800/40";
+                  }
+                }
 
-let songBpmClass = "bg-cyan-500/20"; // neutro
+                const editing = Object.prototype.hasOwnProperty.call(bpmEdit, r.id);
 
-if (bpmTarget && saved !== null) {
-  const diff = Math.abs(saved - bpmTarget);
-  const zone = targetZone(bpmTarget);
+                if (saved !== null && !editing) {
+                  return (
+                    <button
+                      onClick={() => setBpmEdit((prev) => ({ ...prev, [r.id]: saved }))}
+                      className={`rounded-md px-2 py-1 text-xs ${songBpmClass} transition hover:opacity-90`}
+                      title="Modifica BPM"
+                    >
+                      {saved} BPM
+                    </button>
+                  );
+                }
 
-  if (diff <= 5) {
-    // match forte
-    songBpmClass =
-      zone === "low"  ? "bg-green-500/35 ring-2 ring-green-400"
-    : zone === "mid"  ? "bg-yellow-500/35 ring-2 ring-yellow-400"
-    : zone === "high" ? "bg-sky-500/35 ring-2 ring-sky-400"
-    :                 "bg-red-500/35 ring-2 ring-red-400";
-  } else if (diff <= 10) {
-    // match soft
-    songBpmClass =
-      zone === "low"  ? "bg-green-500/20 ring-1 ring-green-400/60"
-    : zone === "mid"  ? "bg-yellow-500/20 ring-1 ring-yellow-400/60"
-    : zone === "high" ? "bg-sky-500/20 ring-1 ring-sky-400/60"
-    :                 "bg-red-500/20 ring-1 ring-red-400/60";
-  } else {
-    songBpmClass = "bg-zinc-800/40"; // fuori range → neutro scuro
-  }
-}
+                return (
+                  <>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      value={bpmEdit[r.id] ?? ""}
+                      onChange={(e) =>
+                        setBpmEdit((prev) => ({
+                          ...prev,
+                          [r.id]: e.target.value === "" ? "" : Number(e.target.value),
+                        }))
+                      }
+                      placeholder="BPM"
+                      className="w-16 rounded-md border border-yellow-400/30 bg-zinc-900 px-2 py-1 text-xs"
+                    />
 
+                    <button
+                      onClick={() => saveBpm(r.id)}
+                      className="rounded-md bg-yellow-500/20 px-2 py-1 text-xs hover:bg-yellow-500/40"
+                      title="Salva BPM"
+                    >
+                      OK
+                    </button>
 
-  const editing = Object.prototype.hasOwnProperty.call(bpmEdit, r.id); // true se l'utente ha "aperto" l'edit
+                    {saved !== null && (
+                      <button
+                        onClick={() =>
+                          setBpmEdit((prev) => {
+                            const copy = { ...prev };
+                            delete copy[r.id];
+                            return copy;
+                          })
+                        }
+                        className="rounded-md bg-zinc-800/60 px-2 py-1 text-xs hover:bg-zinc-800"
+                        title="Annulla"
+                      >
+                        ✖
+                      </button>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
 
-// caso 1: BPM salvato e NON in edit -> badge cliccabile
-if (saved !== null && !editing) {
-  return (
-    <button
-      onClick={() => setBpmEdit((prev) => ({ ...prev, [r.id]: saved }))}
-      className={`text-xs px-2 py-1 rounded-md ${songBpmClass} hover:opacity-90 transition`}
-      title="Modifica BPM"
-    >
-      {saved} BPM
-    </button>
-  );
-}
-
-  // caso 2: BPM mancante oppure in edit -> input + OK (+ annulla se c'era già)
-  return (
-    <>
-      <input
-        type="number"
-        inputMode="numeric"
-        value={bpmEdit[r.id] ?? ""}   // quando entri in edit lo settiamo noi sopra
-        onChange={(e) =>
-          setBpmEdit((prev) => ({
-            ...prev,
-            [r.id]: e.target.value === "" ? "" : Number(e.target.value),
-          }))
-        }
-        placeholder="BPM"
-        className="w-16 rounded-md border border-yellow-400/30 bg-zinc-900 px-2 py-1 text-xs"
-      />
-
-      <button
-        onClick={() => saveBpm(r.id)}
-        className="rounded-md bg-yellow-500/20 px-2 py-1 text-xs hover:bg-yellow-500/40"
-        title="Salva BPM"
-      >
-        OK
-      </button>
-
-      {saved !== null && (
-        <button
-          onClick={() =>
-            setBpmEdit((prev) => {
-              const copy = { ...prev };
-              delete copy[r.id];
-              return copy;
-            })
-          }
-          className="rounded-md bg-zinc-800/60 px-2 py-1 text-xs hover:bg-zinc-800"
-          title="Annulla"
-        >
-          ✖
-        </button>
-      )}
-    </>
-  );
-})()}
-</div>
-
-                            
-                          <button
-                          onClick={() => deleteRequest(r.id)}
-                          className="ml-1 rounded-md px-1.5 py-1 text-xs text-zinc-400 opacity-70 hover:opacity-100 hover:text-red-400"
-                           title="Elimina"
-                          >
-                         🗑️
-                        </button>
-
-                            
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </section>
-            )}
+            <button
+              onClick={() => deleteRequest(r.id)}
+              className="ml-1 rounded-md px-1.5 py-1 text-xs text-zinc-400 opacity-70 hover:text-red-400 hover:opacity-100"
+              title="Elimina"
+            >
+              🗑️
+            </button>
           </div>
+        </div>
+      </li>
+    );
+  })}
+</ul>
+  )}
+   </section>
+  )}
+ </div>
 
           {/* RIGHT: QR */}
           <aside className="lg:col-span-1">
