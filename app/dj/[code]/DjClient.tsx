@@ -710,7 +710,7 @@ function toggleSelect(id: string) {
     onClick={exportPlaylist}
     className="ml-3 rounded-md bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-300 hover:bg-emerald-500/40"
   >
-    ⬇ Export Playlist
+     🎧 Export Playlist
   </button>
 </div>
 
@@ -723,7 +723,7 @@ function toggleSelect(id: string) {
                       CONSOLE DJ:
                     </div>
                     <div className="pl-4 pt-1 text-xs text-amber-300">
-                      Richieste in tempo reale:
+                      Seleziona i Brani:
                     </div>
                   </div>
 
