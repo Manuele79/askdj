@@ -17,6 +17,7 @@ type RequestItem = {
   createdAt: number;
   updatedAt: number;
   tidal_url?: string | null;
+  bpm?: number | null;
 };
 
 function buildTidalSearchUrl(title: string) {
@@ -425,6 +426,34 @@ const saveBpm = async (id: string) => {
   });
 };
 
+function exportPlaylist() {
+  const rows = sorted
+    .filter((r) => selected[r.id] && r.tidal_url)
+    .map((r) => ({
+      title: r.title,
+      bpm: r.bpm ?? "",
+      url: r.tidal_url,
+    }));
+
+  if (rows.length === 0) {
+    alert("Nessun brano esportabile selezionato.");
+    return;
+  }
+
+  const header = ["Title", "BPM", "URL"];
+  const csv = [
+    header.join(","),
+    ...rows.map((r) => [r.title, r.bpm, r.url].join(",")),
+  ].join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+
+  link.href = URL.createObjectURL(blob);
+  link.download = `askdj_playlist_${code}.csv`;
+  link.click();
+}
+
 function toggleSelect(id: string) {
   setSelected((prev) => ({
     ...prev,
@@ -671,12 +700,20 @@ function toggleSelect(id: string) {
               </section>
             ) : (
 <>
-              <div className="mt-3 mb-2 flex items-center gap-3 pl-2 text-sm font-bold text-yellow-300">
+<div className="mt-3 mb-2 flex items-center gap-3 pl-2 text-sm font-bold text-yellow-300">
   ⭐ Playlist selezionata:
   <span className="rounded-full bg-yellow-400 px-3 py-0.5 text-xs font-extrabold text-black">
-    {Object.values(selected).filter(Boolean).length}
+    {sorted.filter((r) => selected[r.id] && r.tidal_url).length}
   </span>
+
+  <button
+    onClick={exportPlaylist}
+    className="ml-3 rounded-md bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-300 hover:bg-emerald-500/40"
+  >
+    ⬇ Export Playlist
+  </button>
 </div>
+
 
               <section className="mt-3 rounded-3xl border border-yellow-400 bg-emerald-400/8 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                <div className="flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between">
@@ -755,9 +792,17 @@ function toggleSelect(id: string) {
       >
         <div className="flex gap-3">
 <button
-  onClick={() => toggleSelect(r.id)}
-  className="text-xl leading-none select-none"
-  title="Seleziona per playlist"
+  onClick={() => {
+    if (!r.tidal_url) return;
+    toggleSelect(r.id);
+  }}
+  disabled={!r.tidal_url}
+  className={`text-xl leading-none select-none transition ${
+    r.tidal_url
+      ? "text-white hover:scale-110 cursor-pointer"
+      : "text-zinc-600 cursor-not-allowed opacity-50"
+  }`}
+  title={r.tidal_url ? "Seleziona per export playlist" : "Non esportabile"}
 >
   {selected[r.id] ? "⭐" : "☆"}
 </button>
