@@ -754,7 +754,7 @@ function toggleSelect(id: string) {
   {selected[r.id] ? "⭐" : "☆"}
 </button>
 
-<div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"></div>
+<div className="flex-1 min-w-0 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 
 
           {/* SINISTRA: titolo */}
@@ -921,6 +921,7 @@ function toggleSelect(id: string) {
             >
               🗑️
             </button>
+          </div>
           </div>
         </div>
       </li>
