@@ -670,6 +670,14 @@ function toggleSelect(id: string) {
 
               </section>
             ) : (
+<>
+              <div className="mt-3 mb-2 flex items-center gap-3 pl-2 text-sm font-bold text-yellow-300">
+  ⭐ Playlist selezionata:
+  <span className="rounded-full bg-yellow-400 px-3 py-0.5 text-xs font-extrabold text-black">
+    {Object.values(selected).filter(Boolean).length}
+  </span>
+</div>
+
               <section className="mt-3 rounded-3xl border border-yellow-400 bg-emerald-400/8 shadow-[0_0_35px_rgba(0,0,0,0.45)]">
                <div className="flex flex-col gap-3 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between">
   
@@ -930,6 +938,7 @@ function toggleSelect(id: string) {
 </ul>
   )}
    </section>
+   </>
   )}
  </div>
 
