@@ -190,6 +190,7 @@ export default function DjClient({ code }: { code: string }) {
   const [currentBpm, setCurrentBpm] = useState<number | "">("");
   const [bpmEdit, setBpmEdit] = useState<Record<string, number | "">>({});
   const [openDedications, setOpenDedications] = useState<Record<string, boolean>>({});
+  const [selected, setSelected] = useState<Record<string, boolean>>({});
 
   function resetPartyUnlock() {
     try {
@@ -423,6 +424,13 @@ const saveBpm = async (id: string) => {
     return copy;
   });
 };
+
+function toggleSelect(id: string) {
+  setSelected((prev) => ({
+    ...prev,
+    [id]: !prev[id],
+  }));
+}
 
 
   return (
@@ -737,7 +745,18 @@ const saveBpm = async (id: string) => {
             : "border-yellow-400/40 bg-zinc-950 hover:border-yellow-300"
         } ${isNew ? "animate-[pulse_1.2s_ease-out_2] border-yellow-300" : ""}`}
       >
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex gap-3">
+<button
+  onClick={() => toggleSelect(r.id)}
+  className="text-xl leading-none select-none"
+  title="Seleziona per playlist"
+>
+  {selected[r.id] ? "⭐" : "☆"}
+</button>
+
+<div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"></div>
+
+
           {/* SINISTRA: titolo */}
           <div className="min-w-0 flex-1">
             <div className="text-xs text-zinc-500">#{idx + 1}</div>
