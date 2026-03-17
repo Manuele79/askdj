@@ -23,7 +23,21 @@ function makeCodeChallenge(verifier: string) {
   return toBase64Url(createHash("sha256").update(verifier).digest());
 }
 
-export async function GET() {
+function normalizeEventCode(code: string | null) {
+  return String(code || "").trim().toUpperCase();
+}
+
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const eventCode = normalizeEventCode(searchParams.get("eventCode"));
+
+  if (!eventCode) {
+    return NextResponse.json(
+      { ok: false, error: "Missing eventCode" },
+      { status: 400 }
+    );
+  }
+
   const clientId = env("TIDAL_CLIENT_ID");
   const redirectUri = "https://askdj.app/api/tidal/callback";
   const scope = "playlists.read playlists.write user.read";
@@ -53,6 +67,14 @@ export async function GET() {
   });
 
   res.cookies.set("tidal_oauth_state", state, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 10,
+  });
+
+  res.cookies.set("tidal_event_code", eventCode, {
     httpOnly: true,
     secure: true,
     sameSite: "lax",
