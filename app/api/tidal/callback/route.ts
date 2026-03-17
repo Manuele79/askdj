@@ -15,11 +15,13 @@ const supabase = createClient(
 
 export async function GET(req: Request) {
   try {
-    const { searchParams } = new URL(req.url);
+    const url = new URL(req.url);
+    const searchParams = url.searchParams;
 
     const code = searchParams.get("code");
     const error = searchParams.get("error");
     const errorDescription = searchParams.get("error_description");
+    const state = searchParams.get("state");
 
     if (error) {
       return NextResponse.json(
@@ -31,6 +33,38 @@ export async function GET(req: Request) {
     if (!code) {
       return NextResponse.json(
         { ok: false, error: "Missing authorization code" },
+        { status: 400 }
+      );
+    }
+
+    const cookieHeader = req.headers.get("cookie") || "";
+
+    const cookies = Object.fromEntries(
+      cookieHeader
+        .split(";")
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .map((part) => {
+          const i = part.indexOf("=");
+          const key = i >= 0 ? part.slice(0, i) : part;
+          const value = i >= 0 ? part.slice(i + 1) : "";
+          return [key, decodeURIComponent(value)];
+        })
+    );
+
+    const codeVerifier = cookies["tidal_pkce_verifier"];
+    const savedState = cookies["tidal_oauth_state"];
+
+    if (!codeVerifier) {
+      return NextResponse.json(
+        { ok: false, error: "Missing PKCE code verifier" },
+        { status: 400 }
+      );
+    }
+
+    if (!state || !savedState || state !== savedState) {
+      return NextResponse.json(
+        { ok: false, error: "Invalid OAuth state" },
         { status: 400 }
       );
     }
@@ -50,6 +84,7 @@ export async function GET(req: Request) {
         client_id: clientId,
         client_secret: clientSecret,
         redirect_uri: redirectUri,
+        code_verifier: codeVerifier,
       }).toString(),
     });
 
@@ -128,7 +163,25 @@ export async function GET(req: Request) {
       );
     }
 
-    return NextResponse.redirect("https://askdj.app/dj");
+    const res = NextResponse.redirect("https://askdj.app/dj");
+
+    res.cookies.set("tidal_pkce_verifier", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+
+    res.cookies.set("tidal_oauth_state", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+
+    return res;
   } catch (err) {
     console.error("TIDAL CALLBACK ERROR:", err);
     return NextResponse.json(
