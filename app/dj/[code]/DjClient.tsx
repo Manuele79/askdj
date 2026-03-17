@@ -192,6 +192,8 @@ export default function DjClient({ code }: { code: string }) {
   const [bpmEdit, setBpmEdit] = useState<Record<string, number | "">>({});
   const [openDedications, setOpenDedications] = useState<Record<string, boolean>>({});
   const [selected, setSelected] = useState<Record<string, boolean>>({});
+  const [tidalConnected, setTidalConnected] = useState<boolean>(false);
+  const [tidalChecked, setTidalChecked] = useState<boolean>(false);
 
   function resetPartyUnlock() {
     try {
@@ -315,10 +317,15 @@ function splitDedications(raw: string | null | undefined) {
 
   useEffect(() => {
     load();
+    loadEventStatus();
     const t = setInterval(load, 1500);
-    return () => clearInterval(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code]);
+    const t2 = setInterval(loadEventStatus, 2000);
+
+  return () => {
+    clearInterval(t);
+    clearInterval(t2);
+  };
+}, [code]);
 
   async function createEvent() { 
   const eventCode = makeEventCodeFromName(eventName);
@@ -342,6 +349,25 @@ function splitDedications(raw: string | null | undefined) {
 
   window.location.href = `/dj/${eventCode}`;
 }
+
+async function loadEventStatus() {
+  if (!code || code === "TEST123") return;
+
+  try {
+    const res = await fetch(`/api/events?eventCode=${encodeURIComponent(code)}`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+    setTidalConnected(!!data.tidal_connected);
+    setTidalChecked(true);
+  } catch {
+    setTidalChecked(true);
+  }
+}
+
 async function joinExistingEvent() {
   const safe = joinCode.trim().toUpperCase().replace(/\s+/g, "-");
   if (!safe) return;
@@ -577,6 +603,24 @@ function toggleSelect(id: string) {
           </div>
          )}
         </div>
+
+        {code && code !== "TEST123" && tidalChecked && (
+  <div className="mb-4 flex flex-col items-end gap-2">
+    {tidalConnected ? (
+      <div className="inline-flex items-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-300">
+        ✅ TIDAL collegato
+      </div>
+    ) : (
+      <a
+        href={`/api/tidal/connect?eventCode=${encodeURIComponent(code)}`}
+        title="Collega il tuo account TIDAL per usare i brani matchati nell’evento"
+        className="inline-flex items-center rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-4 py-2 text-sm font-bold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-300 transition"
+      >
+        🔗 Collega TIDAL
+      </a>
+    )}
+  </div>
+)}
 
             {/* create event */}
             <div className="flex flex-col gap-2 sm:flex-col sm:items-end">
