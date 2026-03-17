@@ -54,6 +54,7 @@ export async function GET(req: Request) {
 
     const codeVerifier = cookies["tidal_pkce_verifier"];
     const savedState = cookies["tidal_oauth_state"];
+    const eventCode = cookies["tidal_event_code"];
 
     if (!codeVerifier) {
       return NextResponse.json(
@@ -65,6 +66,13 @@ export async function GET(req: Request) {
     if (!state || !savedState || state !== savedState) {
       return NextResponse.json(
         { ok: false, error: "Invalid OAuth state" },
+        { status: 400 }
+      );
+    }
+
+    if (!eventCode) {
+      return NextResponse.json(
+        { ok: false, error: "Missing eventCode in OAuth flow" },
         { status: 400 }
       );
     }
@@ -163,7 +171,23 @@ export async function GET(req: Request) {
       );
     }
 
-    const res = NextResponse.redirect("https://askdj.app/dj");
+    const { error: eventUpdateError } = await supabase
+      .from("events")
+      .update({
+        tidal_connected: true,
+        tidal_user_id: String(tidalUserId),
+      })
+      .eq("event_code", eventCode);
+
+    if (eventUpdateError) {
+      console.error("SUPABASE EVENT UPDATE ERROR:", eventUpdateError);
+      return NextResponse.json(
+        { ok: false, error: "Failed to link TIDAL to event" },
+        { status: 500 }
+      );
+    }
+
+    const res = NextResponse.redirect(`https://askdj.app/dj/${eventCode}`);
 
     res.cookies.set("tidal_pkce_verifier", "", {
       httpOnly: true,
@@ -174,6 +198,14 @@ export async function GET(req: Request) {
     });
 
     res.cookies.set("tidal_oauth_state", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+
+    res.cookies.set("tidal_event_code", "", {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
