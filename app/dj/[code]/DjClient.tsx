@@ -78,6 +78,10 @@ function PlatformButton({ r }: { r: RequestItem }) {
   }
 }
 
+function openTidalWindow(url: string) {
+  window.open(url, "TIDAL_WINDOW");
+}
+
 function TidalSearchButton({ r }: { r: RequestItem }) {
   if (r.platform === "tidal") return null;
 
@@ -93,17 +97,15 @@ function TidalSearchButton({ r }: { r: RequestItem }) {
     ? r.tidal_url!
     : buildTidalSearchUrl(r.title);
 
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-      title={title}
-      className={`rounded-xl px-2.5 py-2 text-xs font-semibold transition shadow-[0_6px_18px_rgba(0,0,0,0.25)] ${color}`}
-    >
-      🔎
-    </a>
-  );
+ return (
+  <button
+    onClick={() => openTidalWindow(url)}
+    title={title}
+    className={`rounded-xl px-2.5 py-2 text-xs font-semibold transition shadow-[0_6px_18px_rgba(0,0,0,0.25)] ${color}`}
+  >
+    🔎
+  </button>
+);
 }
 
 
@@ -479,6 +481,7 @@ function exportPlaylist() {
   link.download = `askdj_playlist_${code}.csv`;
   link.click();
 }
+
 
 function toggleSelect(id: string) {
   setSelected((prev) => ({
