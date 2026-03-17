@@ -42,7 +42,7 @@ export async function GET(req: Request) {
 
   const { data: ev, error } = await supabase
     .from("events")
-    .select("event_code, expires_at")
+    .select("event_code, expires_at, tidal_connected, tidal_user_id, tidal_playlist_id, tidal_playlist_url")
     .eq("event_code", eventCode)
     .single();
 
@@ -55,7 +55,15 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: "Expired" }, { status: 410 });
   }
 
-  return NextResponse.json({ ok: true, eventCode: ev.event_code, expiresAt: ev.expires_at });
+  return NextResponse.json({
+  ok: true,
+  eventCode: ev.event_code,
+  expiresAt: ev.expires_at,
+  tidal_connected: ev.tidal_connected,
+  tidal_user_id: ev.tidal_user_id,
+  tidal_playlist_id: ev.tidal_playlist_id,
+  tidal_playlist_url: ev.tidal_playlist_url,
+});
 }
 
 // POST /api/events body: { eventCode, password }
