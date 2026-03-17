@@ -608,7 +608,7 @@ function toggleSelect(id: string) {
         </div>
 
         {code && code !== "TEST123" && tidalChecked && (
-  <div className="flex flex-col gap-2 sm:flex-col sm:items-end mt-4">
+  <div className="mb-4 flex flex-col items-end gap-2">
     {tidalConnected ? (
       <div className="inline-flex items-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-300">
         ✅ TIDAL collegato
