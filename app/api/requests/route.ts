@@ -565,13 +565,13 @@ if (e1 || !row) {
 
 const eventCode = (row as any).event_code;
 
-
 // BLOCCO se evento scaduto
 const { data: ev, error: evErr } = await supabase
   .from("events")
   .select("expires_at")
   .eq("event_code", eventCode)
   .single();
+
 
 if (evErr || !ev) {
   return NextResponse.json({ ok: false, error: "Evento non valido" }, { status: 404 });
