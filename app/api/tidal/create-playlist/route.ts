@@ -54,6 +54,8 @@ export async function POST(req: Request) {
     });
 
     const tidalData = await tidalRes.json();
+    console.log("TIDAL STATUS:", tidalRes.status);
+    console.log("TIDAL RESPONSE:", tidalData);
 
     if (!tidalRes.ok) {
       console.error(tidalData);
@@ -78,8 +80,14 @@ export async function POST(req: Request) {
       playlistUrl,
     });
 
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ ok: false }, { status: 500 });
-  }
+  } catch (err: any) {
+  console.error("CREATE PLAYLIST ERROR:", err);
+  return NextResponse.json(
+    {
+      ok: false,
+      error: String(err?.message || err || "unknown error"),
+    },
+    { status: 500 }
+  );
+}
 }
