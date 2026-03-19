@@ -67,9 +67,10 @@ try {
     if (!tidalRes.ok) {
   console.error("TIDAL ERROR:", tidalData);
   return NextResponse.json(
-    { ok: false, error: tidalData || "Errore TIDAL" },
+    { ok: false, error: tidalData || `TIDAL status ${tidalRes.status}` },
     { status: 500 }
   );
+}
 }
 
     const playlistId = tidalData.id;
