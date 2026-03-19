@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     // 3. crea playlist TIDAL
     const playlistName = `AskDJ - ${eventCode}`;
 
-    const tidalRes = await fetch("https://openapi.tidal.com/v1/playlists", {
+    const tidalRes = await fetch("https://openapi.tidal.com/v1/playlist", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
