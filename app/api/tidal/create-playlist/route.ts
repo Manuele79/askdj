@@ -53,14 +53,24 @@ export async function POST(req: Request) {
       }),
     });
 
-    const tidalData = await tidalRes.json();
-    console.log("TIDAL STATUS:", tidalRes.status);
-    console.log("TIDAL RESPONSE:", tidalData);
+    const rawText = await tidalRes.text();
+console.log("TIDAL STATUS:", tidalRes.status);
+console.log("TIDAL RAW RESPONSE:", rawText);
+
+let tidalData: any = null;
+try {
+  tidalData = rawText ? JSON.parse(rawText) : null;
+} catch {
+  tidalData = rawText;
+}
 
     if (!tidalRes.ok) {
-      console.error(tidalData);
-      return NextResponse.json({ ok: false, error: "Errore TIDAL" }, { status: 500 });
-    }
+  console.error("TIDAL ERROR:", tidalData);
+  return NextResponse.json(
+    { ok: false, error: tidalData || "Errore TIDAL" },
+    { status: 500 }
+  );
+}
 
     const playlistId = tidalData.id;
     const playlistUrl = `https://listen.tidal.com/playlist/${playlistId}`;
