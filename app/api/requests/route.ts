@@ -216,6 +216,7 @@ function mapRow(r: any) {
     youtubeVideoId: String(r.youtube_video_id ?? ""),
     votes: Number(r.votes ?? 0),
     tidal_url: r.tidal_url ?? null,
+    tidal_selected: !!r.tidal_selected,
     bpm: r.bpm === null || r.bpm === undefined ? null : Number(r.bpm), 
     createdAt: r.created_at ? Date.parse(r.created_at) : 0,
     updatedAt: Number(r.updated_at ?? 0),
@@ -547,7 +548,7 @@ export async function PATCH(req: Request) {
   const id = String(body.id || "").trim();
   const delta = Number(body.delta ?? 1);
   const bpm = body.bpm; // può essere number o string
-
+  const tidalSelected = body.tidal_selected;
 
   if (!id) return NextResponse.json({ ok: false }, { status: 400 });
 
@@ -579,6 +580,25 @@ if (evErr || !ev) {
 const exp = ev.expires_at ? Date.parse(ev.expires_at) : 0;
 if (exp && Date.now() > exp) {
   return NextResponse.json({ ok: false, error: "Evento scaduto" }, { status: 410 });
+}
+
+// update tidal_selected (solo DJ)
+if (typeof tidalSelected === "boolean") {
+  const nowMs = Date.now();
+
+  const { data, error } = await supabase
+    .from("requests")
+    .update({ tidal_selected: tidalSelected, updated_at: nowMs })
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error("SUPABASE TIDAL_SELECTED UPDATE ERROR:", error);
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true, request: mapRow(data) });
 }
 
 // update BPM (solo DJ)
