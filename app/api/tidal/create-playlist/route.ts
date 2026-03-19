@@ -71,7 +71,7 @@ try {
     { status: 500 }
   );
 }
-}
+
 
     const playlistId = tidalData.id;
     const playlistUrl = `https://listen.tidal.com/playlist/${playlistId}`;
