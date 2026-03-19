@@ -17,6 +17,7 @@ type RequestItem = {
   createdAt: number;
   updatedAt: number;
   tidal_url?: string | null;
+  tidal_selected?: boolean | null;
   bpm?: number | null;
 };
 
@@ -414,6 +415,32 @@ const deleteRequest = async (id: string) => {
   setItems((prev) => prev.filter((x) => x.id !== id));
 };
 
+const toggleTidalSelected = async (r: RequestItem) => {
+  if (!r.tidal_url) return;
+
+  const nextValue = !Boolean(r.tidal_selected);
+
+  const res = await fetch("/api/requests", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: r.id,
+      tidal_selected: nextValue,
+    }),
+  });
+
+  if (!res.ok) {
+    alert("Errore selezione playlist");
+    return;
+  }
+
+  setItems((prev) =>
+    prev.map((x) =>
+      x.id === r.id ? { ...x, tidal_selected: nextValue } : x
+    )
+  );
+};
+
 const saveBpm = async (id: string) => {
   const v = bpmEdit[id];
 
@@ -750,7 +777,7 @@ function toggleSelect(id: string) {
 <div className="mt-3 mb-2 flex items-center gap-3 pl-2 text-sm font-bold text-yellow-300">
   ⭐ Playlist selezionata:
   <span className="rounded-full bg-yellow-400 px-3 py-0.5 text-xs font-extrabold text-black">
-    {sorted.filter((r) => selected[r.id] && r.tidal_url).length}
+    {sorted.filter((r) => Boolean(r.tidal_selected) && r.tidal_url).length}
   </span>
 
   <button
@@ -839,19 +866,16 @@ function toggleSelect(id: string) {
       >
         <div className="flex gap-3">
 <button
-  onClick={() => {
-    if (!r.tidal_url) return;
-    toggleSelect(r.id);
-  }}
+  onClick={() => toggleTidalSelected(r)}
   disabled={!r.tidal_url}
   className={`text-xl leading-none select-none transition ${
     r.tidal_url
-      ? "text-white hover:scale-110 cursor-pointer"
-      : "text-zinc-600 cursor-not-allowed opacity-50"
+      ? "cursor-pointer text-white hover:scale-110"
+      : "cursor-not-allowed text-zinc-600 opacity-50"
   }`}
-  title={r.tidal_url ? "Seleziona per export playlist" : "Non esportabile"}
+  title={r.tidal_url ? "Seleziona per playlist TIDAL" : "Non esportabile"}
 >
-  {selected[r.id] ? "⭐" : "☆"}
+  {Boolean(r.tidal_selected) ? "⭐" : "☆"}
 </button>
 
 <div className="flex-1 min-w-0 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
