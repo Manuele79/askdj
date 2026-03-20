@@ -83,11 +83,6 @@ function openTidalWindow(url: string) {
   window.open(url, "TIDAL_WINDOW");
 }
 
-function extractTidalTrackId(tidalUrl: string | null | undefined) {
-  const match = String(tidalUrl || "").match(/track\/(\d+)/);
-  return match?.[1] || null;
-}
-
 function TidalSearchButton({ r }: { r: RequestItem }) {
   if (r.platform === "tidal") return null;
 
@@ -202,7 +197,6 @@ export default function DjClient({ code }: { code: string }) {
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [tidalConnected, setTidalConnected] = useState<boolean>(false);
   const [tidalChecked, setTidalChecked] = useState<boolean>(false);
-  const [autoSyncTidal, setAutoSyncTidal] = useState(false);
 
   function resetPartyUnlock() {
     try {
@@ -445,47 +439,6 @@ const toggleTidalSelected = async (r: RequestItem) => {
       x.id === r.id ? { ...x, tidal_selected: nextValue } : x
     )
   );
-
-  // AUTO SYNC TIDAL
-  if (autoSyncTidal && nextValue === true && r.tidal_url) {
-    const trackId = extractTidalTrackId(r.tidal_url);
-
-    if (!trackId) {
-      alert("Track ID TIDAL non valido");
-      return;
-    }
-
-    const createRes = await fetch("/api/tidal/create-playlist", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ eventCode: code }),
-    });
-
-    const createData = await createRes.json().catch(() => null);
-
-    if (!createRes.ok) {
-      alert("Errore creazione playlist TIDAL");
-      console.error(createData);
-      return;
-    }
-
-    const addRes = await fetch("/api/tidal/add-track", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        eventCode: code,
-        trackId,
-      }),
-    });
-
-    const addData = await addRes.json().catch(() => null);
-
-    if (!addRes.ok) {
-      alert("Errore aggiunta brano alla playlist TIDAL");
-      console.error(addData);
-      return;
-    }
-  }
 };
 
 const saveBpm = async (id: string) => {
@@ -872,17 +825,6 @@ function toggleSelect(id: string) {
   >
      🎧 Export Playlist
   </button>
-
-  <label className="ml-3 flex items-center gap-2 text-xs font-bold text-cyan-300">
-  <input
-    type="checkbox"
-    checked={autoSyncTidal}
-    onChange={(e) => setAutoSyncTidal(e.target.checked)}
-    className="accent-cyan-400"
-  />
-  Auto Sync TIDAL
-</label>
-
 </div>
 
 
