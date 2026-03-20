@@ -85,7 +85,7 @@ function openTidalWindow(url: string) {
 
 function extractTidalTrackId(tidalUrl: string | null | undefined) {
   const match = String(tidalUrl || "").match(/track\/(\d+)/);
-  return match?.[1] ?? null;
+  return match?.[1] || null;
 }
 
 function TidalSearchButton({ r }: { r: RequestItem }) {
