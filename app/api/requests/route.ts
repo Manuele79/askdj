@@ -339,6 +339,8 @@ const finalTitle =
     ? safeTitle.trim()
     : shareText || `Richiesta ${platform === "amazon" ? "Amazon Music" : platform === "apple" ? "Apple Music" : platform === "tidal" ? "TIDAL" : "Music"}`;
 
+let seedBpm: number | null = null;
+
 const titleTail = finalTitle.includes("-")
   ? finalTitle.split("-").pop()?.trim() || finalTitle
   : finalTitle;
@@ -348,7 +350,7 @@ if (platform !== "tidal" && finalTitle) {
 
   const { data: libByFull, error: libErr1 } = await supabase
     .from("music_library")
-    .select("tidal_url, title")
+    .select("tidal_url, title,bpm")
     .ilike("title", `%${finalTitle}%`)
     .limit(1);
 
@@ -361,7 +363,7 @@ if (platform !== "tidal" && finalTitle) {
   if (!libMatch?.[0]?.tidal_url && titleTail && titleTail !== finalTitle) {
     const { data: libByTail, error: libErr2 } = await supabase
       .from("music_library")
-      .select("tidal_url, title")
+      .select("tidal_url, title,bpm")
       .ilike("title", `%${titleTail}%`)
       .limit(1);
 
@@ -374,6 +376,10 @@ if (platform !== "tidal" && finalTitle) {
 
   if (libMatch?.[0]?.tidal_url) {
     tidalUrl = libMatch[0].tidal_url;
+
+    if (libMatch[0].bpm !== null && libMatch[0].bpm !== undefined) {
+      seedBpm = Number(libMatch[0].bpm);
+    }
   }
 }
 
@@ -480,9 +486,7 @@ if (isDemo) {
   }
 }
 
-  // 🔁 RIUSO BPM: se esiste già un BPM per lo stesso brano (anche in altri eventi), lo copio
-  let seedBpm: number | null = null;
-
+ 
   if (platform === "youtube" && youtubeVideoId) {
     const { data: prev } = await supabase
       .from("requests")
