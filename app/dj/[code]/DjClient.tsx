@@ -481,32 +481,71 @@ const saveBpm = async (id: string) => {
   });
 };
 
-function exportPlaylist() {
-  const rows = sorted
-    .filter((r) => selected[r.id] && r.tidal_url)
-    .map((r) => ({
-      title: r.title,
-      bpm: r.bpm ?? "",
-      url: r.tidal_url,
-    }));
+async function exportPlaylist() {
+  const selectedTracks = sorted.filter(
+    (r) => Boolean(r.tidal_selected) && r.tidal_url
+  );
 
-  if (rows.length === 0) {
+  if (selectedTracks.length === 0) {
     alert("Nessun brano esportabile selezionato.");
     return;
   }
 
-  const header = ["Title", "BPM", "URL"];
-  const csv = [
-    header.join(","),
-    ...rows.map((r) => [r.title, r.bpm, r.url].join(",")),
-  ].join("\n");
+  try {
+    // 1. crea playlist se manca
+    const createRes = await fetch("/api/tidal/create-playlist", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ eventCode: code }),
+    });
 
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
+    const createJson = await createRes.json();
 
-  link.href = URL.createObjectURL(blob);
-  link.download = `askdj_playlist_${code}.csv`;
-  link.click();
+    if (!createRes.ok || !createJson.ok) {
+      alert("Errore creazione playlist TIDAL");
+      console.error("CREATE PLAYLIST ERROR:", createJson);
+      return;
+    }
+
+    // 2. aggiungi i brani selezionati
+    for (const r of selectedTracks) {
+      const match = String(r.tidal_url).match(/track\/(\d+)/);
+      const trackId = match?.[1];
+
+      if (!trackId) {
+        console.warn("Track ID non trovato per:", r.tidal_url);
+        continue;
+      }
+
+      const addRes = await fetch("/api/tidal/add-track", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          eventCode: code,
+          trackId,
+        }),
+      });
+
+      const addJson = await addRes.json();
+
+      if (!addRes.ok || !addJson.ok) {
+        console.error("ADD TRACK ERROR:", {
+          title: r.title,
+          trackId,
+          response: addJson,
+        });
+      }
+    }
+
+    alert("Playlist TIDAL esportata con successo 🎧");
+  } catch (err) {
+    console.error("EXPORT PLAYLIST ERROR:", err);
+    alert("Errore export playlist");
+  }
 }
 
 
