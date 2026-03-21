@@ -372,6 +372,24 @@ async function loadEventStatus() {
   }
 }
 
+async function disconnectTidal() {
+  const res = await fetch("/api/tidal/disconnect", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ eventCode: code }),
+  });
+
+  const json = await res.json().catch(() => null);
+
+  if (!res.ok || !json?.ok) {
+    alert("Errore scollegamento TIDAL");
+    return;
+  }
+
+  setTidalConnected(false);
+  setTidalChecked(true);
+}
+
 async function joinExistingEvent() {
   const safe = joinCode.trim().toUpperCase().replace(/\s+/g, "-");
   if (!safe) return;
@@ -648,7 +666,7 @@ function toggleSelect(id: string) {
 
 
             <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
-              Crea un EVENTO, poi mostra il QR e ricevi i brani e dediche in una lista ordinata...
+              Crea un EVENTO... Condividi il QR...Ricevi i brani e dediche in una lista ordinata...
                Tu decidi cosa suonare...
             </p>
 
@@ -678,12 +696,21 @@ function toggleSelect(id: string) {
         </div>
 
         {code && code !== "TEST123" && tidalChecked && (
-  <div className="mb-4 flex flex-col items-end gap-2">
-    {tidalConnected ? (
-      <div className="inline-flex items-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-300">
-        ✅ TIDAL collegato
-      </div>
-    ) : (
+        <div className="mb-4 flex flex-col items-end gap-2">
+         {tidalConnected ? (
+         <div className="mb-4 flex items-center gap-2">
+        <div className="inline-flex items-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-300">
+         ✅ TIDAL collegato
+       </div>
+
+    <button
+      onClick={disconnectTidal}
+      className="rounded-md bg-red-500/20 px-3 py-1 text-xs font-bold text-red-300 hover:bg-red-500/40"
+    >
+      Scollega TIDAL
+    </button>
+  </div>
+) : (
       <a
         href={`/api/tidal/connect?eventCode=${encodeURIComponent(code)}`}
         title="Collega il tuo account TIDAL per usare i brani matchati nell’evento"
