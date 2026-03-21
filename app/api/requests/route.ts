@@ -540,6 +540,33 @@ if (isDemo) {
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 
+  // AUTO-POPOLA music_library se la richiesta arriva da TIDAL
+if (platform === "tidal" && tidalUrl) {
+  const trackIdMatch = String(tidalUrl).match(/track\/(\d+)/);
+  const tidalTrackId = trackIdMatch?.[1] || null;
+
+  if (tidalTrackId) {
+    const { error: libSaveErr } = await supabase
+      .from("music_library")
+      .upsert(
+        {
+          title: finalTitle || null,
+          artist: null,
+          tidal_url: tidalUrl,
+          tidal_track_id: tidalTrackId,
+          bpm: seedBpm,
+          source: "request_tidal",
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "tidal_track_id" }
+      );
+
+    if (libSaveErr) {
+      console.error("MUSIC_LIBRARY UPSERT ERROR:", libSaveErr);
+    }
+  }
+}
+
   return NextResponse.json({ ok: true, merged: false, request: mapRow(data) });
 }
 
