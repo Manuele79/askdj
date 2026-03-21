@@ -217,6 +217,7 @@ function mapRow(r: any) {
     votes: Number(r.votes ?? 0),
     tidal_url: r.tidal_url ?? null,
     tidal_selected: !!r.tidal_selected,
+    tidal_synced: !!r.tidal_synced,
     bpm: r.bpm === null || r.bpm === undefined ? null : Number(r.bpm), 
     createdAt: r.created_at ? Date.parse(r.created_at) : 0,
     updatedAt: Number(r.updated_at ?? 0),
