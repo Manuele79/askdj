@@ -76,6 +76,12 @@ export async function POST(req: Request) {
       );
     }
 
+    await supabase
+  .from("requests")
+  .update({ tidal_synced: true })
+  .eq("event_code", eventCode)
+  .ilike("tidal_url", `%${trackId}%`);
+
     return NextResponse.json({ ok: true });
 
   } catch (err: any) {
