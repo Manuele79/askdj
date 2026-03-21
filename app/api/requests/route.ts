@@ -342,6 +342,33 @@ const finalTitle =
 
 let seedBpm: number | null = null;
 
+let tidalLibArtist: string | null = null;
+
+if (platform === "tidal" && tidalUrl) {
+  const trackIdMatch = String(tidalUrl).match(/track\/(\d+)/);
+  const tidalTrackId = trackIdMatch?.[1] || null;
+
+  if (tidalTrackId) {
+    const { data: libByTrack, error: libTrackErr } = await supabase
+      .from("music_library")
+      .select("bpm, artist")
+      .eq("tidal_track_id", tidalTrackId)
+      .limit(1);
+
+    if (libTrackErr) {
+      console.error("MUSIC_LIBRARY TIDAL TRACK MATCH ERROR:", libTrackErr);
+    } else {
+      const row = libByTrack?.[0];
+      if (row?.bpm !== null && row?.bpm !== undefined) {
+        seedBpm = Number(row.bpm);
+      }
+      if (row?.artist) {
+        tidalLibArtist = String(row.artist);
+      }
+    }
+  }
+}
+
 const titleTail = finalTitle.includes("-")
   ? finalTitle.split("-").pop()?.trim() || finalTitle
   : finalTitle;
@@ -551,7 +578,7 @@ if (platform === "tidal" && tidalUrl) {
       .upsert(
         {
           title: finalTitle || null,
-          artist: null,
+          artist: tidalLibArtist,
           tidal_url: tidalUrl,
           tidal_track_id: tidalTrackId,
           bpm: seedBpm,
