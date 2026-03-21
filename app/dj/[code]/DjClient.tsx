@@ -532,14 +532,17 @@ async function exportPlaylist() {
       });
 
       const addJson = await addRes.json();
+if (!addRes.ok || !addJson.ok) {
+  console.error("ADD TRACK ERROR FULL:", JSON.stringify({
+    title: r.title,
+    trackId,
+    response: addJson,
+  }, null, 2));
 
-      if (!addRes.ok || !addJson.ok) {
-        console.error("ADD TRACK ERROR:", {
-          title: r.title,
-          trackId,
-          response: addJson,
-        });
-      }
+  alert(
+    `Errore add-track\nTitolo: ${r.title}\nTrackId: ${trackId}\nDettagli: ${JSON.stringify(addJson)}`
+  );
+}
     }
 
     alert("Playlist TIDAL esportata con successo 🎧");
