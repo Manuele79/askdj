@@ -18,6 +18,7 @@ type RequestItem = {
   updatedAt: number;
   tidal_url?: string | null;
   tidal_selected?: boolean | null;
+  tidal_synced?: boolean | null;
   bpm?: number | null;
 };
 
@@ -483,8 +484,8 @@ const saveBpm = async (id: string) => {
 
 async function exportPlaylist() {
   const selectedTracks = sorted.filter(
-    (r) => Boolean(r.tidal_selected) && r.tidal_url
-  );
+  (r) => Boolean(r.tidal_selected) && Boolean(r.tidal_url) && !Boolean(r.tidal_synced)
+);
 
   if (selectedTracks.length === 0) {
     alert("Nessun brano esportabile selezionato.");
@@ -816,7 +817,7 @@ function toggleSelect(id: string) {
 <div className="mt-3 mb-2 flex items-center gap-3 pl-2 text-sm font-bold text-yellow-300">
   ⭐ Playlist selezionata:
   <span className="rounded-full bg-yellow-400 px-3 py-0.5 text-xs font-extrabold text-black">
-    {sorted.filter((r) => Boolean(r.tidal_selected) && r.tidal_url).length}
+    {sorted.filter((r) => Boolean(r.tidal_selected) && r.tidal_url && !r.tidal_synced).length}
   </span>
 
   <button
@@ -905,16 +906,24 @@ function toggleSelect(id: string) {
       >
         <div className="flex gap-3">
 <button
-  onClick={() => toggleTidalSelected(r)}
-  disabled={!r.tidal_url}
+  onClick={() => !r.tidal_synced && toggleTidalSelected(r)}
+  disabled={!r.tidal_url || Boolean(r.tidal_synced)}
   className={`text-xl leading-none select-none transition ${
-    r.tidal_url
+    r.tidal_synced
+      ? "cursor-not-allowed text-cyan-400 opacity-90"
+      : r.tidal_url
       ? "cursor-pointer text-white hover:scale-110"
       : "cursor-not-allowed text-zinc-600 opacity-50"
   }`}
-  title={r.tidal_url ? "Seleziona per playlist TIDAL" : "Non esportabile"}
+  title={
+    r.tidal_synced
+      ? "Già esportato su TIDAL"
+      : r.tidal_url
+      ? "Seleziona per playlist TIDAL"
+      : "Non esportabile"
+  }
 >
-  {Boolean(r.tidal_selected) ? "⭐" : "☆"}
+  {r.tidal_synced ? "🔵" : Boolean(r.tidal_selected) ? "⭐" : "☆"}
 </button>
 
 <div className="flex-1 min-w-0 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
