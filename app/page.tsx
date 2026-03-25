@@ -216,7 +216,7 @@ export default function Home() {
             <h1
               style={{
                 margin: "16px 0 10px",
-                fontSize: 38,
+                fontSize: 44,
                 lineHeight: 1.08,
                 fontWeight: 1000,
                 letterSpacing: -0.4,
@@ -918,6 +918,10 @@ export default function Home() {
                 text: "Puoi eliminare, gestire o ignorare velocemente ciò che non ti serve.",
               },
               {
+               title: "🔍 Match manuale",
+               text: "Puoi cercare e collegare manualmente un brano quando non viene trovato automaticamente.",
+              },
+              {
                 title: "🎧 Stato TIDAL",
                 text: "Capisci quali brani sono già entrati nel workflow della playlist evento.",
               },
@@ -1050,8 +1054,18 @@ export default function Home() {
             textAlign: "center",
           }}
         >
-          © {new Date().getFullYear()} info@askdj.app — Manuele Martino
+          © {new Date().getFullYear()} AskDJ — info@askdj.app — Tutti i diritti riservati.
         </footer>
+
+          <div style={{ marginTop: 6 }}>
+          <a
+          href="/privacy"
+          style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none" }}
+         >
+         Privacy Policy
+       </a>
+      </div>
+
       </div>
     </main>
   );
