@@ -647,7 +647,7 @@ if (typeof tidalSelected === "boolean") {
 
   const { data, error } = await supabase
     .from("requests")
-    .update({ tidal_selected: tidalSelected, updated_at: nowMs })
+    .update({ tidal_selected: tidalSelected })
     .eq("id", id)
     .select("*")
     .single();
