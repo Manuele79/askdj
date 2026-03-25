@@ -670,7 +670,7 @@ if (bpm !== undefined && bpm !== null) {
   const nowMs = Date.now();
   const { data, error } = await supabase
     .from("requests")
-    .update({ bpm: Math.round(bpmNum), updated_at: nowMs })
+    .update({ bpm: Math.round(bpmNum) })
     .eq("id", id)
     .select("*")
     .single();
