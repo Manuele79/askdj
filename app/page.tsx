@@ -918,8 +918,12 @@ export default function Home() {
                 text: "Puoi eliminare, gestire o ignorare velocemente ciò che non ti serve.",
               },
               {
-               title: "🔍 Match manuale",
-               text: "Puoi cercare e collegare manualmente un brano quando non viene trovato automaticamente.",
+                title: "🔍 Match manuale",
+                text: "Puoi cercare e collegare manualmente un brano quando non viene trovato automaticamente.",
+              },
+              {
+                title: "🖨️ Stampa Playlist",
+                text: "Puoi stampare la Playlist con i titoli dei brani della serata.",
               },
               {
                 title: "🎧 Stato TIDAL",
@@ -1057,14 +1061,18 @@ export default function Home() {
           © {new Date().getFullYear()} AskDJ — info@askdj.app — Tutti i diritti riservati.
         </footer>
 
-          <div style={{ marginTop: 6 }}>
-          <a
-          href="/privacy"
-          style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none" }}
-         >
-         Privacy Policy
-       </a>
-      </div>
+         <div style={{ marginTop: 6 }}>
+  <a
+    href="/privacy"
+    style={{
+      color: "rgba(255,255,255,0.6)",
+      textDecoration: "none",
+      fontWeight: 600,
+    }}
+  >
+    Privacy Policy
+  </a>
+</div>
 
       </div>
     </main>
