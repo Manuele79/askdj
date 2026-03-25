@@ -223,11 +223,11 @@ export default function Home() {
                 maxWidth: 900,
               }}
             >
-              Ricevi richieste musicali con un QR,{" "}
+              Ricevi richieste musicali con un QR...{" "}
               <span style={{ color: "rgba(255,215,0,0.95)" }}>
                 senza perdere il controllo
               </span>{" "}
-              della serata.
+              della serata...
             </h1>
 
             <div
@@ -1065,7 +1065,7 @@ export default function Home() {
   <a
     href="/privacy"
     style={{
-      color: "rgba(255,255,255,0.6)",
+      color: "rgba(244, 227, 41, 0.6)",
       textDecoration: "none",
       fontWeight: 600,
     }}
