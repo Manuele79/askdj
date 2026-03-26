@@ -622,13 +622,13 @@ function toggleSelect(id: string) {
   </div>
 
   <div className="mt-1 md:mt-3 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
-    Richieste e dediche in tempo reale
+    ...Richieste e dediche in tempo reale...
   </div>
   </div>
 
    </div>
 {code && code !== "TEST123" && (
-  <div className="mt-2 flex flex-wrap items-center gap-4 lg:ml-16">
+  <div className="mt-2 flex flex-wrap items-center gap-4 lg:ml-32">
     <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm gap-4">
       EVENTO:
     </span>
