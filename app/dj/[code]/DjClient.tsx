@@ -603,7 +603,7 @@ function toggleSelect(id: string) {
   </div>
 
   <div className="leading-tight">
-    <div className="text-3xl font-black tracking-tight">
+    <div className="text-4xl font-black tracking-tight">
       <span className="text-yellow-400">Ask</span>
       <span className="text-white">DJ</span>
     </div>
@@ -616,7 +616,7 @@ function toggleSelect(id: string) {
 
 
 {/* Titolo */}
-<div className="min-w-0 sm:ml-4 lg:ml-24">
+<div className="min-w-0 sm:ml-4 lg:ml-32">
   <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight break-words gap-6">
    Console <span className="text-yellow-400">DJ</span>
   </div>
@@ -628,7 +628,7 @@ function toggleSelect(id: string) {
 
    </div>
 {code && code !== "TEST123" && (
-  <div className="mt-2 flex flex-wrap items-center gap-4">
+  <div className="mt-2 flex flex-wrap items-center gap-4 lg:ml-8">
     <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm gap-4">
       EVENTO:
     </span>
@@ -666,7 +666,7 @@ function toggleSelect(id: string) {
 
 
             <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
-              Crea un EVENTO... Condividi il QR...Ricevi i brani e dediche in una lista ordinata...
+              Crea un EVENTO... Condividi il QR... Ricevi i brani e dediche in una lista ordinata...
                Tu decidi cosa suonare...
             </p>
 
