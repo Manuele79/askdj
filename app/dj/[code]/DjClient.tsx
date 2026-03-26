@@ -616,7 +616,7 @@ function toggleSelect(id: string) {
 
 
 {/* Titolo */}
-<div className="min-w-0 sm:ml-4 lg:ml-54">
+<div className="min-w-0 sm:ml-4 lg:ml-58">
   <div className="text-3xl sm:text-4xl lg:text-10xl font-black tracking-tight text-white leading-tight break-words gap-6">
    Console <span className="text-yellow-400">DJ</span>
   </div>
@@ -628,9 +628,9 @@ function toggleSelect(id: string) {
 
    </div>
 {code && code !== "TEST123" && (
-  <div className="mt-2 flex flex-wrap items-center gap-4 lg:ml-48">
+  <div className="mt-2 flex flex-wrap items-center gap-4 lg:ml-52">
     <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm gap-4">
-      EVENTO:
+     NOME EVENTO:
     </span>
 
     <span
