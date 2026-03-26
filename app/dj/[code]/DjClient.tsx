@@ -658,7 +658,7 @@ function toggleSelect(id: string) {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6 ">
 
             <div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+              <h1 className="text-4xl md:text-5xl lg:ml-56 font-black tracking-tight">
               Gestisci le richieste <span className="text-yellow-400">senza caos</span>
               </h1>
 
