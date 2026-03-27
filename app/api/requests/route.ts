@@ -373,13 +373,20 @@ const titleTail = finalTitle.includes("-")
   ? finalTitle.split("-").pop()?.trim() || finalTitle
   : finalTitle;
 
+  const cleanTitle = (titleTail || finalTitle)
+  .replace(/\(.*?\)/g, "")
+  .replace(/\[.*?\]/g, "")
+  .replace(/official|video|hd|audio/gi, "")
+  .replace(/-/g, " ")
+  .trim();
+
 if (platform !== "tidal" && finalTitle) {
   let libMatch: any[] | null = null;
 
   const { data: libByFull, error: libErr1 } = await supabase
     .from("music_library")
-    .select("tidal_url, title,bpm")
-    .ilike("title", `%${finalTitle}%`)
+    .select("tidal_url, title, bpm")
+    .ilike("title", `%${cleanTitle}%`)
     .limit(1);
 
   if (libErr1) {
@@ -391,8 +398,8 @@ if (platform !== "tidal" && finalTitle) {
   if (!libMatch?.[0]?.tidal_url && titleTail && titleTail !== finalTitle) {
     const { data: libByTail, error: libErr2 } = await supabase
       .from("music_library")
-      .select("tidal_url, title,bpm")
-      .ilike("title", `%${titleTail}%`)
+      .select("tidal_url, title, bpm")
+      .ilike("title", `%${cleanTitle}%`)
       .limit(1);
 
     if (libErr2) {
