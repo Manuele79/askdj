@@ -350,6 +350,30 @@ useEffect(() => {
   };
 }, []);
 
+useEffect(() => {
+  if (!autoSyncEnabled) {
+    clearAutoSyncTimer();
+    return;
+  }
+
+  if (autoSyncCount === 0) {
+    clearAutoSyncTimer();
+    return;
+  }
+
+  clearAutoSyncTimer();
+
+  autoSyncTimerRef.current = setTimeout(async () => {
+    if (exportInProgressRef.current) return;
+
+    await exportPlaylist();
+  }, 8000);
+
+  return () => {
+    clearAutoSyncTimer();
+  };
+}, [autoSyncEnabled, autoSyncCount]);
+
 
   const password = prompt("Password per creare evento:");
   if (!password) return;
@@ -473,9 +497,7 @@ const toggleTidalSelected = async (r: RequestItem) => {
     )
   );
 
-  if (autoSyncEnabled && nextValue) {
-    scheduleAutoSync();
-  }
+  // niente Auto Sync qui per ora
 };
 
 const saveBpm = async (id: string) => {
@@ -525,22 +547,9 @@ function clearAutoSyncTimer() {
   }
 }
 
-function scheduleAutoSync() {
-  clearAutoSyncTimer();
-
-  autoSyncTimerRef.current = setTimeout(async () => {
-    if (!autoSyncEnabled) return;
-    if (exportInProgressRef.current) return;
-
-    const selectedTracks = sorted.filter(
-      (r) => Boolean(r.tidal_selected) && Boolean(r.tidal_url) && !Boolean(r.tidal_synced)
-    );
-
-    if (selectedTracks.length === 0) return;
-
-    await exportPlaylist();
-  }, 8000);
-}
+const autoSyncCount = items.filter(
+  (r) => Boolean(r.tidal_selected) && Boolean(r.tidal_url) && !Boolean(r.tidal_synced)
+).length;
 
 async function exportPlaylist() {
   if (exportInProgressRef.current) return;
