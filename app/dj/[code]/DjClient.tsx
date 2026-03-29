@@ -338,42 +338,6 @@ function splitDedications(raw: string | null | undefined) {
   const eventCode = makeEventCodeFromName(eventName);
   if (!eventCode) return;
 
-  useEffect(() => {
-  if (!autoSyncEnabled) {
-    clearAutoSyncTimer();
-  }
-}, [autoSyncEnabled]);
-
-useEffect(() => {
-  return () => {
-    clearAutoSyncTimer();
-  };
-}, []);
-
-useEffect(() => {
-  if (!autoSyncEnabled) {
-    clearAutoSyncTimer();
-    return;
-  }
-
-  if (autoSyncCount === 0) {
-    clearAutoSyncTimer();
-    return;
-  }
-
-  clearAutoSyncTimer();
-
-  autoSyncTimerRef.current = setTimeout(async () => {
-    if (exportInProgressRef.current) return;
-
-    await exportPlaylist();
-  }, 8000);
-
-  return () => {
-    clearAutoSyncTimer();
-  };
-}, [autoSyncEnabled, autoSyncCount]);
-
 
   const password = prompt("Password per creare evento:");
   if (!password) return;
@@ -546,6 +510,42 @@ function clearAutoSyncTimer() {
     autoSyncTimerRef.current = null;
   }
 }
+
+  useEffect(() => {
+  if (!autoSyncEnabled) {
+    clearAutoSyncTimer();
+  }
+}, [autoSyncEnabled]);
+
+useEffect(() => {
+  return () => {
+    clearAutoSyncTimer();
+  };
+}, []);
+
+useEffect(() => {
+  if (!autoSyncEnabled) {
+    clearAutoSyncTimer();
+    return;
+  }
+
+  if (autoSyncCount === 0) {
+    clearAutoSyncTimer();
+    return;
+  }
+
+  clearAutoSyncTimer();
+
+  autoSyncTimerRef.current = setTimeout(async () => {
+    if (exportInProgressRef.current) return;
+
+    await exportPlaylist();
+  }, 8000);
+
+  return () => {
+    clearAutoSyncTimer();
+  };
+}, [autoSyncEnabled, autoSyncCount]);
 
 const autoSyncCount = items.filter(
   (r) => Boolean(r.tidal_selected) && Boolean(r.tidal_url) && !Boolean(r.tidal_synced)
