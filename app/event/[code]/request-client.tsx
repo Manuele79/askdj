@@ -511,6 +511,16 @@ function FakeSpectrumWide() {
       </div>
     </div>
 
+    {/* Invia al DJ */}
+    <button
+      onClick={addRequest}
+      disabled={!canSend || loading}
+      className="w-full rounded-xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-4 py-3 text-sm font-extrabold text-zinc-950 transition shadow-[0_0_26px_rgba(34,211,238,0.15)] disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {loading ? "Invio..." : "🚀 INVIA AL DJ"}
+    </button>
+
+
     {/* Campo titolo */}
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
@@ -551,14 +561,6 @@ function FakeSpectrumWide() {
       Party autoplay funziona solo con link YouTube. Gli altri link si aprono dal DJ.
     </p>
 
-    {/* Invia al DJ */}
-    <button
-      onClick={addRequest}
-      disabled={!canSend || loading}
-      className="w-full rounded-xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-4 py-3 text-sm font-extrabold text-zinc-950 transition shadow-[0_0_26px_rgba(34,211,238,0.15)] disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      {loading ? "Invio..." : "🚀 INVIA AL DJ"}
-    </button>
   </div>
 </section>
 
