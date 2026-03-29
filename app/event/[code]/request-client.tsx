@@ -481,7 +481,7 @@ function FakeSpectrumWide() {
       </div>
 
       <div className="text-center text-xs text-zinc-500">
-        Tip: Apri l’app → Copia link → Incolla qui → Invia al DJ
+        Tip: Apri App → Copia link → Incolla qui → Invia al DJ
       </div>
 
       {!!hint && (
@@ -563,7 +563,7 @@ function FakeSpectrumWide() {
       <textarea
         value={dedication}
         onChange={(e) => setDedication(e.target.value)}
-        placeholder="     ❤️  ❤️ la Dedica viene letta solo in console DJ ❤️  ❤️"
+        placeholder="     ❤️❤️ la Dedica viene letta solo in console DJ ❤️❤️"
         rows={2}
         className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
       />
