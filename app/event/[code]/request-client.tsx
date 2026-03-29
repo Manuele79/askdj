@@ -240,7 +240,13 @@ async function loadPartyRequests() {
     const url = link.trim();
     const isValidUrl = looksLikeUrl(url);
     const finalUrl = isValidUrl ? url : "";
+
     if (!t && !url) return;
+
+    if (url && !isValidUrl) {
+    setHint("⚠️ Nel campo link devi incollare un link valido.");
+    return;
+  }
 
     setLoading(true);
     setHint("");
@@ -517,12 +523,12 @@ function FakeSpectrumWide() {
     <button
       onClick={addRequest}
       disabled={!canSend || loading}
-      className={`w-full rounded-xl px-4 py-3 text-sm font-extrabold text-black transition 
+     className={`w-full rounded-xl px-4 py-3 text-sm font-extrabold transition
       ${canSend && !loading
-       ? "bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-400 shadow-[0_0_35px_rgba(250,204,21,0.8)] animate-pulse"
-      : "bg-zinc-700 text-zinc-400"
-    } 
-      disabled:cursor-not-allowed disabled:opacity-50`}
+       ? "bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-400 text-black shadow-[0_0_35px_rgba(250,204,21,0.8)] animate-pulse"
+       : "bg-gradient-to-r from-emerald-950 via-zinc-900 to-cyan-950 text-zinc-400 shadow-[0_0_12px_rgba(34,211,238,0.12)]"
+      }
+      disabled:cursor-not-allowed disabled:opacity-80`}
     >
       {loading ? "Invio..." : canSend ? "🔥 INVIA AL DJ" : "🚀 INVIA AL DJ"}
     </button>
