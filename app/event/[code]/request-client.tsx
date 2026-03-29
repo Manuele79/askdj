@@ -466,14 +466,14 @@ function FakeSpectrumWide() {
               rel="noreferrer"
               className={`rounded-full px-3 py-2 text-xs font-extrabold transition ${color}`}
             >
-              Apri {p.label}
+              {p.label}
             </a>
           );
         })}
       </div>
 
       <div className="text-center text-xs text-zinc-500">
-        Tip: Apri l’app → scegli brano → Condividi/Copia link → torna qui → (📋 Incolla link).
+        Tip: Apri l’app → Copia link → Incolla qui → Invia al DJ
       </div>
 
       {!!hint && (
@@ -486,7 +486,7 @@ function FakeSpectrumWide() {
     {/* Campo link */}
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
-        COPIA IL LINK DA : <span className="text-white">YouTube/Spotify/Apple/Amazon/Tidal…</span> 
+        INCOLLA <span className="text-white">LINK </span> 
 
         <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
          <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -550,7 +550,7 @@ function FakeSpectrumWide() {
       <textarea
         value={dedication}
         onChange={(e) => setDedication(e.target.value)}
-        placeholder="   ❤️      ❤️  Dedica  ❤️      ❤️          (viene letta solo in console DJ)"
+        placeholder=" ❤️  ❤️ la Dedica viene letta solo in console DJ ❤️  ❤️"
         rows={2}
         className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
       />
