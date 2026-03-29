@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import EventQr from "@/app/components/EventQr";
 
 type Platform = "youtube" | "spotify" | "apple" | "amazon" | "tidal" | "other";
@@ -198,9 +198,6 @@ export default function DjClient({ code }: { code: string }) {
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [tidalConnected, setTidalConnected] = useState<boolean>(false);
   const [tidalChecked, setTidalChecked] = useState<boolean>(false);
-  const [autoSyncEnabled, setAutoSyncEnabled] = useState(false);
-  const autoSyncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const exportInProgressRef = useRef(false);
 
   function resetPartyUnlock() {
     try {
@@ -339,6 +336,7 @@ function splitDedications(raw: string | null | undefined) {
   if (!eventCode) return;
 
 
+
   const password = prompt("Password per creare evento:");
   if (!password) return;
 
@@ -460,8 +458,6 @@ const toggleTidalSelected = async (r: RequestItem) => {
       x.id === r.id ? { ...x, tidal_selected: nextValue } : x
     )
   );
-
-  // niente Auto Sync qui per ora
 };
 
 const saveBpm = async (id: string) => {
@@ -504,65 +500,13 @@ const saveBpm = async (id: string) => {
   });
 };
 
-function clearAutoSyncTimer() {
-  if (autoSyncTimerRef.current) {
-    clearTimeout(autoSyncTimerRef.current);
-    autoSyncTimerRef.current = null;
-  }
-}
-
-  useEffect(() => {
-  if (!autoSyncEnabled) {
-    clearAutoSyncTimer();
-  }
-}, [autoSyncEnabled]);
-
-useEffect(() => {
-  return () => {
-    clearAutoSyncTimer();
-  };
-}, []);
-
-useEffect(() => {
-  if (!autoSyncEnabled) {
-    clearAutoSyncTimer();
-    return;
-  }
-
-  if (autoSyncCount === 0) {
-    clearAutoSyncTimer();
-    return;
-  }
-
-  clearAutoSyncTimer();
-
-  autoSyncTimerRef.current = setTimeout(async () => {
-    if (exportInProgressRef.current) return;
-
-    await exportPlaylist();
-  }, 8000);
-
-  return () => {
-    clearAutoSyncTimer();
-  };
-}, [autoSyncEnabled, autoSyncCount]);
-
-const autoSyncCount = items.filter(
-  (r) => Boolean(r.tidal_selected) && Boolean(r.tidal_url) && !Boolean(r.tidal_synced)
-).length;
-
 async function exportPlaylist() {
-  if (exportInProgressRef.current) return;
-
-  exportInProgressRef.current = true;
-
   const selectedTracks = sorted.filter(
-    (r) => Boolean(r.tidal_selected) && Boolean(r.tidal_url) && !Boolean(r.tidal_synced)
-  );
+  (r) => Boolean(r.tidal_selected) && Boolean(r.tidal_url) && !Boolean(r.tidal_synced)
+);
 
   if (selectedTracks.length === 0) {
     alert("Nessun brano esportabile selezionato.");
-    exportInProgressRef.current = false;
     return;
   }
 
@@ -606,26 +550,23 @@ async function exportPlaylist() {
       });
 
       const addJson = await addRes.json();
+if (!addRes.ok || !addJson.ok) {
+  console.error("ADD TRACK ERROR FULL:", JSON.stringify({
+    title: r.title,
+    trackId,
+    response: addJson,
+  }, null, 2));
 
-      if (!addRes.ok || !addJson.ok) {
-        console.error("ADD TRACK ERROR FULL:", JSON.stringify({
-          title: r.title,
-          trackId,
-          response: addJson,
-        }, null, 2));
-
-        alert(
-          `Errore add-track\nTitolo: ${r.title}\nTrackId: ${trackId}\nDettagli: ${JSON.stringify(addJson)}`
-        );
-      }
+  alert(
+    `Errore add-track\nTitolo: ${r.title}\nTrackId: ${trackId}\nDettagli: ${JSON.stringify(addJson)}`
+  );
+}
     }
 
     alert("Playlist TIDAL esportata con successo 🎧");
   } catch (err) {
     console.error("EXPORT PLAYLIST ERROR:", err);
     alert("Errore export playlist");
-  } finally {
-    exportInProgressRef.current = false;
   }
 }
 
@@ -903,27 +844,17 @@ function toggleSelect(id: string) {
               </section>
             ) : (
 <>
-<div className="mt-3 mb-2 flex flex-wrap items-center gap-3 pl-2 text-sm font-bold text-yellow-300">
+<div className="mt-3 mb-2 flex items-center gap-3 pl-2 text-sm font-bold text-yellow-300">
   ⭐ Playlist selezionata:
   <span className="rounded-full bg-yellow-400 px-3 py-0.5 text-xs font-extrabold text-black">
     {sorted.filter((r) => Boolean(r.tidal_selected) && r.tidal_url && !r.tidal_synced).length}
   </span>
 
-  <label className="ml-1 flex items-center gap-2 text-xs font-bold text-cyan-300">
-    <input
-      type="checkbox"
-      checked={autoSyncEnabled}
-      onChange={(e) => setAutoSyncEnabled(e.target.checked)}
-      className="h-4 w-4 accent-cyan-400"
-    />
-    Auto Sync
-  </label>
-
   <button
     onClick={exportPlaylist}
-    className="ml-1 rounded-md bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-300 hover:bg-emerald-500/40"
+    className="ml-3 rounded-md bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-300 hover:bg-emerald-500/40"
   >
-    🎧 Export Playlist
+     🎧 Export Playlist
   </button>
 </div>
 
