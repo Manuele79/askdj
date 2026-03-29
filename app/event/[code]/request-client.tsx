@@ -238,6 +238,8 @@ async function loadPartyRequests() {
   async function addRequest() {
     const t = title.trim();
     const url = link.trim();
+    const isValidUrl = looksLikeUrl(url);
+    const finalUrl = isValidUrl ? url : "";
     if (!t && !url) return;
 
     setLoading(true);
@@ -277,7 +279,7 @@ async function loadPartyRequests() {
         body: JSON.stringify({
           eventCode: code,
           title: finalTitle,
-          url: url,
+          url: finalUrl,
           dedication: dedication.trim().slice(0, 180),
         }),
       });
@@ -486,7 +488,7 @@ function FakeSpectrumWide() {
     {/* Campo link */}
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
-        INCOLLA <span className="text-white">LINK </span> 
+        INCOLLA <span className="text-white">LINK: </span> 
 
         <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
          <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -515,16 +517,21 @@ function FakeSpectrumWide() {
     <button
       onClick={addRequest}
       disabled={!canSend || loading}
-      className="w-full rounded-xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-4 py-3 text-sm font-extrabold text-zinc-950 transition shadow-[0_0_26px_rgba(34,211,238,0.15)] disabled:cursor-not-allowed disabled:opacity-50"
+      className={`w-full rounded-xl px-4 py-3 text-sm font-extrabold text-black transition 
+      ${canSend && !loading
+       ? "bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-400 shadow-[0_0_35px_rgba(250,204,21,0.8)] animate-pulse"
+      : "bg-zinc-700 text-zinc-400"
+    } 
+      disabled:cursor-not-allowed disabled:opacity-50`}
     >
-      {loading ? "Invio..." : "🚀 INVIA AL DJ"}
+      {loading ? "Invio..." : canSend ? "🔥 INVIA AL DJ" : "🚀 INVIA AL DJ"}
     </button>
 
 
     {/* Campo titolo */}
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
-        SCRIVI IL TITOLO DELLA CANZONE : <span className="text-white"> non riproducibile su PARTY</span> 
+        TITOLO DELLA CANZONE: <span className="text-white"> non riproducibile su PARTY</span> 
 
       <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
         <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -533,7 +540,7 @@ function FakeSpectrumWide() {
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="incolla qui il titolo della canzone"
+        placeholder="Scrivi qui il titolo della canzone"
         className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
       />
     </div>
@@ -541,7 +548,7 @@ function FakeSpectrumWide() {
     {/* Dedica */}
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
-        SCRIVI UNA DEDICA CON LA CANZONE: <span className="text-white">scrivi qui sotto</span>
+        INVIA UNA DEDICA: <span className="text-white">scrivi qui sotto</span>
 
       <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
        <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -550,7 +557,7 @@ function FakeSpectrumWide() {
       <textarea
         value={dedication}
         onChange={(e) => setDedication(e.target.value)}
-        placeholder=" ❤️  ❤️ la Dedica viene letta solo in console DJ ❤️  ❤️"
+        placeholder="     ❤️  ❤️ la Dedica viene letta solo in console DJ ❤️  ❤️"
         rows={2}
         className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
       />
@@ -581,7 +588,7 @@ function FakeSpectrumWide() {
 
 
           {sent.length === 0 ? (
-            <p className="mt-3 text-sm text-zinc-400">Nessuna richiesta</p>
+            <p className="mt-3 text-sm text-zinc-400">Nessuna Richiesta</p>
           ) : (
             <ul className="mt-3 space-y-2">
               {sent.slice(0, 10).map((r, i) => (
