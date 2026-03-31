@@ -662,7 +662,6 @@ function toggleSelect(id: string) {
 </div>
 
 
-
 {/* Titolo */}
 <div className="min-w-0 sm:ml-4 lg:ml-56">
   <div className="text-3xl sm:text-4xl lg:text-8xl font-black tracking-tight text-white leading-tight break-words gap-6">
