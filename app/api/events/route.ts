@@ -106,10 +106,17 @@ export async function POST(req: Request) {
   // 2) crea (o resetta se scaduto) scadenza a 12h da ora
   const expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
 
+  const paymentExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
   const { data, error } = await supabase
     .from("events")
     .upsert(
-      { event_code: eventCode, expires_at: expiresAt },
+      {
+  event_code: eventCode,
+  expires_at: expiresAt,
+  payment_status: "pending",
+  payment_expires_at: paymentExpiresAt
+},
       { onConflict: "event_code" }
     )
     .select("event_code, created_at, expires_at")
