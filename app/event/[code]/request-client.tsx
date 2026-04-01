@@ -125,6 +125,12 @@ export default function RequestClient({ code }: { code: string }) {
     }
   }, [code]);
 
+  useEffect(() => {
+  if (!code) return;
+  localStorage.setItem("dj_guest_event", code);
+  }, [code]);
+
+
   // salva storico
   useEffect(() => {
     try {
@@ -435,7 +441,7 @@ function FakeSpectrumWide() {
    {code && code !== "TEST123" && (
   <div className="mt-3 flex items-center justify-center gap-3">
     <span className="text-yellow-300 font-bold tracking-widest text-sm drop-shadow-[0_0_8px_rgba(250,204,21,0.9)]">
-     EVENTO
+     EVENTO:
     </span>
 
     <span className="px-4 py-1.5 rounded-full text-sm font-bold text-black bg-gradient-to-r from-yellow-300 via-amber-300 to-pink-300 shadow-[0_0_15px_rgba(250,204,21,0.4)]">
@@ -714,6 +720,18 @@ function FakeSpectrumWide() {
     Puoi votare le richieste del party direttamente da qui.
   </div>
 </section>
+
+<div className="mt-6 flex justify-center">
+  <button
+    onClick={() => {
+      localStorage.removeItem("dj_guest_event");
+      window.location.href = "/";
+    }}
+    className="text-xs text-zinc-400 underline hover:text-white"
+  >
+    ⬅️ Esci dall’evento
+  </button>
+</div>
 
 
         <footer className="mt-8 text-center text-xs text-zinc-500">
