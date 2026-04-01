@@ -77,6 +77,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [partyRequests, setPartyRequests] = useState<PublicRequestItem[]>([]);
   const [votedMap, setVotedMap] = useState<Record<string, true>>({});
   const [showPartyRequests, setShowPartyRequests] = useState(false);
+  const [showTitle, setShowTitle] = useState(false);
 
 
   // carica storico da localStorage (solo questo telefono)
@@ -533,25 +534,7 @@ function FakeSpectrumWide() {
       {loading ? "Invio..." : canSend ? "🔥 INVIA AL DJ" : "🚀 INVIA AL DJ"}
     </button>
 
-
-    {/* Campo titolo */}
-    <div>
-      <label className="text-sm font-bold text-yellow-400 bg-clip-text">
-        TITOLO DELLA CANZONE: <span className="text-white"> non riproducibile su PARTY</span> 
-
-      <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
-        <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
-
-      </label>
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Scrivi qui il titolo della canzone"
-        className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
-      />
-    </div>
-
-    {/* Dedica */}
+        {/* Dedica */}
     <div>
       <label className="text-sm font-bold text-yellow-400 bg-clip-text">
         INVIA UNA DEDICA: <span className="text-white">scrivi qui sotto</span>
@@ -569,6 +552,37 @@ function FakeSpectrumWide() {
       />
       <div className="mt-1 text-xs text-zinc-500">{dedication.length}/180</div>
     </div>
+
+    <div className="flex justify-center">
+  <button
+    type="button"
+    onClick={() => setShowTitle((v) => !v)}
+    className="text-xs font-bold text-yellow-400 underline opacity-80 hover:opacity-100"
+  >
+    {showTitle ? "➖ Nascondi titolo manuale" : "➕ Aggiungi titolo manuale"}
+  </button>
+</div>
+
+
+    {/* Campo titolo */}
+   {showTitle && (
+  <div>
+    <label className="text-sm font-bold text-yellow-400 bg-clip-text">
+      SCRIVI IL TITOLO DELLA CANZONE : <span className="text-white"> non riproducibile su PARTY</span>
+
+      <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+      <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+    </label>
+
+    <input
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
+      placeholder="incolla qui il titolo della canzone"
+      className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+    />
+  </div>
+)}
+
 
     <p className="text-xs text-zinc-500">
       Party autoplay funziona solo con link YouTube. Gli altri link si aprono dal DJ.
