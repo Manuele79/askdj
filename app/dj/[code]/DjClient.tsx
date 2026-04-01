@@ -201,6 +201,7 @@ export default function DjClient({ code }: { code: string }) {
   const [autoSyncEnabled, setAutoSyncEnabled] = useState(false);
   const autoSyncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const exportInProgressRef = useRef(false);
+  const [redirecting, setRedirecting] = useState(true);
 
   function resetPartyUnlock() {
     try {
@@ -360,8 +361,11 @@ function splitDedications(raw: string | null | undefined) {
 
 useEffect(() => {
   const saved = localStorage.getItem("dj_guest_event");
+
   if (saved && code === "TEST123") {
     window.location.href = `/event/${saved}`;
+  } else {
+    setRedirecting(false);
   }
 }, [code]);
 
@@ -629,6 +633,10 @@ function toggleSelect(id: string) {
     ...prev,
     [id]: !prev[id],
   }));
+}
+
+if (redirecting) {
+  return null;
 }
 
 
