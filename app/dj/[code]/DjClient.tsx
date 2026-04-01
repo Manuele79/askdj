@@ -202,6 +202,7 @@ export default function DjClient({ code }: { code: string }) {
   const autoSyncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const exportInProgressRef = useRef(false);
   const [redirecting, setRedirecting] = useState(true);
+  const [toast, setToast] = useState<string | null>(null);
 
   function resetPartyUnlock() {
     try {
@@ -368,6 +369,16 @@ useEffect(() => {
     setRedirecting(false);
   }
 }, [code]);
+
+useEffect(() => {
+  if (!toast) return;
+
+  const t = setTimeout(() => {
+    setToast(null);
+  }, 3000);
+
+  return () => clearTimeout(t);
+}, [toast]);
 
   useEffect(() => {
     load();
@@ -617,7 +628,7 @@ if (!addRes.ok || !addJson.ok) {
 }
     }
 
-    alert("Playlist TIDAL esportata con successo 🎧");
+    setToast("Playlist esportata su TIDAL 🎧");
   } catch (err) {
     console.error("EXPORT PLAYLIST ERROR:", err);
     alert("Errore export playlist");
@@ -642,6 +653,15 @@ if (redirecting) {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100 overflow-hidden">
+
+     {toast && (
+  <div className="fixed top-6 right-6 z-50 animate-fade-in">
+    <div className="rounded-xl bg-emerald-500/90 px-4 py-2 text-sm font-bold text-white shadow-lg backdrop-blur">
+      {toast}
+    </div>
+  </div>
+)}
+
       <div className="pointer-events-none absolute -top-48 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-emerald-400/20 blur-[140px]" />
       <div className="pointer-events-none absolute -bottom-56 right-[-160px] h-[600px] w-[600px] rounded-full bg-pink-400/20 blur-[140px]" />
 
