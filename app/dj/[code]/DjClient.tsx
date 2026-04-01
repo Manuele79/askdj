@@ -358,7 +358,12 @@ function splitDedications(raw: string | null | undefined) {
   w.print();
 }
 
-
+useEffect(() => {
+  const saved = localStorage.getItem("dj_guest_event");
+  if (saved && code === "TEST123") {
+    window.location.href = `/event/${saved}`;
+  }
+}, [code]);
 
   useEffect(() => {
     load();
