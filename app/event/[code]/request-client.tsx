@@ -404,7 +404,7 @@ function FakeSpectrumWide() {
       <div className="pointer-events-none absolute top-32 left-[-140px] h-[420px] w-[420px] rounded-full bg-cyan-400/6 blur-[110px]" />
 
       <div className="mx-auto max-w-2xl px-4 py-8">
-    <header className="mb-6 text-center">
+    <header className="mb-4 text-center">
      <div className="flex items-center justify-center gap-4">
      <div className="relative h-14 w-14 rounded-2xl bg-yellow-400 grid place-items-center shadow-[0_0_35px_rgba(250,204,21,0.65)]">
      <div className="absolute inset-0 rounded-2xl bg-yellow-300/40 blur-xl animate-pulse" />
@@ -413,7 +413,7 @@ function FakeSpectrumWide() {
 
      <div className="leading-tight text-center">
      <div className="text-xl sm:text-2xl font-black tracking-tight">
-      <span className="text-yellow-400">Ask</span><span className="text-white">DJ</span>
+      <span className="text-yellow-300">Ask</span><span className="text-white">DJ</span>
     </div>
     <div className="text-sm text-zinc-300/80">Music Requests</div>
    </div>
@@ -421,27 +421,25 @@ function FakeSpectrumWide() {
 
 
  <h1 className="mt-6 text-3xl sm:text-4xl font-black tracking-tight text-white">
-  Richiedi una <span className="text-yellow-400">canzone...</span>
+  Richiedi una <span className="text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">canzone...</span>
 </h1>
   <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
 <div className="mx-auto mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
 
 
-  <div className="mt-6 mb-2">
+  <div className="mt-3 mb-1">
     <FakeSpectrumWide />
   </div>
 
   <div className="mt-3 flex items-center justify-center gap-2">
    {code && code !== "TEST123" && (
-  <div className="mt-6 flex items-center justify-center gap-3">
-    <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm">
-      EVENTO:
+  <div className="mt-3 flex items-center justify-center gap-3">
+    <span className="text-yellow-300 font-bold tracking-widest text-sm drop-shadow-[0_0_8px_rgba(250,204,21,0.9)]">
+     EVENTO
     </span>
 
-    <span className="px-5 py-2 rounded-full text-base font-bold text-black 
-                     bg-gradient-to-r from-emerald-300 via-cyan-300 to-pink-300 
-                     shadow-[0_0_15px_rgba(34,211,238,0.4)]">
-      {code}
+    <span className="px-4 py-1.5 rounded-full text-sm font-bold text-black bg-gradient-to-r from-yellow-300 via-amber-300 to-pink-300 shadow-[0_0_15px_rgba(250,204,21,0.4)]">
+    {code}
     </span>
   </div>
 )}
@@ -494,7 +492,7 @@ function FakeSpectrumWide() {
 
     {/* Campo link */}
     <div>
-      <label className="text-sm font-bold text-yellow-400 bg-clip-text">
+      <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] bg-clip-text">
         INCOLLA <span className="text-white">LINK: </span> 
 
         <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
@@ -536,7 +534,7 @@ function FakeSpectrumWide() {
 
         {/* Dedica */}
     <div>
-      <label className="text-sm font-bold text-yellow-400 bg-clip-text">
+      <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] bg-clip-text">
         INVIA UNA DEDICA: <span className="text-white">scrivi qui sotto</span>
 
       <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
@@ -557,7 +555,7 @@ function FakeSpectrumWide() {
   <button
     type="button"
     onClick={() => setShowTitle((v) => !v)}
-    className="text-xs font-bold text-yellow-400 underline opacity-80 hover:opacity-100"
+    className="text-xs font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] underline opacity-80 hover:opacity-100"
   >
     {showTitle ? "➖ Nascondi titolo manuale" : "➕ Aggiungi titolo manuale"}
   </button>
@@ -567,7 +565,7 @@ function FakeSpectrumWide() {
     {/* Campo titolo */}
    {showTitle && (
   <div>
-    <label className="text-sm font-bold text-yellow-400 bg-clip-text">
+    <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] bg-clip-text">
       SCRIVI IL TITOLO DELLA CANZONE : <span className="text-white"> non riproducibile su PARTY</span>
 
       <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
@@ -594,7 +592,7 @@ function FakeSpectrumWide() {
         <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
           <div className="flex items-center justify-between gap-3">
            <div>
-           <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-400">
+           <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
             Le tue Richieste:
            </h2>
            <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
@@ -647,7 +645,7 @@ function FakeSpectrumWide() {
 <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
   <div className="flex items-center justify-between gap-3">
     <div>
-      <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-400">
+      <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
        Vota le Richieste degli ospiti 🔥
       </h2>
       <div className="mt-2 h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
