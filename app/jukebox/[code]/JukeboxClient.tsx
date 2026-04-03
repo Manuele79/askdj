@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import EventQr from "@/app/components/EventQr";
 
 type RequestItem = {
   id: string;
@@ -534,6 +535,14 @@ export default function JukeboxClient({ code }: { code: string }) {
             )}
           </div>
 
+          {code && code !== "TEST123" && (
+  <div className="mb-4 flex justify-center">
+    <div className="scale-90 sm:scale-100">
+      <EventQr eventCode={code} />
+    </div>
+  </div>
+)}
+
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
             <button
               onClick={() => setLoopEnabled((v) => !v)}
@@ -562,11 +571,11 @@ export default function JukeboxClient({ code }: { code: string }) {
             <button
               onClick={playCurrent}
               className={[
-                "rounded-xl px-5 py-3 text-sm font-extrabold transition",
-                isPlaying
-                  ? "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
-                  : "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950 hover:brightness-110",
-              ].join(" ")}
+                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+                 isPlaying
+                 ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
+                 : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+             ].join(" ")}
             >
               ▶ Play
             </button>
