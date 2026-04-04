@@ -671,7 +671,7 @@ async function checkEventStatus() {
               disabled={eventExpired}
               className={[
                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
-                 isPlaying
+                 !isPlaying
                  ? "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
                  : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
               ].join(" ")}
