@@ -69,9 +69,55 @@ type PlayKind = "video" | "playlist";
 
 type PlayableItem = RequestItem & {
   _kind: PlayKind;
-  _key: string;
+  _key: string; // chiave sorgente/base
   _listId?: string;
 };
+
+type QueueEntry = PlayableItem & {
+  _queueKey: string; // chiave unica per ogni ingresso in coda
+};
+
+function buildPlayableList(
+  items: RequestItem[],
+  playlistEnabled: boolean
+): PlayableItem[] {
+  return (items || [])
+    .filter((r) => {
+      if (r.platform !== "youtube") return false;
+
+      const isVideo = !!r.youtubeVideoId;
+      const isPlaylist = isYouTubePlaylistUrl(r.url);
+
+      if (isVideo) return true;
+      if (playlistEnabled && isPlaylist) return true;
+
+      return false;
+    })
+    .map((r) => {
+      const isPl = isYouTubePlaylistUrl(r.url) && !r.youtubeVideoId;
+
+      if (isPl) {
+        const listId = extractYouTubeListId(r.url);
+        return {
+          ...r,
+          _kind: "playlist" as const,
+          _key: `list:${listId || r.id}`,
+          _listId: listId || "",
+        };
+      }
+
+      return {
+        ...r,
+        _kind: "video" as const,
+        _key: r.youtubeVideoId,
+      };
+    })
+    .filter((x) => {
+      if (x._kind === "video") return !!x.youtubeVideoId;
+      return true;
+    })
+    .sort((a, b) => a.createdAt - b.createdAt);
+}
 
 export default function JukeboxClient({ code }: { code: string }) {
   const [redirecting, setRedirecting] = useState(true);
@@ -92,9 +138,12 @@ export default function JukeboxClient({ code }: { code: string }) {
   }, [code]);
 
   const [items, setItems] = useState<RequestItem[]>([]);
-  const [currentKey, setCurrentKey] = useState<string>("");
+  const [queue, setQueue] = useState<QueueEntry[]>([]);
+
+  const [currentKey, setCurrentKey] = useState<string>(""); // queue key
   const [currentTitle, setCurrentTitle] = useState<string>("");
   const [currentDedication, setCurrentDedication] = useState("");
+
   const [loopEnabled, setLoopEnabled] = useState(true);
   const [showQr, setShowQr] = useState(false);
   const [playlistEnabled, setPlaylistEnabled] = useState(true);
@@ -111,10 +160,22 @@ export default function JukeboxClient({ code }: { code: string }) {
     `jukebox-player-${Math.random().toString(16).slice(2)}`
   );
 
-  const playableRef = useRef<PlayableItem[]>([]);
+  const queueRef = useRef<QueueEntry[]>([]);
+  const itemsRef = useRef<RequestItem[]>([]);
   const currentKeyRef = useRef<string>("");
   const loopRef = useRef<boolean>(true);
   const advancingRef = useRef<boolean>(false);
+  const lastSeenRef = useRef<Record<string, number>>({});
+  const queueSeqRef = useRef<number>(0);
+  const pendingAutoplayRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    queueRef.current = queue;
+  }, [queue]);
+
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
 
   useEffect(() => {
     currentKeyRef.current = currentKey;
@@ -124,51 +185,140 @@ export default function JukeboxClient({ code }: { code: string }) {
     loopRef.current = loopEnabled;
   }, [loopEnabled]);
 
-async function checkEventStatus() {
-  if (!code || code === "TEST123") {
-    setEventExpired(false);
-    setEventChecked(true);
-    return;
+  const playable = useMemo<PlayableItem[]>(() => {
+    return buildPlayableList(items, playlistEnabled);
+  }, [items, playlistEnabled]);
+
+  function makeQueueEntry(item: PlayableItem): QueueEntry {
+    queueSeqRef.current += 1;
+    return {
+      ...item,
+      _queueKey: `${item._key}__${Date.now()}__${queueSeqRef.current}`,
+    };
   }
 
-  try {
-    const res = await fetch(`/api/events?eventCode=${encodeURIComponent(code)}`, {
-      cache: "no-store",
+  function findQueueEntryByKey(key: string) {
+    return queueRef.current.find((p) => p._queueKey === key);
+  }
+
+  function getCurrentQueueEntry() {
+    return findQueueEntryByKey(currentKeyRef.current);
+  }
+
+  function setNowPlayingFromEntry(item: QueueEntry) {
+    setCurrentKey(item._queueKey);
+    setCurrentTitle(
+      item.title || (item._kind === "playlist" ? "Playlist YouTube" : "")
+    );
+    setCurrentDedication(item.dedication || "");
+  }
+
+  function insertIntoQueueAfterCurrent(newEntries: QueueEntry[]) {
+    if (!newEntries.length) return;
+
+    setQueue((prev) => {
+      if (!prev.length) return [...newEntries];
+
+      const curKey = currentKeyRef.current;
+      const idx = prev.findIndex((p) => p._queueKey === curKey);
+
+      if (idx < 0) return [...prev, ...newEntries];
+
+      return [
+        ...prev.slice(0, idx + 1),
+        ...newEntries,
+        ...prev.slice(idx + 1),
+      ];
+    });
+  }
+
+  function queueAndPlayNow(item: PlayableItem, reason?: string) {
+    const entry = makeQueueEntry(item);
+
+    setQueue((prev) => {
+      if (!prev.length) return [entry];
+
+      const curKey = currentKeyRef.current;
+      const idx = prev.findIndex((p) => p._queueKey === curKey);
+
+      if (idx < 0) return [entry, ...prev];
+
+      return [...prev.slice(0, idx + 1), entry, ...prev.slice(idx + 1)];
     });
 
-    if (res.status === 410 || res.status === 404) {
-      setEventExpired(true);
-      setEventChecked(true);
-      localStorage.removeItem("jukebox_event");
-
-      try {
-        playerRef.current?.pauseVideo?.();
-      } catch {}
-
-      setIsPlaying(false);
-      setStatusMsg("⛔ Evento scaduto");
-      return;
-    }
-
-    if (!res.ok) {
-      setEventChecked(true);
-      return;
-    }
-
-    setEventExpired(false);
-    setEventChecked(true);
-  } catch {
-    setEventChecked(true);
+    pendingAutoplayRef.current = true;
+    setStatusMsg(reason ? `▶️ Play (${reason})` : "▶️ Play");
+    setNowPlayingFromEntry(entry);
   }
-}
 
+  function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
+    if (!entry) return;
+
+    pendingAutoplayRef.current = autoplay;
+
+    if (entry._kind === "playlist") {
+      const listId = entry._listId || extractYouTubeListId(entry.url);
+      if (!listId) {
+        setStatusMsg("⚠️ Playlist non riproducibile");
+        return;
+      }
+      setStatusMsg(reason ? `▶️ Playlist (${reason})` : `▶️ Playlist`);
+      setNowPlayingFromEntry({ ...entry, _listId: listId });
+      return;
+    }
+
+    const id = normalizeVideoId(entry.youtubeVideoId);
+    if (!id) return;
+
+    setStatusMsg(reason ? `▶️ Play (${reason})` : `▶️ Play`);
+    setNowPlayingFromEntry(entry);
+  }
+
+  async function checkEventStatus() {
+    if (!code || code === "TEST123") {
+      setEventExpired(false);
+      setEventChecked(true);
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/events?eventCode=${encodeURIComponent(code)}`, {
+        cache: "no-store",
+      });
+
+      if (res.status === 410 || res.status === 404) {
+        setEventExpired(true);
+        setEventChecked(true);
+        localStorage.removeItem("jukebox_event");
+
+        try {
+          playerRef.current?.pauseVideo?.();
+        } catch {}
+
+        setIsPlaying(false);
+        setStatusMsg("⛔ Evento scaduto");
+        return;
+      }
+
+      if (!res.ok) {
+        setEventChecked(true);
+        return;
+      }
+
+      setEventExpired(false);
+      setEventChecked(true);
+    } catch {
+      setEventChecked(true);
+    }
+  }
 
   async function load() {
     try {
-    const res = await fetch(
-       `/api/jukebox/requests?eventCode=${encodeURIComponent(code)}`,
-       { cache: "no-store" }
-    );
+      const res = await fetch(
+        `/api/jukebox/requests?eventCode=${encodeURIComponent(code)}`,
+        { cache: "no-store" }
+      );
+
       const data = await res.json();
 
       const mapped: RequestItem[] = (data.requests || []).map((r: any) => ({
@@ -185,12 +335,54 @@ async function checkEventStatus() {
         createdAt: Number(
           r.createdAt ?? (r.created_at ? Date.parse(r.created_at) : 0)
         ),
-        updatedAt: Number(r.updatedAt ?? r.updated_at ?? 0),
+        updatedAt: Number(
+          r.updatedAt ?? (r.updated_at ? Date.parse(r.updated_at) : 0)
+        ),
       }));
+
+      const prevItems = itemsRef.current;
 
       setItems((prev) =>
         JSON.stringify(prev) === JSON.stringify(mapped) ? prev : mapped
       );
+
+      const nextPlayable = buildPlayableList(mapped, playlistEnabled);
+
+      const seen: Record<string, number> = {};
+      for (const r of mapped) {
+        seen[r.id] = Number(r.updatedAt || r.createdAt || 0);
+      }
+
+      // primo caricamento: inizializza la queue dalla libreria attuale
+      if (!Object.keys(lastSeenRef.current).length) {
+        if (!queueRef.current.length) {
+          setQueue(nextPlayable.map(makeQueueEntry));
+        }
+        lastSeenRef.current = seen;
+        return;
+      }
+
+      const prevMap = new Map(prevItems.map((r) => [r.id, r]));
+      const toEnqueue: QueueEntry[] = [];
+
+      for (const p of nextPlayable) {
+        const prevRow = prevMap.get(p.id);
+        const currentSeen = lastSeenRef.current[p.id] ?? 0;
+        const nextStamp = Number(p.updatedAt || p.createdAt || 0);
+
+        const isBrandNew = !prevRow;
+        const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
+
+        if (isBrandNew || isUpdatedDuplicate) {
+          toEnqueue.push(makeQueueEntry(p));
+        }
+      }
+
+      if (toEnqueue.length) {
+        insertIntoQueueAfterCurrent(toEnqueue);
+      }
+
+      lastSeenRef.current = seen;
     } catch {
       // niente
     }
@@ -198,116 +390,22 @@ async function checkEventStatus() {
 
   useEffect(() => {
     checkEventStatus();
-   load();
+    load();
 
-   const t1 = setInterval(load, 1500);
-   const t2 = setInterval(checkEventStatus, 5000);
+    const t1 = setInterval(load, 1500);
+    const t2 = setInterval(checkEventStatus, 5000);
 
-   return () => {
-     clearInterval(t1);
-     clearInterval(t2);
-   };
-  }, [code]);
-
-  const playable = useMemo<PlayableItem[]>(() => {
-    return (items || [])
-      .filter((r) => {
-        if (r.platform !== "youtube") return false;
-
-        const isVideo = !!r.youtubeVideoId;
-        const isPlaylist = isYouTubePlaylistUrl(r.url);
-
-        if (isVideo) return true;
-        if (playlistEnabled && isPlaylist) return true;
-
-        return false;
-      })
-      .map((r) => {
-        const isPl = isYouTubePlaylistUrl(r.url) && !r.youtubeVideoId;
-
-        if (isPl) {
-          const listId = extractYouTubeListId(r.url);
-          return {
-            ...r,
-            _kind: "playlist" as const,
-            _key: `list:${listId || r.id}`,
-            _listId: listId || "",
-          };
-        }
-
-        return {
-          ...r,
-          _kind: "video" as const,
-          _key: r.youtubeVideoId,
-        };
-      })
-      .filter((x) => {
-        if (x._kind === "video") return !!x.youtubeVideoId;
-        return true;
-      })
-      .sort((a, b) => a.createdAt - b.createdAt);
-  }, [items, playlistEnabled]);
-
-  useEffect(() => {
-    playableRef.current = playable;
-  }, [playable]);
-
-  function findPlayableByKey(key: string) {
-    return playableRef.current.find((p) => p._key === key);
-  }
-
-  function setNowPlayingFromItem(item: PlayableItem) {
-    setCurrentKey(item._key);
-    setCurrentTitle(
-      item.title || (item._kind === "playlist" ? "Playlist YouTube" : "")
-    );
-    setCurrentDedication(item.dedication || "");
-  }
-
-  function playItem(item: PlayableItem, reason?: string) {
-    const p = playerRef.current;
-    if (!item) return;
-
-    if (item._kind === "playlist") {
-      const listId = item._listId || extractYouTubeListId(item.url);
-      if (!listId) {
-        setStatusMsg("⚠️ Playlist non riproducibile");
-        return;
-      }
-
-      setStatusMsg(reason ? `▶️ Playlist (${reason})` : `▶️ Playlist`);
-      setNowPlayingFromItem({ ...item, _key: `list:${listId}`, _listId: listId });
-
-      if (p?.loadPlaylist) {
-        try {
-          p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
-          p.playVideo?.();
-          setIsPlaying(true);
-        } catch {}
-      }
-      return;
-    }
-
-    const id = normalizeVideoId(item.youtubeVideoId);
-    if (!id) return;
-
-    setStatusMsg(reason ? `▶️ Play (${reason})` : `▶️ Play`);
-    setNowPlayingFromItem(item);
-
-    if (p?.loadVideoById) {
-      try {
-        p.loadVideoById(id);
-        p.playVideo?.();
-        setIsPlaying(true);
-      } catch {}
-    }
-  }
+    return () => {
+      clearInterval(t1);
+      clearInterval(t2);
+    };
+  }, [code, playlistEnabled]);
 
   function advance(reason: string) {
     if (advancingRef.current) return;
     advancingRef.current = true;
 
-    const list = playableRef.current;
+    const list = queueRef.current;
     const curKey = currentKeyRef.current;
 
     if (!list.length) {
@@ -315,10 +413,10 @@ async function checkEventStatus() {
       return;
     }
 
-    const idx = list.findIndex((p) => p._key === curKey);
+    const idx = list.findIndex((p) => p._queueKey === curKey);
 
     if (idx < 0) {
-      playItem(list[0], `start (${reason})`);
+      playQueueEntry(list[0], `start (${reason})`, true);
       setTimeout(() => {
         advancingRef.current = false;
       }, 350);
@@ -327,7 +425,7 @@ async function checkEventStatus() {
 
     const next = list[idx + 1];
     if (next) {
-      playItem(next, `next (${reason})`);
+      playQueueEntry(next, `next (${reason})`, true);
       setTimeout(() => {
         advancingRef.current = false;
       }, 350);
@@ -335,14 +433,14 @@ async function checkEventStatus() {
     }
 
     if (loopRef.current) {
-      playItem(list[0], `loop (${reason})`);
+      playQueueEntry(list[0], `loop (${reason})`, true);
       setTimeout(() => {
         advancingRef.current = false;
       }, 350);
       return;
     }
 
-    setStatusMsg("⏹ Fine libreria");
+    setStatusMsg("⏹ Fine coda");
     setIsPlaying(false);
 
     setTimeout(() => {
@@ -353,14 +451,15 @@ async function checkEventStatus() {
   function playCurrent() {
     const p = playerRef.current;
 
-    if (!currentKey && playableRef.current.length) {
-      playItem(playableRef.current[0], "manual start");
+    if (!currentKey && queueRef.current.length) {
+      playQueueEntry(queueRef.current[0], "manual start", true);
       return;
     }
 
     if (!p) return;
 
     try {
+      pendingAutoplayRef.current = true;
       p.playVideo?.();
       setIsPlaying(true);
       setStatusMsg("▶️ Riproduzione");
@@ -374,6 +473,7 @@ async function checkEventStatus() {
     try {
       p.pauseVideo?.();
       setIsPlaying(false);
+      pendingAutoplayRef.current = false;
       setStatusMsg("⏸ Pausa");
     } catch {}
   }
@@ -384,24 +484,28 @@ async function checkEventStatus() {
   }
 
   async function deleteRequest(id: string) {
-  if (!confirm("Eliminare questo brano dalla libreria evento?")) return;
+    if (!confirm("Eliminare questo brano dalla libreria evento?")) return;
 
-  const res = await fetch("/api/requests", {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id }),
-  });
+    const res = await fetch("/api/requests", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
 
-  if (!res.ok) {
-    alert("Errore eliminazione");
-    return;
+    if (!res.ok) {
+      alert("Errore eliminazione");
+      return;
+    }
+
+    setItems((prev) => prev.filter((x) => x.id !== id));
+
+    setQueue((prev) =>
+      prev.filter((x) => !(x.id === id && x._queueKey !== currentKeyRef.current))
+    );
   }
 
-  setItems((prev) => prev.filter((x) => x.id !== id));
-}
-
   useEffect(() => {
-    if (!playable.length) {
+    if (!queue.length) {
       setCurrentKey("");
       setCurrentTitle("");
       setCurrentDedication("");
@@ -409,20 +513,20 @@ async function checkEventStatus() {
     }
 
     if (!currentKey) {
-      setNowPlayingFromItem(playable[0]);
+      setNowPlayingFromEntry(queue[0]);
       return;
     }
 
-    const stillThere = playable.some((p) => p._key === currentKey);
+    const stillThere = queue.some((p) => p._queueKey === currentKey);
     if (!stillThere) {
-      setNowPlayingFromItem(playable[0]);
+      setNowPlayingFromEntry(queue[0]);
     }
-  }, [playable, currentKey]);
+  }, [queue, currentKey]);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function init() {
+    async function initOrLoadCurrent() {
       if (eventExpired) return;
       if (!currentKey) return;
 
@@ -430,9 +534,11 @@ async function checkEventStatus() {
       if (cancelled) return;
 
       const origin = window.location.origin;
-      const current = findPlayableByKey(currentKey);
+      const current = findQueueEntryByKey(currentKey);
 
       if (!current) return;
+
+      const shouldAutoplay = pendingAutoplayRef.current;
 
       if (!playerRef.current) {
         const isPl = current._kind === "playlist";
@@ -455,13 +561,20 @@ async function checkEventStatus() {
             onReady: () => {
               setPlayerReady(true);
               setStatusMsg("✅ Player pronto");
+
+              if (pendingAutoplayRef.current) {
+                try {
+                  playerRef.current?.playVideo?.();
+                  setIsPlaying(true);
+                } catch {}
+              }
             },
             onStateChange: (e: any) => {
               if (e.data === 1) setIsPlaying(true);
               if (e.data === 2) setIsPlaying(false);
 
               if (e.data === 0) {
-                const cur = findPlayableByKey(currentKeyRef.current);
+                const cur = getCurrentQueueEntry();
                 const p = playerRef.current;
 
                 if (cur?._kind === "playlist" && p?.getPlaylist && p?.getPlaylistIndex) {
@@ -477,6 +590,7 @@ async function checkEventStatus() {
                   }
                 }
 
+                pendingAutoplayRef.current = true;
                 advancingRef.current = false;
                 advance("ended");
               }
@@ -485,7 +599,7 @@ async function checkEventStatus() {
               const code = e?.data;
               setStatusMsg(`⚠️ YouTube error ${code}`);
 
-              const cur = findPlayableByKey(currentKeyRef.current);
+              const cur = getCurrentQueueEntry();
               const p = playerRef.current;
 
               if (cur?._kind === "playlist" && p?.nextVideo) {
@@ -495,6 +609,7 @@ async function checkEventStatus() {
                 } catch {}
               }
 
+              pendingAutoplayRef.current = true;
               advancingRef.current = false;
               setTimeout(() => advance(`error-${code}`), 200);
             },
@@ -511,27 +626,34 @@ async function checkEventStatus() {
           const listId = current._listId || extractYouTubeListId(current.url);
           if (listId && p.loadPlaylist) {
             p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
+            if (shouldAutoplay) {
+              p.playVideo?.();
+            }
           }
         } else {
           const vid = current.youtubeVideoId || "";
           if (vid && p.loadVideoById) {
             p.loadVideoById(vid);
+            if (shouldAutoplay) {
+              p.playVideo?.();
+            }
           }
         }
       } catch {}
     }
 
-    init();
+    initOrLoadCurrent();
 
     return () => {
       cancelled = true;
     };
-  }, [currentKey]);
+  }, [currentKey, eventExpired]);
 
   useEffect(() => {
     const t = setInterval(() => {
       if (eventExpired) return;
-      const cur = findPlayableByKey(currentKeyRef.current);
+
+      const cur = getCurrentQueueEntry();
       if (cur?._kind === "playlist") return;
 
       const p = playerRef.current;
@@ -545,6 +667,7 @@ async function checkEventStatus() {
         const curT = p.getCurrentTime();
 
         if (dur > 0 && curT > 0 && dur - curT < 0.7) {
+          pendingAutoplayRef.current = true;
           advancingRef.current = false;
           advance("timer");
         }
@@ -552,7 +675,10 @@ async function checkEventStatus() {
     }, 500);
 
     return () => clearInterval(t);
-  }, []);
+  }, [eventExpired]);
+
+  const currentSourceKey =
+    queue.find((q) => q._queueKey === currentKey)?._key || "";
 
   if (redirecting) return null;
 
@@ -563,15 +689,14 @@ async function checkEventStatus() {
       <div className="pointer-events-none absolute top-32 left-[-140px] h-[420px] w-[420px] rounded-full bg-cyan-400/10 blur-[110px]" />
 
       <div className="mx-auto max-w-6xl px-4 py-8 overflow-x-hidden">
-
-      {eventChecked && eventExpired && (
-  <div className="mb-6 rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-4 text-sm text-red-200 shadow-[0_0_20px_rgba(239,68,68,0.18)]">
-    <div className="font-extrabold text-red-300">⛔ Evento scaduto</div>
-    <div className="mt-1 text-red-200/90">
-      Questo Jukebox non è più attivo. Crea o apri un nuovo evento.
-    </div>
-  </div>
-)}
+        {eventChecked && eventExpired && (
+          <div className="mb-6 rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-4 text-sm text-red-200 shadow-[0_0_20px_rgba(239,68,68,0.18)]">
+            <div className="font-extrabold text-red-300">⛔ Evento scaduto</div>
+            <div className="mt-1 text-red-200/90">
+              Questo Jukebox non è più attivo. Crea o apri un nuovo evento.
+            </div>
+          </div>
+        )}
 
         <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -614,17 +739,14 @@ async function checkEventStatus() {
             )}
           </div>
 
-
-
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
-
             {code && code !== "TEST123" && !eventExpired && (
-            <button
-             onClick={() => setShowQr(true)}
-             className="rounded-xl bg-zinc-900/60 px-5 py-3 text-sm font-extrabold text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 transition"
-            >
-            🔳 QR ospiti
-            </button>
+              <button
+                onClick={() => setShowQr(true)}
+                className="rounded-xl bg-zinc-900/60 px-5 py-3 text-sm font-extrabold text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 transition"
+              >
+                🔳 QR ospiti
+              </button>
             )}
 
             <button
@@ -657,11 +779,11 @@ async function checkEventStatus() {
               onClick={playCurrent}
               disabled={eventExpired}
               className={[
-                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
-                 isPlaying
-                 ? "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
-                 : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
-             ].join(" ")}
+                "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+                isPlaying
+                  ? "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
+                  : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+              ].join(" ")}
             >
               ▶ Play
             </button>
@@ -671,9 +793,9 @@ async function checkEventStatus() {
               disabled={eventExpired}
               className={[
                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
-                 !isPlaying
-                 ? "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
-                 : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+                !isPlaying
+                  ? "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
+                  : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
               ].join(" ")}
             >
               ⏸ Pausa
@@ -740,12 +862,13 @@ async function checkEventStatus() {
             <ul className="space-y-3">
               {playable.map((r, idx) => {
                 const isPlaylist = r._kind === "playlist";
+                const isCurrentSource = r._key === currentSourceKey;
 
                 return (
                   <li
                     key={r.id}
                     className={`rounded-2xl border px-4 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
-                      r._key === currentKey
+                      isCurrentSource
                         ? "border-cyan-400/50 bg-zinc-900/80 ring-1 ring-cyan-400/30"
                         : "border-zinc-700/40 bg-zinc-950/50"
                     }`}
@@ -757,7 +880,7 @@ async function checkEventStatus() {
                         <button
                           onClick={() => {
                             advancingRef.current = false;
-                            playItem(r, "manual pick");
+                            queueAndPlayNow(r, "manual pick");
                           }}
                           className="truncate text-left text-base font-extrabold text-zinc-100 hover:underline"
                         >
@@ -807,19 +930,19 @@ async function checkEventStatus() {
         </section>
 
         {showQr && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-         <div className="relative bg-zinc-900 rounded-3xl p-4 shadow-[0_0_40px_rgba(0,0,0,0.6)]">
-       <button
-        onClick={() => setShowQr(false)}
-        className="absolute -top-3 -right-3 rounded-full bg-zinc-800 px-3 py-1 text-xs text-white hover:bg-zinc-700"
-      >
-        ✕
-      </button>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+            <div className="relative bg-zinc-900 rounded-3xl p-4 shadow-[0_0_40px_rgba(0,0,0,0.6)]">
+              <button
+                onClick={() => setShowQr(false)}
+                className="absolute -top-3 -right-3 rounded-full bg-zinc-800 px-3 py-1 text-xs text-white hover:bg-zinc-700"
+              >
+                ✕
+              </button>
 
-      <EventQr eventCode={code} />
-    </div>
-  </div>
-)}
+              <EventQr eventCode={code} />
+            </div>
+          </div>
+        )}
 
         <footer
           style={{
