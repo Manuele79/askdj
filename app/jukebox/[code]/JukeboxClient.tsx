@@ -103,6 +103,9 @@ export default function JukeboxClient({ code }: { code: string }) {
   const [playerReady, setPlayerReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const [eventExpired, setEventExpired] = useState(false);
+  const [eventChecked, setEventChecked] = useState(false);
+
   const playerRef = useRef<any>(null);
   const playerContainerId = useRef(
     `jukebox-player-${Math.random().toString(16).slice(2)}`
@@ -120,6 +123,45 @@ export default function JukeboxClient({ code }: { code: string }) {
   useEffect(() => {
     loopRef.current = loopEnabled;
   }, [loopEnabled]);
+
+async function checkEventStatus() {
+  if (!code || code === "TEST123") {
+    setEventExpired(false);
+    setEventChecked(true);
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/events?eventCode=${encodeURIComponent(code)}`, {
+      cache: "no-store",
+    });
+
+    if (res.status === 410 || res.status === 404) {
+      setEventExpired(true);
+      setEventChecked(true);
+      localStorage.removeItem("jukebox_event");
+
+      try {
+        playerRef.current?.pauseVideo?.();
+      } catch {}
+
+      setIsPlaying(false);
+      setStatusMsg("⛔ Evento scaduto");
+      return;
+    }
+
+    if (!res.ok) {
+      setEventChecked(true);
+      return;
+    }
+
+    setEventExpired(false);
+    setEventChecked(true);
+  } catch {
+    setEventChecked(true);
+  }
+}
+
 
   async function load() {
     try {
@@ -155,9 +197,16 @@ export default function JukeboxClient({ code }: { code: string }) {
   }
 
   useEffect(() => {
-    load();
-    const t = setInterval(load, 1500);
-    return () => clearInterval(t);
+    checkEventStatus();
+   load();
+
+   const t1 = setInterval(load, 1500);
+   const t2 = setInterval(checkEventStatus, 5000);
+
+   return () => {
+     clearInterval(t1);
+     clearInterval(t2);
+   };
   }, [code]);
 
   const playable = useMemo<PlayableItem[]>(() => {
@@ -357,6 +406,7 @@ export default function JukeboxClient({ code }: { code: string }) {
     let cancelled = false;
 
     async function init() {
+      if (eventExpired) return;
       if (!currentKey) return;
 
       await loadYouTubeIframeAPI();
@@ -463,6 +513,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 
   useEffect(() => {
     const t = setInterval(() => {
+      if (eventExpired) return;
       const cur = findPlayableByKey(currentKeyRef.current);
       if (cur?._kind === "playlist") return;
 
@@ -495,6 +546,16 @@ export default function JukeboxClient({ code }: { code: string }) {
       <div className="pointer-events-none absolute top-32 left-[-140px] h-[420px] w-[420px] rounded-full bg-cyan-400/10 blur-[110px]" />
 
       <div className="mx-auto max-w-6xl px-4 py-8 overflow-x-hidden">
+
+      {eventChecked && eventExpired && (
+  <div className="mb-6 rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-4 text-sm text-red-200 shadow-[0_0_20px_rgba(239,68,68,0.18)]">
+    <div className="font-extrabold text-red-300">⛔ Evento scaduto</div>
+    <div className="mt-1 text-red-200/90">
+      Questo Jukebox non è più attivo. Crea o apri un nuovo evento.
+    </div>
+  </div>
+)}
+
         <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="flex items-center gap-4">
@@ -540,7 +601,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
 
-            {code && code !== "TEST123" && (
+            {code && code !== "TEST123" && !eventExpired && (
             <button
              onClick={() => setShowQr(true)}
              className="rounded-xl bg-zinc-900/60 px-5 py-3 text-sm font-extrabold text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 transition"
@@ -551,6 +612,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 
             <button
               onClick={() => setLoopEnabled((v) => !v)}
+              disabled={eventExpired}
               className={[
                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
                 loopEnabled
@@ -563,6 +625,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 
             <button
               onClick={() => setPlaylistEnabled((v) => !v)}
+              disabled={eventExpired}
               className={[
                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
                 playlistEnabled
@@ -575,6 +638,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 
             <button
               onClick={playCurrent}
+              disabled={eventExpired}
               className={[
                  "rounded-xl px-5 py-3 text-sm font-extrabold transition",
                  isPlaying
@@ -587,6 +651,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 
             <button
               onClick={pauseCurrent}
+              disabled={eventExpired}
               className={[
                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
                 !isPlaying
@@ -599,6 +664,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 
             <button
               onClick={playNext}
+              disabled={eventExpired}
               className="rounded-xl bg-zinc-900/60 px-5 py-3 text-sm font-extrabold text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 transition"
             >
               ⏭ Avanti
