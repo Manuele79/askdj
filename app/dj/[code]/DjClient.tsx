@@ -203,6 +203,7 @@ export default function DjClient({ code }: { code: string }) {
   const exportInProgressRef = useRef(false);
   const [redirecting, setRedirecting] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
+  const [eventMode, setEventMode] = useState<"dj_party" | "jukebox">("dj_party");
 
   function resetPartyUnlock() {
     try {
@@ -404,7 +405,7 @@ useEffect(() => {
   const res = await fetch("/api/events", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-   body: JSON.stringify({ eventCode, password }),
+    body: JSON.stringify({ eventCode, password, mode: eventMode,}),
   });
 
   if (!res.ok) {
@@ -689,7 +690,7 @@ if (redirecting) {
       <span className="text-white">DJ</span>
     </div>
     <div className="text-xs text-zinc-400 tracking-wide">
-      Music Requests
+      Music Console
     </div>
   </div>
 </div>
@@ -801,6 +802,31 @@ if (redirecting) {
     )}
   </div>
 )}
+
+<div className="mb-4 flex flex-wrap justify-end gap-2">
+  <button
+    onClick={() => setEventMode("dj_party")}
+    className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
+      eventMode === "dj_party"
+        ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950"
+        : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
+    }`}
+  >
+    🎧 DJ / Party
+  </button>
+
+  <button
+    onClick={() => setEventMode("jukebox")}
+    className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
+      eventMode === "jukebox"
+        ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950"
+        : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
+    }`}
+  >
+    📻 Jukebox
+  </button>
+</div>
+
 
             {/* create event */}
             <div className="flex flex-col gap-2 sm:flex-col sm:items-end">
