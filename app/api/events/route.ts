@@ -71,6 +71,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({} as any));
   const mode = body.mode === "jukebox" ? "jukebox" : "dj_party";
+  const duration = body.duration;
   const eventCode = normalizeEventCode(body.eventCode);
   const password = body.password;
 
@@ -106,13 +107,17 @@ export async function POST(req: Request) {
   }
 
   // 2) crea (o resetta se scaduto) scadenza a 12h da ora
-  let expiresAt;
+let expiresAt;
 
 if (mode === "jukebox") {
-  // 1 giorno (poi cambiamo dopo)
-  expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+  if (duration === "1m") {
+    expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+  } else if (duration === "1y") {
+    expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
+  } else {
+    expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+  }
 } else {
-  // DJ normale
   expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
 }
 
