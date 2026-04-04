@@ -521,7 +521,7 @@ export default function JukeboxClient({ code }: { code: string }) {
             </h1>
 
             <p className="mt-3 max-w-2xl text-sm sm:text-base text-zinc-300">
-              Gli ospiti scelgono la musica. Il Jukebox la riproduce automaticamente.
+              Gli ospiti scelgono la musica... Il Jukebox la riproduce automaticamente...
             </p>
 
             {code && code !== "TEST123" && (
@@ -539,6 +539,16 @@ export default function JukeboxClient({ code }: { code: string }) {
 
 
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
+
+            {code && code !== "TEST123" && (
+            <button
+             onClick={() => setShowQr(true)}
+             className="rounded-xl bg-zinc-900/60 px-5 py-3 text-sm font-extrabold text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 transition"
+            >
+            🔳 QR ospiti
+            </button>
+            )}
+
             <button
               onClick={() => setLoopEnabled((v) => !v)}
               className={[
@@ -550,15 +560,6 @@ export default function JukeboxClient({ code }: { code: string }) {
             >
               🔁 Loop {loopEnabled ? "ON" : "OFF"}
             </button>
-
-            {code && code !== "TEST123" && (
-           <button
-             onClick={() => setShowQr(true)}
-             className="rounded-xl bg-zinc-900/60 px-5 py-3 text-sm font-extrabold text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 transition"
-            >
-            🔳 QR ospiti
-            </button>
-            )}
 
             <button
               onClick={() => setPlaylistEnabled((v) => !v)}
