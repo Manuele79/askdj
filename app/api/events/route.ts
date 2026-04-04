@@ -105,7 +105,15 @@ export async function POST(req: Request) {
   }
 
   // 2) crea (o resetta se scaduto) scadenza a 12h da ora
-  const expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
+  let expiresAt;
+
+if (mode === "jukebox") {
+  // 1 giorno (poi cambiamo dopo)
+  expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+} else {
+  // DJ normale
+  expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
+}
 
   const paymentExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
