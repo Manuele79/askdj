@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import EventQr from "@/app/components/EventQr";
 
 type Platform = "youtube" | "spotify" | "apple" | "amazon" | "tidal" | "other";
@@ -204,6 +205,7 @@ export default function DjClient({ code }: { code: string }) {
   const [redirecting, setRedirecting] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
   const [eventMode, setEventMode] = useState<"dj_party" | "jukebox">("dj_party");
+  const router = useRouter();
 
   function resetPartyUnlock() {
     try {
@@ -413,7 +415,11 @@ useEffect(() => {
     return;
   }
 
-  window.location.href = `/dj/${eventCode}`;
+  if (eventMode === "jukebox") {
+  router.push(`/jukebox/${eventCode}`);
+} else {
+  router.push(`/dj/${eventCode}`);
+}
 }
 
 async function loadEventStatus() {
@@ -803,33 +809,42 @@ if (redirecting) {
   </div>
 )}
 
-<div className="mb-4 flex flex-wrap justify-end gap-2">
-  <button
-    onClick={() => setEventMode("dj_party")}
-    className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
-      eventMode === "dj_party"
-        ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950"
-        : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
-    }`}
-  >
-    🎧 DJ / Party
-  </button>
+{code === "TEST123" && (
+  <div className="mb-4 flex flex-col gap-3 sm:items-end">
+    <div className="text-xs font-extrabold text-cyan-300 tracking-wide">
+      SCEGLI MODALITÀ EVENTO
+    </div>
 
-  <button
-    onClick={() => setEventMode("jukebox")}
-    className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
-      eventMode === "jukebox"
-        ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950"
-        : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
-    }`}
-  >
-    📻 Jukebox
-  </button>
-</div>
+    <div className="flex flex-wrap gap-2 sm:justify-end">
+      <button
+        onClick={() => setEventMode("dj_party")}
+        className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
+          eventMode === "dj_party"
+            ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950"
+            : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
+        }`}
+      >
+        🎧 DJ / Party
+      </button>
+
+      <button
+        onClick={() => setEventMode("jukebox")}
+        className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
+          eventMode === "jukebox"
+            ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950"
+            : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
+        }`}
+      >
+        📻 Jukebox
+      </button>
+    </div>
+  </div>
+)}
 
 
             {/* create event */}
-            <div className="flex flex-col gap-2 sm:flex-col sm:items-end">
+                {code === "TEST123" && eventMode && (
+              <div className="flex flex-col gap-2 sm:flex-col sm:items-end">
               <input
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
@@ -845,7 +860,9 @@ if (redirecting) {
                 CREA NUOVO EVENTO
               </button>
             </div>
+            )}
           </div>
+          
           {/* join event */}
           <div className="flex flex-col gap-2 sm:flex-col sm:items-end mt-4">
             <input
