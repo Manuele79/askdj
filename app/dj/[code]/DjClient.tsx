@@ -206,7 +206,7 @@ export default function DjClient({ code }: { code: string }) {
   const [toast, setToast] = useState<string | null>(null);
   const [eventMode, setEventMode] = useState<"dj_party" | "jukebox" | "">("");
   const router = useRouter();
-  const [jukeboxDuration, setJukeboxDuration] = useState<"1d" | "1m" | "1y">("1d");
+  const [jukeboxDuration, setJukeboxDuration] = useState<"1d" | "1m" | "1y" | "">("");
 
   function resetPartyUnlock() {
     try {
@@ -409,11 +409,11 @@ useEffect(() => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-  eventCode,
-  password,
-  mode: eventMode,
-  duration: jukeboxDuration,
-}),
+    eventCode,
+    password,
+    mode: eventMode,
+    duration: jukeboxDuration,
+  }),
   });
 
   if (!res.ok) {
@@ -778,6 +778,7 @@ if (redirecting) {
         </p>
 
         <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
+          <li>Scegli la modalià:<b>DJ/PARTY (for MIX Tidal) o JUKEBOX(Playlist)</b></li>
           <li>Scrivi un nome evento e premi <b>Crea Evento</b></li>
           <li>Quando l’evento è attivo, <b>stampa il QR</b></li>
           <li>Gli ospiti lo scansionano e inviano richieste</li>
@@ -785,7 +786,7 @@ if (redirecting) {
 
         <div className="mt-3 text-xs text-yellow-300 leading-snug">
           ⚠️ Gli ospiti NON entrano da questa pagina.
-          Entrano solo scansionando il QR dell’evento.
+          Entrano solo scansionando il QR dell’evento."Dopo che crei l’evento, questa guida sparisce"
         </div>
       </div>
     )}
@@ -821,9 +822,9 @@ if (redirecting) {
 
     {code === "TEST123" && (
       <div className="flex flex-col gap-3 sm:items-end">
-        <div className="text-xs font-extrabold text-cyan-300 tracking-wide">
-          SCEGLI MODALITÀ EVENTO
-        </div>
+        <div className="text-sm sm:text-base font-black text-yellow-300 tracking-wide drop-shadow-[0_0_10px_rgba(250,204,21,0.7)]">
+        SCEGLI MODALITÀ EVENTO
+          </div>
 
         <div className="flex flex-wrap gap-2 sm:justify-end">
           <button
@@ -848,18 +849,51 @@ if (redirecting) {
             📻 Jukebox
           </button>
         </div>
-        {eventMode === "jukebox" && (
-        <div className="flex gap-2 mt-2">
-       <button onClick={() => setJukeboxDuration("1d")}>1 giorno</button>
-       <button onClick={() => setJukeboxDuration("1m")}>1 mese</button>
-       <button onClick={() => setJukeboxDuration("1y")}>1 anno</button>
-     </div>
-     )}
+{eventMode === "jukebox" && (
+  <div className="flex flex-wrap gap-2 sm:justify-end">
+    <button
+      onClick={() => setJukeboxDuration("1d")}
+      className={`rounded-xl px-3 py-2 text-xs sm:text-sm font-extrabold transition ${
+        jukeboxDuration === "1d"
+          ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950"
+          : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
+      }`}
+    >
+      1 giorno
+    </button>
+
+    <button
+      onClick={() => setJukeboxDuration("1m")}
+      className={`rounded-xl px-3 py-2 text-xs sm:text-sm font-extrabold transition ${
+        jukeboxDuration === "1m"
+          ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950"
+          : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
+      }`}
+    >
+      1 mese
+    </button>
+
+    <button
+      onClick={() => setJukeboxDuration("1y")}
+      className={`rounded-xl px-3 py-2 text-xs sm:text-sm font-extrabold transition ${
+        jukeboxDuration === "1y"
+          ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950"
+          : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
+      }`}
+    >
+      1 anno
+    </button>
+  </div>
+)}
       </div>
     )}
 
     {/* create event */}
-    {code === "TEST123" && eventMode && (
+    {code === "TEST123" &&
+  (
+    eventMode === "dj_party" ||
+    (eventMode === "jukebox" && jukeboxDuration)
+  ) && (
       <div className="flex flex-col gap-2 sm:items-end">
         <input
           value={eventName}
