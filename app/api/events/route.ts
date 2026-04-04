@@ -69,6 +69,7 @@ export async function GET(req: Request) {
 // POST /api/events body: { eventCode, password }
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({} as any));
+  const mode = body.mode === "jukebox" ? "jukebox" : "dj_party";
   const eventCode = normalizeEventCode(body.eventCode);
   const password = body.password;
 
@@ -115,7 +116,8 @@ export async function POST(req: Request) {
   event_code: eventCode,
   expires_at: expiresAt,
   payment_status: "pending",
-  payment_expires_at: paymentExpiresAt
+  payment_expires_at: paymentExpiresAt,
+  mode: mode,
 },
       { onConflict: "event_code" }
     )
