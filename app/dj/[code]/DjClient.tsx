@@ -204,7 +204,7 @@ export default function DjClient({ code }: { code: string }) {
   const exportInProgressRef = useRef(false);
   const [redirecting, setRedirecting] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
-  const [eventMode, setEventMode] = useState<"dj_party" | "jukebox">("dj_party");
+  const [eventMode, setEventMode] = useState<"dj_party" | "jukebox" | "">("");
   const router = useRouter();
 
   function resetPartyUnlock() {
@@ -765,7 +765,7 @@ if (redirecting) {
     <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
 
     {/* INIZIA QUI */}
-    {code !== "TEST123" && (
+     {code ! == "TEST123" && ( 
       <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
         <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
           INIZIA QUI 👇
