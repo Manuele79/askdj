@@ -96,6 +96,7 @@ export default function JukeboxClient({ code }: { code: string }) {
   const [currentTitle, setCurrentTitle] = useState<string>("");
   const [currentDedication, setCurrentDedication] = useState("");
   const [loopEnabled, setLoopEnabled] = useState(true);
+  const [showQr, setShowQr] = useState(false);
   const [playlistEnabled, setPlaylistEnabled] = useState(true);
   const [statusMsg, setStatusMsg] = useState<string>("");
 
@@ -535,13 +536,7 @@ export default function JukeboxClient({ code }: { code: string }) {
             )}
           </div>
 
-          {code && code !== "TEST123" && (
-  <div className="mb-4 flex justify-center">
-    <div className="scale-90 sm:scale-100">
-      <EventQr eventCode={code} />
-    </div>
-  </div>
-)}
+
 
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
             <button
@@ -555,6 +550,15 @@ export default function JukeboxClient({ code }: { code: string }) {
             >
               🔁 Loop {loopEnabled ? "ON" : "OFF"}
             </button>
+
+            {code && code !== "TEST123" && (
+           <button
+             onClick={() => setShowQr(true)}
+             className="rounded-xl bg-zinc-900/60 px-5 py-3 text-sm font-extrabold text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 transition"
+            >
+            🔳 QR ospiti
+            </button>
+            )}
 
             <button
               onClick={() => setPlaylistEnabled((v) => !v)}
@@ -717,6 +721,21 @@ export default function JukeboxClient({ code }: { code: string }) {
             </ul>
           )}
         </section>
+
+        {showQr && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+         <div className="relative bg-zinc-900 rounded-3xl p-4 shadow-[0_0_40px_rgba(0,0,0,0.6)]">
+       <button
+        onClick={() => setShowQr(false)}
+        className="absolute -top-3 -right-3 rounded-full bg-zinc-800 px-3 py-1 text-xs text-white hover:bg-zinc-700"
+      >
+        ✕
+      </button>
+
+      <EventQr eventCode={code} />
+    </div>
+  </div>
+)}
 
         <footer
           style={{
