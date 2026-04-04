@@ -165,10 +165,10 @@ async function checkEventStatus() {
 
   async function load() {
     try {
-      const res = await fetch(
-        `/api/requests?eventCode=${encodeURIComponent(code)}`,
-        { cache: "no-store" }
-      );
+    const res = await fetch(
+       `/api/jukebox/requests?eventCode=${encodeURIComponent(code)}`,
+       { cache: "no-store" }
+    );
       const data = await res.json();
 
       const mapped: RequestItem[] = (data.requests || []).map((r: any) => ({
