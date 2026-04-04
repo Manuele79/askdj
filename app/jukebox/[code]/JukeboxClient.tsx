@@ -383,6 +383,23 @@ async function checkEventStatus() {
     advance("manual");
   }
 
+  async function deleteRequest(id: string) {
+  if (!confirm("Eliminare questo brano dalla libreria evento?")) return;
+
+  const res = await fetch("/api/requests", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
+
+  if (!res.ok) {
+    alert("Errore eliminazione");
+    return;
+  }
+
+  setItems((prev) => prev.filter((x) => x.id !== id));
+}
+
   useEffect(() => {
     if (!playable.length) {
       setCurrentKey("");
@@ -587,7 +604,7 @@ async function checkEventStatus() {
 
             {code && code !== "TEST123" && (
               <div className="mt-4 flex flex-wrap items-center gap-3">
-                <span className="text-yellow-400 font-extrabold tracking-widest text-sm">
+                <span className="text-yellow-300 font-extrabold tracking-widest text-sm">
                   EVENTO:
                 </span>
                 <span className="rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300 px-4 py-1.5 text-sm font-bold text-zinc-900 shadow-[0_0_12px_rgba(34,211,238,0.35)]">
@@ -642,7 +659,7 @@ async function checkEventStatus() {
               className={[
                  "rounded-xl px-5 py-3 text-sm font-extrabold transition",
                  isPlaying
-                 ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
+                 ? "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
                  : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
              ].join(" ")}
             >
@@ -654,9 +671,9 @@ async function checkEventStatus() {
               disabled={eventExpired}
               className={[
                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
-                !isPlaying
-                  ? "bg-zinc-800 text-zinc-100 ring-1 ring-zinc-600"
-                  : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+                 isPlaying
+                 ? "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
+                 : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
               ].join(" ")}
             >
               ⏸ Pausa
@@ -776,7 +793,7 @@ async function checkEventStatus() {
 
                         <button
                           className="rounded-xl bg-zinc-900/60 px-3 py-2 text-xs font-extrabold text-zinc-400 ring-1 ring-zinc-700"
-                          title="Arriva nel prossimo step"
+                          onClick={() => deleteRequest(r.id)}
                         >
                           🗑 Elimina
                         </button>
