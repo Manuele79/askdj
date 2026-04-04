@@ -206,6 +206,7 @@ export default function DjClient({ code }: { code: string }) {
   const [toast, setToast] = useState<string | null>(null);
   const [eventMode, setEventMode] = useState<"dj_party" | "jukebox" | "">("");
   const router = useRouter();
+  const [jukeboxDuration, setJukeboxDuration] = useState<"1d" | "1m" | "1y">("1d");
 
   function resetPartyUnlock() {
     try {
@@ -842,6 +843,13 @@ if (redirecting) {
             📻 Jukebox
           </button>
         </div>
+        {eventMode === "jukebox" && (
+        <div className="flex gap-2 mt-2">
+       <button onClick={() => setJukeboxDuration("1d")}>1 giorno</button>
+       <button onClick={() => setJukeboxDuration("1m")}>1 mese</button>
+       <button onClick={() => setJukeboxDuration("1y")}>1 anno</button>
+     </div>
+     )}
       </div>
     )}
 
