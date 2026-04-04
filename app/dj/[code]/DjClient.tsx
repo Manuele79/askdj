@@ -470,7 +470,13 @@ async function joinExistingEvent() {
     });
 
     if (res.status === 200) {
-      window.location.href = `/dj/${safe}`;
+      const data = await res.json();
+
+      if (data.mode === "jukebox") {
+        router.push(`/jukebox/${safe}`);
+      } else {
+        router.push(`/dj/${safe}`);
+      }
       return;
     }
 
@@ -740,128 +746,124 @@ if (redirecting) {
 
 
 
-          </div>
+ </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6 ">
+<div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6">
+  <div>
+    <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+      Gestisci le richieste <span className="text-yellow-400">senza caos</span>
+    </h1>
 
-            <div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight">
-              Gestisci le richieste <span className="text-yellow-400">senza caos</span>
-              </h1>
+    <FakeSpectrumWide />
 
-               <FakeSpectrumWide />
+    <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
+      Crea un EVENTO... Condividi il QR... Ricevi i brani e dediche in una lista ordinata...
+      Tu decidi cosa suonare...
+    </p>
 
+    <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+    <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
 
-            <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
-              Crea un EVENTO... Condividi il QR... Ricevi i brani e dediche in una lista ordinata...
-               Tu decidi cosa suonare...
-            </p>
+    {/* INIZIA QUI */}
+    {code !== "TEST123" && (
+      <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
+        <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
+          INIZIA QUI 👇
+        </p>
 
-            <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
-            <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+        <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
+          <li>Scrivi un nome evento e premi <b>Crea Evento</b></li>
+          <li>Quando l’evento è attivo, <b>stampa il QR</b></li>
+          <li>Gli ospiti lo scansionano e inviano richieste</li>
+        </ol>
 
-
-              {/* INIZIA QUI */}
-            {code ! == "TEST123" && (           
-             <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
-            <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
-             INIZIA QUI 👇
-             </p>
-
-             <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
-             <li>Scrivi un nome evento e premi <b>Crea Evento</b></li>
-             <li>Quando l’evento è attivo, <b>stampa il QR</b></li>
-             <li>Gli ospiti lo scansionano e inviano richieste</li>
-             </ol>
-
-            <div className="mt-3 text-xs text-yellow-300 leading-snug">
-             ⚠️ Gli ospiti NON entrano da questa pagina.  
-              Entrano solo scansionando il QR dell’evento.
-            </div>
-          </div>
-         )}
+        <div className="mt-3 text-xs text-yellow-300 leading-snug">
+          ⚠️ Gli ospiti NON entrano da questa pagina.
+          Entrano solo scansionando il QR dell’evento.
         </div>
-
-        {code && code !== "TEST123" && tidalChecked && (
-        <div className="mb-4 flex flex-col items-end gap-2">
-         {tidalConnected ? (
-         <div className="mb-4 flex items-center gap-2">
-        <div className="inline-flex items-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-300">
-         ✅ TIDAL collegato
-       </div>
-
-    <button
-      onClick={disconnectTidal}
-      className="rounded-md bg-red-500/20 px-3 py-1 text-xs font-bold text-red-300 hover:bg-red-500/40"
-    >
-      Scollega TIDAL
-    </button>
-  </div>
-) : (
-      <a
-        href={`/api/tidal/connect?eventCode=${encodeURIComponent(code)}`}
-        title="Collega il tuo account TIDAL per usare i brani matchati nell’evento"
-        className="inline-flex items-center rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-4 py-2 text-sm font-bold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-300 transition"
-      >
-        🔗 Collega TIDAL
-      </a>
+      </div>
     )}
   </div>
-)}
 
-{code === "TEST123" && (
-  <div className="mb-4 flex flex-col gap-3 sm:items-end">
-    <div className="text-xs font-extrabold text-cyan-300 tracking-wide">
-      SCEGLI MODALITÀ EVENTO
-    </div>
-
-    <div className="flex flex-wrap gap-2 sm:justify-end">
-      <button
-        onClick={() => setEventMode("dj_party")}
-        className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
-          eventMode === "dj_party"
-            ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950"
-            : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
-        }`}
-      >
-        🎧 DJ / Party
-      </button>
-
-      <button
-        onClick={() => setEventMode("jukebox")}
-        className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
-          eventMode === "jukebox"
-            ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950"
-            : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
-        }`}
-      >
-        📻 Jukebox
-      </button>
-    </div>
-  </div>
-)}
-
-
-            {/* create event */}
-                {code === "TEST123" && eventMode && (
-              <div className="flex flex-col gap-2 sm:flex-col sm:items-end">
-              <input
-                value={eventName}
-                onChange={(e) => setEventName(e.target.value)}
-                placeholder="Scrivi: Nome Nuovo Evento..."
-                className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
-
-              />
-              <button
-                onClick={createEvent}
-                className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
-
-              >
-                CREA NUOVO EVENTO
-              </button>
+  <div className="flex flex-col gap-4 sm:items-end">
+    {code && code !== "TEST123" && tidalChecked && (
+      <div className="flex flex-col items-end gap-2">
+        {tidalConnected ? (
+          <div className="mb-4 flex items-center gap-2">
+            <div className="inline-flex items-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-300">
+              ✅ TIDAL collegato
             </div>
-            )}
+
+            <button
+              onClick={disconnectTidal}
+              className="rounded-md bg-red-500/20 px-3 py-1 text-xs font-bold text-red-300 hover:bg-red-500/40"
+            >
+              Scollega TIDAL
+            </button>
           </div>
+        ) : (
+          <a
+            href={`/api/tidal/connect?eventCode=${encodeURIComponent(code)}`}
+            title="Collega il tuo account TIDAL per usare i brani matchati nell’evento"
+            className="inline-flex items-center rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-4 py-2 text-sm font-bold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-300 transition"
+          >
+            🔗 Collega TIDAL
+          </a>
+        )}
+      </div>
+    )}
+
+    {code === "TEST123" && (
+      <div className="flex flex-col gap-3 sm:items-end">
+        <div className="text-xs font-extrabold text-cyan-300 tracking-wide">
+          SCEGLI MODALITÀ EVENTO
+        </div>
+
+        <div className="flex flex-wrap gap-2 sm:justify-end">
+          <button
+            onClick={() => setEventMode("dj_party")}
+            className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
+              eventMode === "dj_party"
+                ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950"
+                : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
+            }`}
+          >
+            🎧 DJ / Party
+          </button>
+
+          <button
+            onClick={() => setEventMode("jukebox")}
+            className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
+              eventMode === "jukebox"
+                ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950"
+                : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
+            }`}
+          >
+            📻 Jukebox
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* create event */}
+    {code === "TEST123" && eventMode && (
+      <div className="flex flex-col gap-2 sm:items-end">
+        <input
+          value={eventName}
+          onChange={(e) => setEventName(e.target.value)}
+          placeholder="Scrivi: Nome Nuovo Evento..."
+          className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
+        />
+        <button
+          onClick={createEvent}
+          className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
+        >
+          CREA NUOVO EVENTO
+        </button>
+      </div>
+    )}
+  </div>
+</div>
           
           {/* join event */}
           <div className="flex flex-col gap-2 sm:flex-col sm:items-end mt-4">
