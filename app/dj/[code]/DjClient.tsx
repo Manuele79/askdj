@@ -408,7 +408,12 @@ useEffect(() => {
   const res = await fetch("/api/events", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ eventCode, password, mode: eventMode,}),
+    body: JSON.stringify({
+  eventCode,
+  password,
+  mode: eventMode,
+  duration: jukeboxDuration,
+}),
   });
 
   if (!res.ok) {
