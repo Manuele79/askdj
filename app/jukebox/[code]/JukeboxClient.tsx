@@ -180,6 +180,8 @@ export default function JukeboxClient({ code }: { code: string }) {
   const queueSeqRef = useRef<number>(0);
   const pendingAutoplayRef = useRef<boolean>(false);
   const startedRef = useRef<boolean>(false);
+  const loadWatchdogRef = useRef<any>(null);
+  const loadingQueueKeyRef = useRef<string>("");
 
   function startedKey(eventCode: string) {
    return `jukebox_started_${eventCode}`;
@@ -266,11 +268,52 @@ export default function JukeboxClient({ code }: { code: string }) {
     setStatusMsg(reason ? `▶️ Play (${reason})` : "▶️ Play");
     setNowPlayingFromEntry(entry);
   }
+  function clearLoadWatchdog() {
+  if (loadWatchdogRef.current) {
+    clearTimeout(loadWatchdogRef.current);
+    loadWatchdogRef.current = null;
+  }
+  loadingQueueKeyRef.current = "";
+}
+
+function armLoadWatchdog(queueKey: string) {
+  clearLoadWatchdog();
+  loadingQueueKeyRef.current = queueKey;
+
+  loadWatchdogRef.current = setTimeout(() => {
+    const p = playerRef.current;
+    const stillSame = currentKeyRef.current === queueKey;
+
+    if (!stillSame) return;
+
+    try {
+      const state = p?.getPlayerState?.();
+
+      // 1 = playing, 2 = paused
+      if (state === 1 || state === 2) {
+        clearLoadWatchdog();
+        return;
+      }
+    } catch {}
+
+    setStatusMsg("⏭ Video non partito, salto...");
+    pendingAutoplayRef.current = true;
+    advancingRef.current = false;
+    advance("watchdog");
+  }, 4500);
+}
+
 
   function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
     if (!entry) return;
 
     pendingAutoplayRef.current = autoplay;
+
+    if (autoplay) {
+     armLoadWatchdog(entry._queueKey);
+    } else {
+     clearLoadWatchdog();
+    }
 
     if (entry._kind === "playlist") {
       const listId = entry._listId || extractYouTubeListId(entry.url);
@@ -513,6 +556,7 @@ function pauseCurrent() {
 
   try {
     p.pauseVideo?.();
+    clearLoadWatchdog();
     setIsPlaying(false);
     pendingAutoplayRef.current = false;
     setStatusMsg("⏸ Pausa");
@@ -620,8 +664,15 @@ onReady: (e: any) => {
 },
 
   onStateChange: (e: any) => {
-    if (e.data === 1) setIsPlaying(true);
-    if (e.data === 2) setIsPlaying(false);
+    if (e.data === 1) {
+  setIsPlaying(true);
+  clearLoadWatchdog();
+}
+
+if (e.data === 2) {
+  setIsPlaying(false);
+  clearLoadWatchdog();
+}
 
     if (e.data === 0) {
       const cur = getCurrentQueueEntry();
@@ -648,6 +699,7 @@ onReady: (e: any) => {
 
   onError: (e: any) => {
     const code = e?.data;
+    clearLoadWatchdog();
 
     console.log("YT ERROR:", code);
 
@@ -710,7 +762,8 @@ onReady: (e: any) => {
     initOrLoadCurrent();
 
     return () => {
-      cancelled = true;
+     cancelled = true;
+     clearLoadWatchdog();
     };
   }, [currentKey, eventExpired]);
 
