@@ -137,6 +137,16 @@ export default function JukeboxClient({ code }: { code: string }) {
     localStorage.setItem("jukebox_event", code);
   }, [code]);
 
+  useEffect(() => {
+  if (!code) return;
+
+  try {
+    const saved = localStorage.getItem(startedKey(code)) === "1";
+    startedRef.current = saved;
+    setUserStarted(saved);
+  } catch {}
+}, [code]);
+
   const [items, setItems] = useState<RequestItem[]>([]);
   const [queue, setQueue] = useState<QueueEntry[]>([]);
 
@@ -151,6 +161,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 
   const [playerReady, setPlayerReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [userStarted, setUserStarted] = useState(false);
 
   const [eventExpired, setEventExpired] = useState(false);
   const [eventChecked, setEventChecked] = useState(false);
@@ -168,6 +179,11 @@ export default function JukeboxClient({ code }: { code: string }) {
   const lastSeenRef = useRef<Record<string, number>>({});
   const queueSeqRef = useRef<number>(0);
   const pendingAutoplayRef = useRef<boolean>(false);
+  const startedRef = useRef<boolean>(false);
+
+  function startedKey(eventCode: string) {
+   return `jukebox_started_${eventCode}`;
+  }
 
   useEffect(() => {
     queueRef.current = queue;
@@ -448,35 +464,60 @@ export default function JukeboxClient({ code }: { code: string }) {
     }, 350);
   }
 
-  function playCurrent() {
-    const p = playerRef.current;
+  function handleUserStart() {
+  startedRef.current = true;
+  setUserStarted(true);
 
-    if (!currentKey && queueRef.current.length) {
-      playQueueEntry(queueRef.current[0], "manual start", true);
-      return;
-    }
+  try {
+    localStorage.setItem(startedKey(code), "1");
+  } catch {}
 
-    if (!p) return;
+  const p = playerRef.current;
 
-    try {
-      pendingAutoplayRef.current = true;
-      p.playVideo?.();
-      setIsPlaying(true);
-      setStatusMsg("▶️ Riproduzione");
-    } catch {}
+  try {
+    p?.unMute?.();
+    p?.playVideo?.();
+    pendingAutoplayRef.current = true;
+    setStatusMsg("✅ Jukebox avviato");
+    setIsPlaying(true);
+  } catch {}
+}
+
+function playCurrent() {
+  if (!startedRef.current) {
+    handleUserStart();
+    return;
   }
 
-  function pauseCurrent() {
-    const p = playerRef.current;
-    if (!p) return;
+  const p = playerRef.current;
 
-    try {
-      p.pauseVideo?.();
-      setIsPlaying(false);
-      pendingAutoplayRef.current = false;
-      setStatusMsg("⏸ Pausa");
-    } catch {}
+  if (!currentKey && queueRef.current.length) {
+    playQueueEntry(queueRef.current[0], "manual start", true);
+    return;
   }
+
+  if (!p) return;
+
+  try {
+    p.unMute?.();
+    pendingAutoplayRef.current = true;
+    p.playVideo?.();
+    setIsPlaying(true);
+    setStatusMsg("▶️ Riproduzione");
+  } catch {}
+}
+
+function pauseCurrent() {
+  const p = playerRef.current;
+  if (!p) return;
+
+  try {
+    p.pauseVideo?.();
+    setIsPlaying(false);
+    pendingAutoplayRef.current = false;
+    setStatusMsg("⏸ Pausa");
+  } catch {}
+}
 
   function playNext() {
     advancingRef.current = false;
@@ -558,17 +599,25 @@ export default function JukeboxClient({ code }: { code: string }) {
             ...(isPl && listId ? { listType: "playlist", list: listId } : {}),
           },
 events: {
-  onReady: () => {
-    setPlayerReady(true);
-    setStatusMsg("✅ Player pronto");
+onReady: (e: any) => {
+  setPlayerReady(true);
+  setStatusMsg("✅ Player pronto");
 
-    if (pendingAutoplayRef.current) {
-      try {
-        playerRef.current?.playVideo?.();
-        setIsPlaying(true);
-      } catch {}
+  try {
+    if (!startedRef.current) {
+      e.target?.mute?.();
+    } else {
+      e.target?.unMute?.();
     }
-  },
+  } catch {}
+
+  if (pendingAutoplayRef.current) {
+    try {
+      e.target?.playVideo?.();
+      setIsPlaying(true);
+    } catch {}
+  }
+},
 
   onStateChange: (e: any) => {
     if (e.data === 1) setIsPlaying(true);
@@ -632,24 +681,30 @@ events: {
       const p = playerRef.current;
 
       try {
-        if (current._kind === "playlist") {
-          const listId = current._listId || extractYouTubeListId(current.url);
-          if (listId && p.loadPlaylist) {
-            p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
-            if (shouldAutoplay) {
-              p.playVideo?.();
-            }
-          }
-        } else {
-          const vid = current.youtubeVideoId || "";
-          if (vid && p.loadVideoById) {
-            p.loadVideoById(vid);
-            if (shouldAutoplay) {
-              p.playVideo?.();
-            }
-          }
-        }
-      } catch {}
+  if (!startedRef.current) {
+    p?.mute?.();
+  } else {
+    p?.unMute?.();
+  }
+
+  if (current._kind === "playlist") {
+    const listId = current._listId || extractYouTubeListId(current.url);
+    if (listId && p.loadPlaylist) {
+      p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
+      if (shouldAutoplay) {
+        p.playVideo?.();
+      }
+    }
+  } else {
+    const vid = current.youtubeVideoId || "";
+    if (vid && p.loadVideoById) {
+      p.loadVideoById(vid);
+      if (shouldAutoplay) {
+        p.playVideo?.();
+      }
+    }
+  }
+} catch {}
     }
 
     initOrLoadCurrent();
@@ -669,7 +724,7 @@ events: {
       const p = playerRef.current;
       if (!p || !p.getDuration || !p.getCurrentTime || !p.getPlayerState) return;
 
-      try {
+   try {
         const state = p.getPlayerState();
         if (state !== 1) return;
 
@@ -795,7 +850,7 @@ events: {
                   : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
               ].join(" ")}
             >
-              ▶ Play
+             {userStarted ? "▶ Play" : "▶ Avvia"}
             </button>
 
             <button
