@@ -71,6 +71,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
   const [dedication, setDedication] = useState("");
+  const [eventMode, setEventMode] = useState<"dj_party" | "jukebox" | null>(null);
   const [sent, setSent] = useState<SentItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hint, setHint] = useState("");
@@ -140,6 +141,11 @@ export default function RequestClient({ code }: { code: string }) {
     }
   }, [sent, code]);
 
+  const visiblePlatforms =
+  eventMode === "jukebox"
+    ? PLATFORM_LINKS.filter((p) => p.key === "youtube")
+    : PLATFORM_LINKS;
+
   const canSend = useMemo(() => {
     return title.trim().length > 0 || link.trim().length > 0;
   }, [title, link]);
@@ -168,6 +174,8 @@ useEffect(() => {
 
 useEffect(() => {
   loadPartyRequests();
+  loadEventMode();
+
   const t = setInterval(loadPartyRequests, 8000);
   return () => clearInterval(t);
 }, [code]);
@@ -214,6 +222,25 @@ useEffect(() => {
     setTimeout(() => setHint(""), 1600);
   } catch {
     setHint("⚠️ Permesso negato o non disponibile. Incolla manualmente.");
+  }
+}
+
+async function loadEventMode() {
+  try {
+    const resp = await fetch(`/api/events?eventCode=${encodeURIComponent(code)}`, {
+      cache: "no-store",
+    });
+
+    if (!resp.ok) return;
+
+    const data = await resp.json().catch(() => null);
+    const mode = data?.mode;
+
+    if (mode === "jukebox" || mode === "dj_party") {
+      setEventMode(mode);
+    }
+  } catch {
+    // ignore
   }
 }
 
@@ -457,7 +484,7 @@ function FakeSpectrumWide() {
     {/* Bottoni piattaforme */}
     <div className="space-y-3">
       <div className="flex flex-wrap justify-center gap-2">
-        {PLATFORM_LINKS.map((p) => {
+        {visiblePlatforms.map((p) => {
           const color =
             p.key === "youtube"
               ? "bg-red-600 hover:bg-red-500 shadow-[0_0_18px_rgba(239,68,68,0.4)]"
@@ -486,7 +513,9 @@ function FakeSpectrumWide() {
       </div>
 
       <div className="text-center text-xs text-zinc-500">
-        Tip: Apri App → Copia link → Incolla qui → Invia al DJ
+        {eventMode === "jukebox"
+         ? "Apri YouTube → copia link → incolla qui"
+         : "Apri app → copia link → incolla qui → invia al DJ "}
       </div>
 
       {!!hint && (
@@ -509,7 +538,10 @@ function FakeSpectrumWide() {
       <input
         value={link}
         onChange={(e) => setLink(e.target.value)}
-        placeholder="Incolla qui il link della canzone"
+        placeholder={ eventMode === "jukebox"
+    ? "Incolla qui il link YouTube"
+    : "Incolla qui il link della canzone"
+}
         className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-yellow-400/20"
       />
 
@@ -519,7 +551,7 @@ function FakeSpectrumWide() {
           onClick={pasteFromClipboard}
           className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.45)] hover:brightness-110 transition"
         >
-          📋 INCOLLA IL LINK
+         {eventMode === "jukebox" ? "INCOLLA IL LINK YOUTUBE" : "INCOLLA IL LINK"}
         </button>
       </div>
     </div>
@@ -588,9 +620,11 @@ function FakeSpectrumWide() {
 )}
 
 
-    <p className="text-xs text-zinc-500">
-      Party autoplay funziona solo con link YouTube. Gli altri link si aprono dal DJ.
-    </p>
+   <p className="text-xs text-zinc-500">
+  {eventMode === "jukebox"
+    ? "Questo evento accetta solo richieste YouTube."
+    : "Party autoplay funziona solo con link YouTube. Gli altri link si aprono dal DJ."}
+</p>
 
   </div>
 </section>
