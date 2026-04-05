@@ -952,7 +952,7 @@ if (e.data === 2) {
               Ora in riproduzione
             </div>
 
-            <div className="mt-2 text-base font-bold text-zinc-100">
+            <div className="mt-2 text-base font-bold leading-tight text-zinc-100 break-words">
               {currentTitle || "Nessun brano selezionato"}
             </div>
 
@@ -987,10 +987,17 @@ if (e.data === 2) {
                     key={r.id}
                     className={`rounded-2xl border px-4 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
                       isCurrentSource
-                        ? "border-cyan-400/50 bg-zinc-900/80 ring-1 ring-cyan-400/30"
+                        ? "border-yellow-300 bg-zinc-900/80 ring-2 ring-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
                         : "border-zinc-700/40 bg-zinc-950/50"
                     }`}
                   >
+
+                      {isCurrentSource && (
+                       <div className="text-xs text-yellow-300 font-bold mb-1">
+                         ▶ IN RIPRODUZIONE
+                       </div>
+                      )}
+
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div className="min-w-0 flex-1">
                         <div className="text-xs text-zinc-500">#{idx + 1}</div>
@@ -1000,7 +1007,7 @@ if (e.data === 2) {
                             advancingRef.current = false;
                             queueAndPlayNow(r, "manual pick");
                           }}
-                          className="truncate text-left text-base font-extrabold text-zinc-100 hover:underline"
+                          className="block w-full text-left text-base font-extrabold leading-tight text-zinc-100 hover:underline break-words"
                         >
                           {r.title || (isPlaylist ? "Playlist YouTube" : "—")}
                         </button>
