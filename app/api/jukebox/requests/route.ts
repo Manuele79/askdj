@@ -17,6 +17,25 @@ function normalizeEventCode(code: any) {
   return String(code || "").trim().toUpperCase();
 }
 
+function toMs(value: any) {
+  if (value === null || value === undefined || value === "") return 0;
+
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  const raw = String(value).trim();
+  if (!raw) return 0;
+
+  const asNum = Number(raw);
+  if (Number.isFinite(asNum) && /^\d+$/.test(raw)) {
+    return asNum;
+  }
+
+  const parsed = Date.parse(raw);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 function mapRow(r: any) {
   return {
     id: String(r.id),
@@ -27,8 +46,8 @@ function mapRow(r: any) {
     platform: String(r.platform ?? "other"),
     youtubeVideoId: String(r.youtube_video_id ?? ""),
     votes: Number(r.votes ?? 0),
-    createdAt: r.created_at ? Date.parse(r.created_at) : 0,
-    updatedAt: r.updated_at ? Date.parse(r.updated_at) : 0,
+    createdAt: toMs(r.created_at),
+    updatedAt: toMs(r.updated_at),
   };
 }
 
