@@ -557,62 +557,72 @@ export default function JukeboxClient({ code }: { code: string }) {
             origin,
             ...(isPl && listId ? { listType: "playlist", list: listId } : {}),
           },
-          events: {
-            onReady: () => {
-              setPlayerReady(true);
-              setStatusMsg("✅ Player pronto");
+events: {
+  onReady: () => {
+    setPlayerReady(true);
+    setStatusMsg("✅ Player pronto");
 
-              if (pendingAutoplayRef.current) {
-                try {
-                  playerRef.current?.playVideo?.();
-                  setIsPlaying(true);
-                } catch {}
-              }
-            },
-            onStateChange: (e: any) => {
-              if (e.data === 1) setIsPlaying(true);
-              if (e.data === 2) setIsPlaying(false);
+    if (pendingAutoplayRef.current) {
+      try {
+        playerRef.current?.playVideo?.();
+        setIsPlaying(true);
+      } catch {}
+    }
+  },
 
-              if (e.data === 0) {
-                const cur = getCurrentQueueEntry();
-                const p = playerRef.current;
+  onStateChange: (e: any) => {
+    if (e.data === 1) setIsPlaying(true);
+    if (e.data === 2) setIsPlaying(false);
 
-                if (cur?._kind === "playlist" && p?.getPlaylist && p?.getPlaylistIndex) {
-                  try {
-                    const pl = p.getPlaylist?.() || [];
-                    const idx = p.getPlaylistIndex?.() ?? -1;
-                    const hasMoreInside =
-                      Array.isArray(pl) && idx >= 0 && idx < pl.length - 1;
+    if (e.data === 0) {
+      const cur = getCurrentQueueEntry();
+      const p = playerRef.current;
 
-                    if (hasMoreInside) return;
-                  } catch {
-                    return;
-                  }
-                }
+      if (cur?._kind === "playlist" && p?.getPlaylist && p?.getPlaylistIndex) {
+        try {
+          const pl = p.getPlaylist?.() || [];
+          const idx = p.getPlaylistIndex?.() ?? -1;
+          const hasMoreInside =
+            Array.isArray(pl) && idx >= 0 && idx < pl.length - 1;
 
-                pendingAutoplayRef.current = true;
-                advancingRef.current = false;
-                advance("ended");
-              }
-            },
-            onError: (e: any) => {
-              const code = e?.data;
-              setStatusMsg(`⚠️ YouTube error ${code}`);
+          if (hasMoreInside) return;
+        } catch {
+          return;
+        }
+      }
 
-              const cur = getCurrentQueueEntry();
-              const p = playerRef.current;
+      pendingAutoplayRef.current = true;
+      advancingRef.current = false;
+      advance("ended");
+    }
+  },
 
-              if (cur?._kind === "playlist" && p?.nextVideo) {
-                try {
-                  p.nextVideo();
-                  return;
-                } catch {}
-              }
+  onError: (e: any) => {
+    const code = e?.data;
 
-              pendingAutoplayRef.current = true;
-              advancingRef.current = false;
-              setTimeout(() => advance(`error-${code}`), 200);
-            },
+    console.log("YT ERROR:", code);
+
+    if (code === 150 || code === 101) {
+      setStatusMsg("⏭ Video bloccato, salto...");
+    } else {
+      setStatusMsg(`⚠️ YouTube error ${code}`);
+    }
+
+    const cur = getCurrentQueueEntry();
+    const p = playerRef.current;
+
+    if (cur?._kind === "playlist" && p?.nextVideo) {
+      try {
+        p.nextVideo();
+        return;
+      } catch {}
+    }
+
+    pendingAutoplayRef.current = true;
+    advancingRef.current = false;
+    advance(`error-${code}`);
+  },
+
           },
         });
 
