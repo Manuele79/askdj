@@ -232,23 +232,35 @@ export default function JukeboxClient({ code }: { code: string }) {
   }
 
   function insertIntoQueueAfterCurrent(newEntries: QueueEntry[]) {
-    if (!newEntries.length) return;
+  if (!newEntries.length) return;
 
-    setQueue((prev) => {
-      if (!prev.length) return [...newEntries];
+  setQueue((prev) => {
+    if (!prev.length) return [...newEntries];
 
-      const curKey = currentKeyRef.current;
-      const idx = prev.findIndex((p) => p._queueKey === curKey);
+    const curKey = currentKeyRef.current;
+    const currentIdx = prev.findIndex((p) => p._queueKey === curKey);
 
-      if (idx < 0) return [...prev, ...newEntries];
+    if (currentIdx < 0) return [...prev, ...newEntries];
 
-      return [
-        ...prev.slice(0, idx + 1),
-        ...newEntries,
-        ...prev.slice(idx + 1),
-      ];
-    });
-  }
+    let insertIdx = currentIdx + 1;
+
+    // salta tutte le entry già in coda dopo il corrente
+    // che sono "nuove richieste" rispetto alla libreria base
+    while (
+      insertIdx < prev.length &&
+      prev[insertIdx] &&
+      prev[insertIdx]._queueKey !== prev[insertIdx]._key
+    ) {
+      insertIdx += 1;
+    }
+
+    return [
+      ...prev.slice(0, insertIdx),
+      ...newEntries,
+      ...prev.slice(insertIdx),
+    ];
+  });
+}
 
   function queueAndPlayNow(item: PlayableItem, reason?: string) {
     const entry = makeQueueEntry(item);
@@ -861,11 +873,33 @@ if (e.data === 2) {
             {code && code !== "TEST123" && !eventExpired && (
               <button
                 onClick={() => setShowQr(true)}
-                className="rounded-xl bg-zinc-900/60 px-5 py-3 text-sm font-extrabold text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 transition"
+               className="rounded-xl px-5 py-3 text-sm font-extrabold transition bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110"
               >
                 🔳 QR ospiti
               </button>
             )}
+
+            {code && code !== "TEST123" && !eventExpired && (
+           <button
+             onClick={() => {
+              if (isPlaying) {
+              setStatusMsg("⏸ Metti in pausa per importare brani");
+             return;
+            }
+
+              window.open(`/event/${code}?from=jukebox-import`, "_blank");
+          }}
+            className={[
+             "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+             isPlaying
+               ? "bg-zinc-900/60 text-zinc-500 ring-1 ring-zinc-800"
+               : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
+            ].join(" ")}
+           >
+               ➕ Importa brani
+           </button>
+          )}
+
 
             <button
               onClick={() => setLoopEnabled((v) => !v)}
