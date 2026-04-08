@@ -318,34 +318,58 @@ export default function JukeboxClient({ code }: { code: string }) {
     }, 4500);
   }
 
-  function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
-    if (!entry) return;
+function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
+  if (!entry) return;
 
-    pendingAutoplayRef.current = autoplay;
+  pendingAutoplayRef.current = autoplay;
 
-    if (autoplay) {
-      armLoadWatchdog(entry._queueKey);
-    } else {
-      clearLoadWatchdog();
-    }
+  if (autoplay) {
+    armLoadWatchdog(entry._queueKey);
+  } else {
+    clearLoadWatchdog();
+  }
 
-    if (entry._kind === "playlist") {
-      const listId = entry._listId || extractYouTubeListId(entry.url);
-      if (!listId) {
-        setStatusMsg("⚠️ Playlist non riproducibile");
-        return;
-      }
-      setStatusMsg(reason ? `▶️ Playlist (${reason})` : `▶️ Playlist`);
-      setNowPlayingFromEntry({ ...entry, _listId: listId });
+  if (entry._kind === "playlist") {
+    const listId = entry._listId || extractYouTubeListId(entry.url);
+    if (!listId) {
+      setStatusMsg("⚠️ Playlist non riproducibile");
       return;
     }
 
-    const id = normalizeVideoId(entry.youtubeVideoId);
-    if (!id) return;
+    setStatusMsg(reason ? `▶️ Playlist (${reason})` : `▶️ Playlist`);
+    setNowPlayingFromEntry({ ...entry, _listId: listId });
 
-    setStatusMsg(reason ? `▶️ Play (${reason})` : `▶️ Play`);
-    setNowPlayingFromEntry(entry);
+    const p = playerRef.current;
+    if (p?.loadPlaylist) {
+      try {
+        if (!startedRef.current && p.mute) p.mute();
+        else p.unMute?.();
+
+        p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
+        if (autoplay) p.playVideo?.();
+      } catch {}
+    }
+
+    return;
   }
+
+  const id = normalizeVideoId(entry.youtubeVideoId);
+  if (!id) return;
+
+  setStatusMsg(reason ? `▶️ Play (${reason})` : `▶️ Play`);
+  setNowPlayingFromEntry(entry);
+
+  const p = playerRef.current;
+  if (p?.loadVideoById) {
+    try {
+      if (!startedRef.current && p.mute) p.mute();
+      else p.unMute?.();
+
+      p.loadVideoById(id);
+      if (autoplay) p.playVideo?.();
+    } catch {}
+  }
+}
 
   async function checkEventStatus() {
     if (!code || code === "TEST123") {
