@@ -137,15 +137,7 @@ export default function JukeboxClient({ code }: { code: string }) {
     localStorage.setItem("jukebox_event", code);
   }, [code]);
 
-  useEffect(() => {
-  if (!code) return;
 
-  try {
-    const saved = localStorage.getItem(startedKey(code)) === "1";
-    startedRef.current = saved;
-    setUserStarted(saved);
-  } catch {}
-}, [code]);
 
   const [items, setItems] = useState<RequestItem[]>([]);
   const [priorityQueue, setPriorityQueue] = useState<QueueEntry[]>([]);
@@ -187,9 +179,6 @@ export default function JukeboxClient({ code }: { code: string }) {
   const loadWatchdogRef = useRef<any>(null);
   const loadingQueueKeyRef = useRef<string>("");
 
-  function startedKey(eventCode: string) {
-   return `jukebox_started_${eventCode}`;
-  }
 
   useEffect(() => {
     queueRef.current = queue;
@@ -588,14 +577,9 @@ function advance(reason: string) {
     advancingRef.current = false;
   }, 350);
 }
-
 function handleUserStart() {
   startedRef.current = true;
   setUserStarted(true);
-
-  try {
-    localStorage.setItem(startedKey(code), "1");
-  } catch {}
 
   pendingAutoplayRef.current = true;
   setStatusMsg("✅ Jukebox avviato");
@@ -815,16 +799,18 @@ if (e.data === 2) {
     if (listId && p.loadPlaylist) {
       p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
       if (shouldAutoplay) {
-        p.playVideo?.();
-      }
+  p.unMute?.();
+  p.playVideo?.();
+}
     }
   } else {
     const vid = current.youtubeVideoId || "";
     if (vid && p.loadVideoById) {
       p.loadVideoById(vid);
-      if (shouldAutoplay) {
-        p.playVideo?.();
-      }
+     if (shouldAutoplay) {
+  p.unMute?.();
+  p.playVideo?.();
+}
     }
   }
 } catch {}
