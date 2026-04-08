@@ -227,9 +227,12 @@ export default function JukeboxClient({ code }: { code: string }) {
     return `${item.id}:${item.updatedAt || item.createdAt}`;
   }
 
-  function findQueueEntryByKey(key: string) {
-    return queueRef.current.find((p) => p._queueKey === key);
-  }
+function findQueueEntryByKey(key: string) {
+  return (
+    queueRef.current.find((p) => p._queueKey === key) ||
+    priorityQueueRef.current.find((p) => p._queueKey === key)
+  );
+}
 
   function getCurrentQueueEntry() {
     return findQueueEntryByKey(currentKeyRef.current);
@@ -586,7 +589,7 @@ function advance(reason: string) {
   }, 350);
 }
 
-  function handleUserStart() {
+function handleUserStart() {
   startedRef.current = true;
   setUserStarted(true);
 
@@ -594,13 +597,12 @@ function advance(reason: string) {
     localStorage.setItem(startedKey(code), "1");
   } catch {}
 
-  const p = playerRef.current;
+  pendingAutoplayRef.current = true;
+  setStatusMsg("✅ Jukebox avviato");
 
   try {
-    p?.unMute?.();
-    p?.playVideo?.();
-    pendingAutoplayRef.current = true;
-    setStatusMsg("✅ Jukebox avviato");
+    playerRef.current?.unMute?.();
+    playerRef.current?.playVideo?.();
     setIsPlaying(true);
   } catch {}
 }
@@ -620,13 +622,13 @@ function playCurrent() {
 
   if (!p) return;
 
-  try {
-    p.unMute?.();
-    pendingAutoplayRef.current = true;
-    p.playVideo?.();
-    setIsPlaying(true);
-    setStatusMsg("▶️ Riproduzione");
-  } catch {}
+try {
+  pendingAutoplayRef.current = true;
+  p.unMute?.();
+  p.playVideo?.();
+  setIsPlaying(true);
+  setStatusMsg("▶️ Riproduzione");
+} catch {}
 }
 
 function pauseCurrent() {
@@ -726,20 +728,14 @@ onReady: (e: any) => {
   setPlayerReady(true);
   setStatusMsg("✅ Player pronto");
 
-  try {
-    if (!startedRef.current) {
-      e.target?.mute?.();
-    } else {
-      e.target?.unMute?.();
-    }
-  } catch {}
 
-  if (pendingAutoplayRef.current) {
-    try {
-      e.target?.playVideo?.();
-      setIsPlaying(true);
-    } catch {}
-  }
+if (pendingAutoplayRef.current) {
+  try {
+    e.target?.unMute?.();
+    e.target?.playVideo?.();
+    setIsPlaying(true);
+  } catch {}
+}
 },
 
   onStateChange: (e: any) => {
@@ -812,11 +808,7 @@ if (e.data === 2) {
       const p = playerRef.current;
 
       try {
-  if (!startedRef.current) {
-    p?.mute?.();
-  } else {
-    p?.unMute?.();
-  }
+ 
 
   if (current._kind === "playlist") {
     const listId = current._listId || extractYouTubeListId(current.url);
