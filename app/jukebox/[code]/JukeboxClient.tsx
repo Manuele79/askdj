@@ -75,7 +75,6 @@ type PlayableItem = RequestItem & {
 
 type QueueEntry = PlayableItem & {
   _queueKey: string; // chiave unica per ogni ingresso in coda
-  _isPriority?: boolean; // richieste fresche inserite dopo il corrente
 };
 
 function buildPlayableList(
@@ -208,13 +207,12 @@ export default function JukeboxClient({ code }: { code: string }) {
     return buildPlayableList(items, playlistEnabled);
   }, [items, playlistEnabled]);
 
-  function makeQueueEntry(item: PlayableItem, isPriority = false): QueueEntry {
-  queueSeqRef.current += 1;
-  return {
-    ...item,
-    _queueKey: `${item._key}__${Date.now()}__${queueSeqRef.current}`,
-    _isPriority: isPriority,
-  };
+  function makeQueueEntry(item: PlayableItem): QueueEntry {
+    queueSeqRef.current += 1;
+    return {
+      ...item,
+      _queueKey: `${item._key}__${Date.now()}__${queueSeqRef.current}`,
+    };
   }
 
   function findQueueEntryByKey(key: string) {
@@ -234,34 +232,26 @@ export default function JukeboxClient({ code }: { code: string }) {
   }
 
   function insertIntoQueueAfterCurrent(newEntries: QueueEntry[]) {
-  if (!newEntries.length) return;
+    if (!newEntries.length) return;
 
-  setQueue((prev) => {
-    if (!prev.length) return [...newEntries];
+    setQueue((prev) => {
+      if (!prev.length) return [...newEntries];
 
-    const curKey = currentKeyRef.current;
-    const currentIdx = prev.findIndex((p) => p._queueKey === curKey);
+      const curKey = currentKeyRef.current;
+      const idx = prev.findIndex((p) => p._queueKey === curKey);
 
-    if (currentIdx < 0) return [...prev, ...newEntries];
+      if (idx < 0) return [...prev, ...newEntries];
 
-    let insertIdx = currentIdx + 1;
-
-    // se subito dopo il corrente ci sono già richieste fresche,
-    // accodiamo le nuove alla fine di quel blocco
-    while (insertIdx < prev.length && prev[insertIdx]?._isPriority) {
-      insertIdx += 1;
-    }
-
-    return [
-      ...prev.slice(0, insertIdx),
-      ...newEntries,
-      ...prev.slice(insertIdx),
-    ];
-  });
-}
+      return [
+        ...prev.slice(0, idx + 1),
+        ...newEntries,
+        ...prev.slice(idx + 1),
+      ];
+    });
+  }
 
   function queueAndPlayNow(item: PlayableItem, reason?: string) {
-    const entry = makeQueueEntry(item, true);
+    const entry = makeQueueEntry(item);
 
     setQueue((prev) => {
       if (!prev.length) return [entry];
@@ -425,7 +415,7 @@ function armLoadWatchdog(queueKey: string) {
       // primo caricamento: inizializza la queue dalla libreria attuale
       if (!Object.keys(lastSeenRef.current).length) {
         if (!queueRef.current.length) {
-         setQueue(nextPlayable.map((item) => makeQueueEntry(item, false)));
+          setQueue(nextPlayable.map(makeQueueEntry));
         }
         lastSeenRef.current = seen;
         return;
@@ -443,7 +433,7 @@ function armLoadWatchdog(queueKey: string) {
         const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
 
         if (isBrandNew || isUpdatedDuplicate) {
-          toEnqueue.push(makeQueueEntry(p, true));
+          toEnqueue.push(makeQueueEntry(p));
         }
       }
 
@@ -517,7 +507,7 @@ function armLoadWatchdog(queueKey: string) {
     }, 350);
   }
 
-function handleUserStart() {
+  function handleUserStart() {
   startedRef.current = true;
   setUserStarted(true);
 
@@ -525,10 +515,14 @@ function handleUserStart() {
     localStorage.setItem(startedKey(code), "1");
   } catch {}
 
-  setStatusMsg("✅ Jukebox avviato");
+  const p = playerRef.current;
 
   try {
-    playerRef.current?.unMute?.();
+    p?.unMute?.();
+    p?.playVideo?.();
+    pendingAutoplayRef.current = true;
+    setStatusMsg("✅ Jukebox avviato");
+    setIsPlaying(true);
   } catch {}
 }
 
@@ -654,11 +648,13 @@ onReady: (e: any) => {
   setStatusMsg("✅ Player pronto");
 
   try {
-    e.target?.unMute?.();
+    if (!startedRef.current) {
+      e.target?.mute?.();
+    } else {
+      e.target?.unMute?.();
+    }
   } catch {}
 
-  // NON partire automaticamente all'apertura pagina
-  // si parte solo quando l'utente preme Play
   if (pendingAutoplayRef.current) {
     try {
       e.target?.playVideo?.();
@@ -865,33 +861,11 @@ if (e.data === 2) {
             {code && code !== "TEST123" && !eventExpired && (
               <button
                 onClick={() => setShowQr(true)}
-               className="rounded-xl px-5 py-3 text-sm font-extrabold transition bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110"
+                className="rounded-xl bg-zinc-900/60 px-5 py-3 text-sm font-extrabold text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 transition"
               >
                 🔳 QR ospiti
               </button>
             )}
-
-            {code && code !== "TEST123" && !eventExpired && (
-           <button
-             onClick={() => {
-              if (isPlaying) {
-              setStatusMsg("⏸ Metti in pausa per importare brani");
-             return;
-            }
-
-              window.open(`/event/${code}?from=jukebox-import`, "_blank");
-          }}
-            className={[
-             "rounded-xl px-5 py-3 text-sm font-extrabold transition",
-             isPlaying
-               ? "bg-zinc-900/60 text-zinc-500 ring-1 ring-zinc-800"
-               : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
-            ].join(" ")}
-           >
-               ➕ Importa brani
-           </button>
-          )}
-
 
             <button
               onClick={() => setLoopEnabled((v) => !v)}
