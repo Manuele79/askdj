@@ -75,6 +75,7 @@ type PlayableItem = RequestItem & {
 
 type QueueEntry = PlayableItem & {
   _queueKey: string; // chiave unica per ogni ingresso in coda
+  _isPriority?: boolean; // richieste fresche inserite dopo il corrente
 };
 
 function buildPlayableList(
@@ -207,12 +208,13 @@ export default function JukeboxClient({ code }: { code: string }) {
     return buildPlayableList(items, playlistEnabled);
   }, [items, playlistEnabled]);
 
-  function makeQueueEntry(item: PlayableItem): QueueEntry {
-    queueSeqRef.current += 1;
-    return {
-      ...item,
-      _queueKey: `${item._key}__${Date.now()}__${queueSeqRef.current}`,
-    };
+  function makeQueueEntry(item: PlayableItem, isPriority = false): QueueEntry {
+  queueSeqRef.current += 1;
+  return {
+    ...item,
+    _queueKey: `${item._key}__${Date.now()}__${queueSeqRef.current}`,
+    _isPriority: isPriority,
+  };
   }
 
   function findQueueEntryByKey(key: string) {
@@ -244,13 +246,9 @@ export default function JukeboxClient({ code }: { code: string }) {
 
     let insertIdx = currentIdx + 1;
 
-    // salta tutte le entry già in coda dopo il corrente
-    // che sono "nuove richieste" rispetto alla libreria base
-    while (
-      insertIdx < prev.length &&
-      prev[insertIdx] &&
-      prev[insertIdx]._queueKey !== prev[insertIdx]._key
-    ) {
+    // se subito dopo il corrente ci sono già richieste fresche,
+    // accodiamo le nuove alla fine di quel blocco
+    while (insertIdx < prev.length && prev[insertIdx]?._isPriority) {
       insertIdx += 1;
     }
 
@@ -263,7 +261,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 }
 
   function queueAndPlayNow(item: PlayableItem, reason?: string) {
-    const entry = makeQueueEntry(item);
+    const entry = makeQueueEntry(item, true);
 
     setQueue((prev) => {
       if (!prev.length) return [entry];
@@ -427,7 +425,7 @@ function armLoadWatchdog(queueKey: string) {
       // primo caricamento: inizializza la queue dalla libreria attuale
       if (!Object.keys(lastSeenRef.current).length) {
         if (!queueRef.current.length) {
-          setQueue(nextPlayable.map(makeQueueEntry));
+         setQueue(nextPlayable.map((item) => makeQueueEntry(item, false)));
         }
         lastSeenRef.current = seen;
         return;
@@ -445,7 +443,7 @@ function armLoadWatchdog(queueKey: string) {
         const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
 
         if (isBrandNew || isUpdatedDuplicate) {
-          toEnqueue.push(makeQueueEntry(p));
+          toEnqueue.push(makeQueueEntry(p, true));
         }
       }
 
