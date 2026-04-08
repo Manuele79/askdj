@@ -411,7 +411,7 @@ function FakeSpectrumWide() {
       {Array.from({ length: 28 }).map((_, i) => (
         <span
           key={i}
-          className="w-2 rounded-full bg-gradient-to-t from-amber-400 via-orange-400 to-pink-400 opacity-80 animate-[eqwide_1.4s_ease-in-out_infinite]"
+          className="w-2 rounded-full bg-gradient-to-t from-yellow-300 via-emerald-400 to-pink-400 opacity-85 animate-[eqwide_1.4s_ease-in-out_infinite]"
           style={{ animationDelay: `${i * 60}ms` }}
         />
       ))}
@@ -448,7 +448,7 @@ function FakeSpectrumWide() {
      <div className="text-xl sm:text-2xl font-black tracking-tight">
       <span className="text-yellow-300">Ask</span><span className="text-white">DJ</span>
     </div>
-    <div className="text-sm text-zinc-300/80">Music Requests</div>
+    <div className="text-sm text-zinc-300/80">Guest Music Requests</div>
    </div>
 </div>
 
@@ -504,10 +504,10 @@ function FakeSpectrumWide() {
               href={p.href}
               target="_blank"
               rel="noreferrer"
-            className={`rounded-full font-extrabold transition ${
-            eventMode === "jukebox" && p.key === "youtube"
-              ? "w-full max-w-[260px] py-3 text-sm"
-              : "px-3 py-2 text-xs"
+             className={`rounded-full font-extrabold transition flex items-center justify-center ${
+             eventMode === "jukebox" && p.key === "youtube"
+                ? "w-full max-w-[260px] py-3 text-sm mx-auto"
+                : "px-3 py-2 text-xs"
             } ${color}`}
             >
               {p.label}
@@ -532,7 +532,10 @@ function FakeSpectrumWide() {
     {/* Campo link */}
     <div>
       <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-         {eventMode === "jukebox" ? "LINK del tuo brano da YOUTUBE:" : "LINK CANZONE:"}
+        {eventMode === "jukebox" 
+           ? <>INCOLLA IL LINK <span className="text-white">YOUTUBE</span></> 
+           : "LINK CANZONE:"
+        }
 
          <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
         <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -542,8 +545,11 @@ function FakeSpectrumWide() {
         <button
           type="button"
           onClick={pasteFromClipboard}
-          className={`w-full rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3 py-3 text-sm font-extrabold text-zinc-950 transition
-          ${!link ? "animate-pulse shadow-[0_0_22px_rgba(34,211,238,0.45)]" : "opacity-80 shadow-none"}`}
+          className={`w-full rounded-xl bg-gradient-to-r from-cyan-400 via-emerald-400 to-lime-300 px-3 py-3 text-sm font-extrabold text-zinc-950 transition hover:brightness-110 ${
+            !link
+              ? "animate-pulse shadow-[0_0_28px_rgba(74,222,128,0.55)]"
+              : "shadow-[0_0_16px_rgba(34,211,238,0.22)] opacity-90"
+        }`}
         >
          {eventMode === "jukebox" ? "📋 INCOLLA" : "INCOLLA IL LINK"}
         </button>
