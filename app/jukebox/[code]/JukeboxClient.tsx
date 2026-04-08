@@ -148,6 +148,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 }, [code]);
 
   const [items, setItems] = useState<RequestItem[]>([]);
+  const [priorityQueue, setPriorityQueue] = useState<QueueEntry[]>([]);
   const [queue, setQueue] = useState<QueueEntry[]>([]);
 
   const [currentKey, setCurrentKey] = useState<string>(""); // queue key
@@ -174,6 +175,9 @@ export default function JukeboxClient({ code }: { code: string }) {
   const queueRef = useRef<QueueEntry[]>([]);
   const itemsRef = useRef<RequestItem[]>([]);
   const currentKeyRef = useRef<string>("");
+  const priorityQueueRef = useRef<QueueEntry[]>([]);
+  const playedPriorityTokensRef = useRef<Set<string>>(new Set());
+  const resumeBaseKeyRef = useRef<string>("");
   const loopRef = useRef<boolean>(true);
   const advancingRef = useRef<boolean>(false);
   const lastSeenRef = useRef<Record<string, number>>({});
@@ -190,6 +194,10 @@ export default function JukeboxClient({ code }: { code: string }) {
   useEffect(() => {
     queueRef.current = queue;
   }, [queue]);
+
+  useEffect(() => {
+  priorityQueueRef.current = priorityQueue;
+  }, [priorityQueue]);
 
   useEffect(() => {
     itemsRef.current = items;
@@ -213,6 +221,10 @@ export default function JukeboxClient({ code }: { code: string }) {
       ...item,
       _queueKey: `${item._key}__${Date.now()}__${queueSeqRef.current}`,
     };
+  }
+
+  function getPriorityToken(item: { id: string; updatedAt: number; createdAt: number }) {
+    return `${item.id}:${item.updatedAt || item.createdAt}`;
   }
 
   function findQueueEntryByKey(key: string) {
@@ -412,36 +424,46 @@ function armLoadWatchdog(queueKey: string) {
         seen[r.id] = Number(r.updatedAt || r.createdAt || 0);
       }
 
-      // primo caricamento: inizializza la queue dalla libreria attuale
-      if (!Object.keys(lastSeenRef.current).length) {
-        if (!queueRef.current.length) {
-          setQueue(nextPlayable.map(makeQueueEntry));
-        }
-        lastSeenRef.current = seen;
-        return;
-      }
+// primo caricamento: inizializza solo la base queue
+if (!Object.keys(lastSeenRef.current).length) {
+  if (!queueRef.current.length) {
+    setQueue(nextPlayable.map(makeQueueEntry));
+  }
+  lastSeenRef.current = seen;
+  return;
+}
 
-      const prevMap = new Map(prevItems.map((r) => [r.id, r]));
-      const toEnqueue: QueueEntry[] = [];
+const prevMap = new Map(prevItems.map((r) => [r.id, r]));
+const queuedTokens = new Set(
+  priorityQueueRef.current.map((item) => getPriorityToken(item))
+);
 
-      for (const p of nextPlayable) {
-        const prevRow = prevMap.get(p.id);
-        const currentSeen = lastSeenRef.current[p.id] ?? 0;
-        const nextStamp = Number(p.updatedAt || p.createdAt || 0);
+const freshRequests: QueueEntry[] = [];
 
-        const isBrandNew = !prevRow;
-        const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
+for (const p of nextPlayable) {
+  const prevRow = prevMap.get(p.id);
+  const currentSeen = lastSeenRef.current[p.id] ?? 0;
+  const nextStamp = Number(p.updatedAt || p.createdAt || 0);
 
-        if (isBrandNew || isUpdatedDuplicate) {
-          toEnqueue.push(makeQueueEntry(p));
-        }
-      }
+  const isBrandNew = !prevRow;
+  const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
 
-      if (toEnqueue.length) {
-        insertIntoQueueAfterCurrent(toEnqueue);
-      }
+  const token = getPriorityToken(p);
 
-      lastSeenRef.current = seen;
+  if (
+    (isBrandNew || isUpdatedDuplicate) &&
+    !queuedTokens.has(token) &&
+    !playedPriorityTokensRef.current.has(token)
+  ) {
+    freshRequests.push(makeQueueEntry(p));
+  }
+}
+
+if (freshRequests.length) {
+  setPriorityQueue((prev) => [...prev, ...freshRequests]);
+}
+
+lastSeenRef.current = seen;
     } catch {
       // niente
     }
@@ -460,52 +482,109 @@ function armLoadWatchdog(queueKey: string) {
     };
   }, [code, playlistEnabled]);
 
-  function advance(reason: string) {
-    if (advancingRef.current) return;
-    advancingRef.current = true;
+function advance(reason: string) {
+  if (advancingRef.current) return;
+  advancingRef.current = true;
 
-    const list = queueRef.current;
-    const curKey = currentKeyRef.current;
+  const base = queueRef.current;
+  const priority = priorityQueueRef.current;
+  const curKey = currentKeyRef.current;
 
-    if (!list.length) {
-      advancingRef.current = false;
-      return;
+  const currentBaseEntry = base.find((p) => p._queueKey === curKey);
+  const currentPriorityIdx = priority.findIndex((p) => p._queueKey === curKey);
+
+  // Se stiamo finendo una richiesta prioritaria, rimuovila dalla priorityQueue
+  let remainingPriority = priority;
+
+  if (currentPriorityIdx === 0) {
+    playedPriorityTokensRef.current.add(getPriorityToken(priority[0]));
+    remainingPriority = priority.slice(1);
+    setPriorityQueue(remainingPriority);
+  }
+
+  // Se ci sono richieste prioritarie, suona sempre quelle per prime
+  if (remainingPriority.length > 0) {
+    if (currentBaseEntry && !resumeBaseKeyRef.current) {
+      resumeBaseKeyRef.current = currentBaseEntry._key;
     }
 
-    const idx = list.findIndex((p) => p._queueKey === curKey);
-
-    if (idx < 0) {
-      playQueueEntry(list[0], `start (${reason})`, true);
-      setTimeout(() => {
-        advancingRef.current = false;
-      }, 350);
-      return;
-    }
-
-    const next = list[idx + 1];
-    if (next) {
-      playQueueEntry(next, `next (${reason})`, true);
-      setTimeout(() => {
-        advancingRef.current = false;
-      }, 350);
-      return;
-    }
-
-    if (loopRef.current) {
-      playQueueEntry(list[0], `loop (${reason})`, true);
-      setTimeout(() => {
-        advancingRef.current = false;
-      }, 350);
-      return;
-    }
-
-    setStatusMsg("⏹ Fine coda");
-    setIsPlaying(false);
+    playQueueEntry(remainingPriority[0], `priority (${reason})`, true);
 
     setTimeout(() => {
       advancingRef.current = false;
     }, 350);
+    return;
   }
+
+  // Se abbiamo appena finito il blocco priority, torna alla base dal punto corretto
+  if (currentPriorityIdx === 0 && base.length > 0) {
+    const resumeIdx = base.findIndex((p) => p._key === resumeBaseKeyRef.current);
+    resumeBaseKeyRef.current = "";
+
+    if (resumeIdx >= 0) {
+      const next = base[resumeIdx + 1];
+      if (next) {
+        playQueueEntry(next, `resume (${reason})`, true);
+      } else if (loopRef.current) {
+        playQueueEntry(base[0], `loop (${reason})`, true);
+      } else {
+        setStatusMsg("⏹ Fine playlist");
+        setIsPlaying(false);
+      }
+
+      setTimeout(() => {
+        advancingRef.current = false;
+      }, 350);
+      return;
+    }
+
+    playQueueEntry(base[0], `resume-start (${reason})`, true);
+    setTimeout(() => {
+      advancingRef.current = false;
+    }, 350);
+    return;
+  }
+
+  // Nessuna priority: continua la base normale
+  if (!base.length) {
+    advancingRef.current = false;
+    return;
+  }
+
+  const idx = base.findIndex((p) => p._queueKey === curKey);
+
+  if (idx < 0) {
+    playQueueEntry(base[0], `start (${reason})`, true);
+    setTimeout(() => {
+      advancingRef.current = false;
+    }, 350);
+    return;
+  }
+
+  const next = base[idx + 1];
+  if (next) {
+    playQueueEntry(next, `next (${reason})`, true);
+    setTimeout(() => {
+      advancingRef.current = false;
+    }, 350);
+    return;
+  }
+
+  if (loopRef.current) {
+    playQueueEntry(base[0], `loop (${reason})`, true);
+    setTimeout(() => {
+      advancingRef.current = false;
+    }, 350);
+    return;
+  }
+
+  setStatusMsg("⏹ Fine coda");
+  setIsPlaying(false);
+
+  setTimeout(() => {
+    advancingRef.current = false;
+  }, 350);
+}
 
   function handleUserStart() {
   startedRef.current = true;
@@ -795,8 +874,10 @@ if (e.data === 2) {
     return () => clearInterval(t);
   }, [eventExpired]);
 
-  const currentSourceKey =
-    queue.find((q) => q._queueKey === currentKey)?._key || "";
+const currentSourceKey =
+  queue.find((q) => q._queueKey === currentKey)?._key ||
+  priorityQueue.find((q) => q._queueKey === currentKey)?._key ||
+  "";
 
   if (redirecting) return null;
 
