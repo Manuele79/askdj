@@ -137,10 +137,17 @@ export default function JukeboxClient({ code }: { code: string }) {
     localStorage.setItem("jukebox_event", code);
   }, [code]);
 
+  useEffect(() => {
+  if (!code) return;
 
+  try {
+    const saved = localStorage.getItem(startedKey(code)) === "1";
+    startedRef.current = saved;
+    setUserStarted(saved);
+  } catch {}
+}, [code]);
 
   const [items, setItems] = useState<RequestItem[]>([]);
-  const [priorityQueue, setPriorityQueue] = useState<QueueEntry[]>([]);
   const [queue, setQueue] = useState<QueueEntry[]>([]);
 
   const [currentKey, setCurrentKey] = useState<string>(""); // queue key
@@ -167,9 +174,6 @@ export default function JukeboxClient({ code }: { code: string }) {
   const queueRef = useRef<QueueEntry[]>([]);
   const itemsRef = useRef<RequestItem[]>([]);
   const currentKeyRef = useRef<string>("");
-  const priorityQueueRef = useRef<QueueEntry[]>([]);
-  const playedPriorityTokensRef = useRef<Set<string>>(new Set());
-  const resumeBaseKeyRef = useRef<string>("");
   const loopRef = useRef<boolean>(true);
   const advancingRef = useRef<boolean>(false);
   const lastSeenRef = useRef<Record<string, number>>({});
@@ -179,14 +183,13 @@ export default function JukeboxClient({ code }: { code: string }) {
   const loadWatchdogRef = useRef<any>(null);
   const loadingQueueKeyRef = useRef<string>("");
 
+  function startedKey(eventCode: string) {
+   return `jukebox_started_${eventCode}`;
+  }
 
   useEffect(() => {
     queueRef.current = queue;
   }, [queue]);
-
-  useEffect(() => {
-  priorityQueueRef.current = priorityQueue;
-  }, [priorityQueue]);
 
   useEffect(() => {
     itemsRef.current = items;
@@ -212,16 +215,9 @@ export default function JukeboxClient({ code }: { code: string }) {
     };
   }
 
-  function getPriorityToken(item: { id: string; updatedAt: number; createdAt: number }) {
-    return `${item.id}:${item.updatedAt || item.createdAt}`;
+  function findQueueEntryByKey(key: string) {
+    return queueRef.current.find((p) => p._queueKey === key);
   }
-
-function findQueueEntryByKey(key: string) {
-  return (
-    queueRef.current.find((p) => p._queueKey === key) ||
-    priorityQueueRef.current.find((p) => p._queueKey === key)
-  );
-}
 
   function getCurrentQueueEntry() {
     return findQueueEntryByKey(currentKeyRef.current);
@@ -416,46 +412,36 @@ function armLoadWatchdog(queueKey: string) {
         seen[r.id] = Number(r.updatedAt || r.createdAt || 0);
       }
 
-// primo caricamento: inizializza solo la base queue
-if (!Object.keys(lastSeenRef.current).length) {
-  if (!queueRef.current.length) {
-    setQueue(nextPlayable.map(makeQueueEntry));
-  }
-  lastSeenRef.current = seen;
-  return;
-}
+      // primo caricamento: inizializza la queue dalla libreria attuale
+      if (!Object.keys(lastSeenRef.current).length) {
+        if (!queueRef.current.length) {
+          setQueue(nextPlayable.map(makeQueueEntry));
+        }
+        lastSeenRef.current = seen;
+        return;
+      }
 
-const prevMap = new Map(prevItems.map((r) => [r.id, r]));
-const queuedTokens = new Set(
-  priorityQueueRef.current.map((item) => getPriorityToken(item))
-);
+      const prevMap = new Map(prevItems.map((r) => [r.id, r]));
+      const toEnqueue: QueueEntry[] = [];
 
-const freshRequests: QueueEntry[] = [];
+      for (const p of nextPlayable) {
+        const prevRow = prevMap.get(p.id);
+        const currentSeen = lastSeenRef.current[p.id] ?? 0;
+        const nextStamp = Number(p.updatedAt || p.createdAt || 0);
 
-for (const p of nextPlayable) {
-  const prevRow = prevMap.get(p.id);
-  const currentSeen = lastSeenRef.current[p.id] ?? 0;
-  const nextStamp = Number(p.updatedAt || p.createdAt || 0);
+        const isBrandNew = !prevRow;
+        const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
 
-  const isBrandNew = !prevRow;
-  const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
+        if (isBrandNew || isUpdatedDuplicate) {
+          toEnqueue.push(makeQueueEntry(p));
+        }
+      }
 
-  const token = getPriorityToken(p);
+      if (toEnqueue.length) {
+        insertIntoQueueAfterCurrent(toEnqueue);
+      }
 
-  if (
-    (isBrandNew || isUpdatedDuplicate) &&
-    !queuedTokens.has(token) &&
-    !playedPriorityTokensRef.current.has(token)
-  ) {
-    freshRequests.push(makeQueueEntry(p));
-  }
-}
-
-if (freshRequests.length) {
-  setPriorityQueue((prev) => [...prev, ...freshRequests]);
-}
-
-lastSeenRef.current = seen;
+      lastSeenRef.current = seen;
     } catch {
       // niente
     }
@@ -474,119 +460,68 @@ lastSeenRef.current = seen;
     };
   }, [code, playlistEnabled]);
 
-function advance(reason: string) {
-  if (advancingRef.current) return;
-  advancingRef.current = true;
+  function advance(reason: string) {
+    if (advancingRef.current) return;
+    advancingRef.current = true;
 
-  const base = queueRef.current;
-  const priority = priorityQueueRef.current;
-  const curKey = currentKeyRef.current;
+    const list = queueRef.current;
+    const curKey = currentKeyRef.current;
 
-  const currentBaseEntry = base.find((p) => p._queueKey === curKey);
-  const currentPriorityIdx = priority.findIndex((p) => p._queueKey === curKey);
-
-  // Se stiamo finendo una richiesta prioritaria, rimuovila dalla priorityQueue
-  let remainingPriority = priority;
-
-  if (currentPriorityIdx === 0) {
-    playedPriorityTokensRef.current.add(getPriorityToken(priority[0]));
-    remainingPriority = priority.slice(1);
-    setPriorityQueue(remainingPriority);
-  }
-
-  // Se ci sono richieste prioritarie, suona sempre quelle per prime
-  if (remainingPriority.length > 0) {
-    if (currentBaseEntry && !resumeBaseKeyRef.current) {
-      resumeBaseKeyRef.current = currentBaseEntry._key;
+    if (!list.length) {
+      advancingRef.current = false;
+      return;
     }
 
-    playQueueEntry(remainingPriority[0], `priority (${reason})`, true);
+    const idx = list.findIndex((p) => p._queueKey === curKey);
 
-    setTimeout(() => {
-      advancingRef.current = false;
-    }, 350);
-    return;
-  }
-
-  // Se abbiamo appena finito il blocco priority, torna alla base dal punto corretto
-  if (currentPriorityIdx === 0 && base.length > 0) {
-    const resumeIdx = base.findIndex((p) => p._key === resumeBaseKeyRef.current);
-    resumeBaseKeyRef.current = "";
-
-    if (resumeIdx >= 0) {
-      const next = base[resumeIdx + 1];
-      if (next) {
-        playQueueEntry(next, `resume (${reason})`, true);
-      } else if (loopRef.current) {
-        playQueueEntry(base[0], `loop (${reason})`, true);
-      } else {
-        setStatusMsg("⏹ Fine playlist");
-        setIsPlaying(false);
-      }
-
+    if (idx < 0) {
+      playQueueEntry(list[0], `start (${reason})`, true);
       setTimeout(() => {
         advancingRef.current = false;
       }, 350);
       return;
     }
 
-    playQueueEntry(base[0], `resume-start (${reason})`, true);
+    const next = list[idx + 1];
+    if (next) {
+      playQueueEntry(next, `next (${reason})`, true);
+      setTimeout(() => {
+        advancingRef.current = false;
+      }, 350);
+      return;
+    }
+
+    if (loopRef.current) {
+      playQueueEntry(list[0], `loop (${reason})`, true);
+      setTimeout(() => {
+        advancingRef.current = false;
+      }, 350);
+      return;
+    }
+
+    setStatusMsg("⏹ Fine coda");
+    setIsPlaying(false);
+
     setTimeout(() => {
       advancingRef.current = false;
     }, 350);
-    return;
   }
 
-  // Nessuna priority: continua la base normale
-  if (!base.length) {
-    advancingRef.current = false;
-    return;
-  }
-
-  const idx = base.findIndex((p) => p._queueKey === curKey);
-
-  if (idx < 0) {
-    playQueueEntry(base[0], `start (${reason})`, true);
-    setTimeout(() => {
-      advancingRef.current = false;
-    }, 350);
-    return;
-  }
-
-  const next = base[idx + 1];
-  if (next) {
-    playQueueEntry(next, `next (${reason})`, true);
-    setTimeout(() => {
-      advancingRef.current = false;
-    }, 350);
-    return;
-  }
-
-  if (loopRef.current) {
-    playQueueEntry(base[0], `loop (${reason})`, true);
-    setTimeout(() => {
-      advancingRef.current = false;
-    }, 350);
-    return;
-  }
-
-  setStatusMsg("⏹ Fine coda");
-  setIsPlaying(false);
-
-  setTimeout(() => {
-    advancingRef.current = false;
-  }, 350);
-}
-function handleUserStart() {
+  function handleUserStart() {
   startedRef.current = true;
   setUserStarted(true);
 
-  pendingAutoplayRef.current = true;
-  setStatusMsg("✅ Jukebox avviato");
+  try {
+    localStorage.setItem(startedKey(code), "1");
+  } catch {}
+
+  const p = playerRef.current;
 
   try {
-    playerRef.current?.unMute?.();
-    playerRef.current?.playVideo?.();
+    p?.unMute?.();
+    p?.playVideo?.();
+    pendingAutoplayRef.current = true;
+    setStatusMsg("✅ Jukebox avviato");
     setIsPlaying(true);
   } catch {}
 }
@@ -606,13 +541,13 @@ function playCurrent() {
 
   if (!p) return;
 
-try {
-  pendingAutoplayRef.current = true;
-  p.unMute?.();
-  p.playVideo?.();
-  setIsPlaying(true);
-  setStatusMsg("▶️ Riproduzione");
-} catch {}
+  try {
+    p.unMute?.();
+    pendingAutoplayRef.current = true;
+    p.playVideo?.();
+    setIsPlaying(true);
+    setStatusMsg("▶️ Riproduzione");
+  } catch {}
 }
 
 function pauseCurrent() {
@@ -712,14 +647,20 @@ onReady: (e: any) => {
   setPlayerReady(true);
   setStatusMsg("✅ Player pronto");
 
-
-if (pendingAutoplayRef.current) {
   try {
-    e.target?.unMute?.();
-    e.target?.playVideo?.();
-    setIsPlaying(true);
+    if (!startedRef.current) {
+      e.target?.mute?.();
+    } else {
+      e.target?.unMute?.();
+    }
   } catch {}
-}
+
+  if (pendingAutoplayRef.current) {
+    try {
+      e.target?.playVideo?.();
+      setIsPlaying(true);
+    } catch {}
+  }
 },
 
   onStateChange: (e: any) => {
@@ -792,25 +733,27 @@ if (e.data === 2) {
       const p = playerRef.current;
 
       try {
- 
+  if (!startedRef.current) {
+    p?.mute?.();
+  } else {
+    p?.unMute?.();
+  }
 
   if (current._kind === "playlist") {
     const listId = current._listId || extractYouTubeListId(current.url);
     if (listId && p.loadPlaylist) {
       p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
       if (shouldAutoplay) {
-  p.unMute?.();
-  p.playVideo?.();
-}
+        p.playVideo?.();
+      }
     }
   } else {
     const vid = current.youtubeVideoId || "";
     if (vid && p.loadVideoById) {
       p.loadVideoById(vid);
-     if (shouldAutoplay) {
-  p.unMute?.();
-  p.playVideo?.();
-}
+      if (shouldAutoplay) {
+        p.playVideo?.();
+      }
     }
   }
 } catch {}
@@ -852,10 +795,8 @@ if (e.data === 2) {
     return () => clearInterval(t);
   }, [eventExpired]);
 
-const currentSourceKey =
-  queue.find((q) => q._queueKey === currentKey)?._key ||
-  priorityQueue.find((q) => q._queueKey === currentKey)?._key ||
-  "";
+  const currentSourceKey =
+    queue.find((q) => q._queueKey === currentKey)?._key || "";
 
   if (redirecting) return null;
 
