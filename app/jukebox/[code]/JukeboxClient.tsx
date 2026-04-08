@@ -223,6 +223,22 @@ export default function JukeboxClient({ code }: { code: string }) {
     };
   }
 
+    useEffect(() => {
+    setQueue((prev) => {
+     if (!playable.length) return prev;
+     if (!prev.length) return playable.map(makeQueueEntry);
+
+      const existingBaseKeys = new Set(prev.map((x) => x._key));
+      const missing = playable.filter((p) => !existingBaseKeys.has(p._key));
+
+      if (!missing.length) return prev;
+
+      return [...prev, ...missing.map(makeQueueEntry)];
+   });
+  }, [playable]);
+
+
+
   function getRequestToken(item: {
     id: string;
     updatedAt: number;
