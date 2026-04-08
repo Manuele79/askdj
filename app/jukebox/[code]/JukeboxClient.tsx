@@ -517,7 +517,7 @@ function armLoadWatchdog(queueKey: string) {
     }, 350);
   }
 
-  function handleUserStart() {
+function handleUserStart() {
   startedRef.current = true;
   setUserStarted(true);
 
@@ -525,14 +525,10 @@ function armLoadWatchdog(queueKey: string) {
     localStorage.setItem(startedKey(code), "1");
   } catch {}
 
-  const p = playerRef.current;
+  setStatusMsg("✅ Jukebox avviato");
 
   try {
-    p?.unMute?.();
-    p?.playVideo?.();
-    pendingAutoplayRef.current = true;
-    setStatusMsg("✅ Jukebox avviato");
-    setIsPlaying(true);
+    playerRef.current?.unMute?.();
   } catch {}
 }
 
@@ -658,13 +654,11 @@ onReady: (e: any) => {
   setStatusMsg("✅ Player pronto");
 
   try {
-    if (!startedRef.current) {
-      e.target?.mute?.();
-    } else {
-      e.target?.unMute?.();
-    }
+    e.target?.unMute?.();
   } catch {}
 
+  // NON partire automaticamente all'apertura pagina
+  // si parte solo quando l'utente preme Play
   if (pendingAutoplayRef.current) {
     try {
       e.target?.playVideo?.();
