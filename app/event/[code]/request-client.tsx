@@ -504,11 +504,11 @@ function FakeSpectrumWide() {
               href={p.href}
               target="_blank"
               rel="noreferrer"
-              className={`rounded-full font-extrabold transition ${
-                   eventMode === "jukebox" && p.key === "youtube"
-                   ? "px-6 py-3 text-sm"
-                   : "px-3 py-2 text-xs"
-              } ${color}`}
+            className={`rounded-full font-extrabold transition ${
+            eventMode === "jukebox" && p.key === "youtube"
+              ? "w-full max-w-[260px] py-3 text-sm"
+              : "px-3 py-2 text-xs"
+            } ${color}`}
             >
               {p.label}
             </a>
@@ -532,7 +532,7 @@ function FakeSpectrumWide() {
     {/* Campo link */}
     <div>
       <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-         {eventMode === "jukebox" ? "LINK YOUTUBE" : "LINK CANZONE"}
+         {eventMode === "jukebox" ? "LINK del tuo brano da YOUTUBE:" : "LINK CANZONE:"}
 
          <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
         <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -542,9 +542,10 @@ function FakeSpectrumWide() {
         <button
           type="button"
           onClick={pasteFromClipboard}
-          className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.45)] hover:brightness-110 transition"
+          className={`w-full rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3 py-3 text-sm font-extrabold text-zinc-950 transition
+          ${!link ? "animate-pulse shadow-[0_0_22px_rgba(34,211,238,0.45)]" : "opacity-80 shadow-none"}`}
         >
-         {eventMode === "jukebox" ? "INCOLLA IL LINK YOUTUBE" : "INCOLLA IL LINK"}
+         {eventMode === "jukebox" ? "📋 INCOLLA" : "INCOLLA IL LINK"}
         </button>
       </div>
 
