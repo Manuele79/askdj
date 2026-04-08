@@ -335,21 +335,8 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
       setStatusMsg("⚠️ Playlist non riproducibile");
       return;
     }
-
     setStatusMsg(reason ? `▶️ Playlist (${reason})` : `▶️ Playlist`);
     setNowPlayingFromEntry({ ...entry, _listId: listId });
-
-    const p = playerRef.current;
-    if (p?.loadPlaylist) {
-      try {
-        if (!startedRef.current && p.mute) p.mute();
-        else p.unMute?.();
-
-        p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
-        if (autoplay) p.playVideo?.();
-      } catch {}
-    }
-
     return;
   }
 
@@ -358,17 +345,6 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
 
   setStatusMsg(reason ? `▶️ Play (${reason})` : `▶️ Play`);
   setNowPlayingFromEntry(entry);
-
-  const p = playerRef.current;
-  if (p?.loadVideoById) {
-    try {
-      if (!startedRef.current && p.mute) p.mute();
-      else p.unMute?.();
-
-      p.loadVideoById(id);
-      if (autoplay) p.playVideo?.();
-    } catch {}
-  }
 }
 
   async function checkEventStatus() {
