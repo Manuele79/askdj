@@ -138,19 +138,20 @@ export default function JukeboxClient({ code }: { code: string }) {
   }, [code]);
 
   useEffect(() => {
-  if (!code) return;
+    if (!code) return;
 
-  try {
-    const saved = localStorage.getItem(startedKey(code)) === "1";
-    startedRef.current = saved;
-    setUserStarted(saved);
-  } catch {}
-}, [code]);
+    try {
+      const saved = localStorage.getItem(startedKey(code)) === "1";
+      startedRef.current = saved;
+      setUserStarted(saved);
+    } catch {}
+  }, [code]);
 
   const [items, setItems] = useState<RequestItem[]>([]);
   const [queue, setQueue] = useState<QueueEntry[]>([]);
+  const [requestQueue, setRequestQueue] = useState<QueueEntry[]>([]);
 
-  const [currentKey, setCurrentKey] = useState<string>(""); // queue key
+  const [currentKey, setCurrentKey] = useState<string>("");
   const [currentTitle, setCurrentTitle] = useState<string>("");
   const [currentDedication, setCurrentDedication] = useState("");
 
@@ -172,6 +173,7 @@ export default function JukeboxClient({ code }: { code: string }) {
   );
 
   const queueRef = useRef<QueueEntry[]>([]);
+  const requestQueueRef = useRef<QueueEntry[]>([]);
   const itemsRef = useRef<RequestItem[]>([]);
   const currentKeyRef = useRef<string>("");
   const loopRef = useRef<boolean>(true);
@@ -182,14 +184,20 @@ export default function JukeboxClient({ code }: { code: string }) {
   const startedRef = useRef<boolean>(false);
   const loadWatchdogRef = useRef<any>(null);
   const loadingQueueKeyRef = useRef<string>("");
+  const playedRequestTokensRef = useRef<Set<string>>(new Set());
+  const resumeBaseKeyRef = useRef<string>("");
 
   function startedKey(eventCode: string) {
-   return `jukebox_started_${eventCode}`;
+    return `jukebox_started_${eventCode}`;
   }
 
   useEffect(() => {
     queueRef.current = queue;
   }, [queue]);
+
+  useEffect(() => {
+    requestQueueRef.current = requestQueue;
+  }, [requestQueue]);
 
   useEffect(() => {
     itemsRef.current = items;
@@ -215,8 +223,19 @@ export default function JukeboxClient({ code }: { code: string }) {
     };
   }
 
+  function getRequestToken(item: {
+    id: string;
+    updatedAt: number;
+    createdAt: number;
+  }) {
+    return `${item.id}:${item.updatedAt || item.createdAt}`;
+  }
+
   function findQueueEntryByKey(key: string) {
-    return queueRef.current.find((p) => p._queueKey === key);
+    return (
+      queueRef.current.find((p) => p._queueKey === key) ||
+      requestQueueRef.current.find((p) => p._queueKey === key)
+    );
   }
 
   function getCurrentQueueEntry() {
@@ -229,25 +248,6 @@ export default function JukeboxClient({ code }: { code: string }) {
       item.title || (item._kind === "playlist" ? "Playlist YouTube" : "")
     );
     setCurrentDedication(item.dedication || "");
-  }
-
-  function insertIntoQueueAfterCurrent(newEntries: QueueEntry[]) {
-    if (!newEntries.length) return;
-
-    setQueue((prev) => {
-      if (!prev.length) return [...newEntries];
-
-      const curKey = currentKeyRef.current;
-      const idx = prev.findIndex((p) => p._queueKey === curKey);
-
-      if (idx < 0) return [...prev, ...newEntries];
-
-      return [
-        ...prev.slice(0, idx + 1),
-        ...newEntries,
-        ...prev.slice(idx + 1),
-      ];
-    });
   }
 
   function queueAndPlayNow(item: PlayableItem, reason?: string) {
@@ -268,41 +268,39 @@ export default function JukeboxClient({ code }: { code: string }) {
     setStatusMsg(reason ? `▶️ Play (${reason})` : "▶️ Play");
     setNowPlayingFromEntry(entry);
   }
+
   function clearLoadWatchdog() {
-  if (loadWatchdogRef.current) {
-    clearTimeout(loadWatchdogRef.current);
-    loadWatchdogRef.current = null;
+    if (loadWatchdogRef.current) {
+      clearTimeout(loadWatchdogRef.current);
+      loadWatchdogRef.current = null;
+    }
+    loadingQueueKeyRef.current = "";
   }
-  loadingQueueKeyRef.current = "";
-}
 
-function armLoadWatchdog(queueKey: string) {
-  clearLoadWatchdog();
-  loadingQueueKeyRef.current = queueKey;
+  function armLoadWatchdog(queueKey: string) {
+    clearLoadWatchdog();
+    loadingQueueKeyRef.current = queueKey;
 
-  loadWatchdogRef.current = setTimeout(() => {
-    const p = playerRef.current;
-    const stillSame = currentKeyRef.current === queueKey;
+    loadWatchdogRef.current = setTimeout(() => {
+      const p = playerRef.current;
+      const stillSame = currentKeyRef.current === queueKey;
 
-    if (!stillSame) return;
+      if (!stillSame) return;
 
-    try {
-      const state = p?.getPlayerState?.();
+      try {
+        const state = p?.getPlayerState?.();
+        if (state === 1 || state === 2) {
+          clearLoadWatchdog();
+          return;
+        }
+      } catch {}
 
-      // 1 = playing, 2 = paused
-      if (state === 1 || state === 2) {
-        clearLoadWatchdog();
-        return;
-      }
-    } catch {}
-
-    setStatusMsg("⏭ Video non partito, salto...");
-    pendingAutoplayRef.current = true;
-    advancingRef.current = false;
-    advance("watchdog");
-  }, 4500);
-}
-
+      setStatusMsg("⏭ Video non partito, salto...");
+      pendingAutoplayRef.current = true;
+      advancingRef.current = false;
+      advance("watchdog");
+    }, 4500);
+  }
 
   function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
     if (!entry) return;
@@ -310,9 +308,9 @@ function armLoadWatchdog(queueKey: string) {
     pendingAutoplayRef.current = autoplay;
 
     if (autoplay) {
-     armLoadWatchdog(entry._queueKey);
+      armLoadWatchdog(entry._queueKey);
     } else {
-     clearLoadWatchdog();
+      clearLoadWatchdog();
     }
 
     if (entry._kind === "playlist") {
@@ -412,7 +410,7 @@ function armLoadWatchdog(queueKey: string) {
         seen[r.id] = Number(r.updatedAt || r.createdAt || 0);
       }
 
-      // primo caricamento: inizializza la queue dalla libreria attuale
+      // primo caricamento: inizializza solo la playlist base
       if (!Object.keys(lastSeenRef.current).length) {
         if (!queueRef.current.length) {
           setQueue(nextPlayable.map(makeQueueEntry));
@@ -422,7 +420,11 @@ function armLoadWatchdog(queueKey: string) {
       }
 
       const prevMap = new Map(prevItems.map((r) => [r.id, r]));
-      const toEnqueue: QueueEntry[] = [];
+      const queuedTokens = new Set(
+        requestQueueRef.current.map((item) => getRequestToken(item))
+      );
+
+      const freshRequests: QueueEntry[] = [];
 
       for (const p of nextPlayable) {
         const prevRow = prevMap.get(p.id);
@@ -431,14 +433,19 @@ function armLoadWatchdog(queueKey: string) {
 
         const isBrandNew = !prevRow;
         const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
+        const token = getRequestToken(p);
 
-        if (isBrandNew || isUpdatedDuplicate) {
-          toEnqueue.push(makeQueueEntry(p));
+        if (
+          (isBrandNew || isUpdatedDuplicate) &&
+          !queuedTokens.has(token) &&
+          !playedRequestTokensRef.current.has(token)
+        ) {
+          freshRequests.push(makeQueueEntry(p));
         }
       }
 
-      if (toEnqueue.length) {
-        insertIntoQueueAfterCurrent(toEnqueue);
+      if (freshRequests.length) {
+        setRequestQueue((prev) => [...prev, ...freshRequests]);
       }
 
       lastSeenRef.current = seen;
@@ -464,25 +471,79 @@ function armLoadWatchdog(queueKey: string) {
     if (advancingRef.current) return;
     advancingRef.current = true;
 
-    const list = queueRef.current;
+    const base = queueRef.current;
+    const requests = requestQueueRef.current;
     const curKey = currentKeyRef.current;
 
-    if (!list.length) {
-      advancingRef.current = false;
-      return;
+    const currentBaseEntry = base.find((p) => p._queueKey === curKey);
+    const currentRequestIdx = requests.findIndex((p) => p._queueKey === curKey);
+
+    let remainingRequests = requests;
+
+    if (currentRequestIdx === 0) {
+      playedRequestTokensRef.current.add(getRequestToken(requests[0]));
+      remainingRequests = requests.slice(1);
+      setRequestQueue(remainingRequests);
     }
 
-    const idx = list.findIndex((p) => p._queueKey === curKey);
+    if (remainingRequests.length > 0) {
+      if (currentBaseEntry && !resumeBaseKeyRef.current) {
+        resumeBaseKeyRef.current = currentBaseEntry._key;
+      }
 
-    if (idx < 0) {
-      playQueueEntry(list[0], `start (${reason})`, true);
+      playQueueEntry(remainingRequests[0], `request (${reason})`, true);
+
       setTimeout(() => {
         advancingRef.current = false;
       }, 350);
       return;
     }
 
-    const next = list[idx + 1];
+    if (currentRequestIdx === 0 && base.length > 0) {
+      const resumeIdx = base.findIndex((p) => p._key === resumeBaseKeyRef.current);
+      resumeBaseKeyRef.current = "";
+
+      if (resumeIdx >= 0) {
+        const next = base[resumeIdx + 1];
+
+        if (next) {
+          playQueueEntry(next, `resume (${reason})`, true);
+        } else if (loopRef.current) {
+          playQueueEntry(base[0], `loop (${reason})`, true);
+        } else {
+          setStatusMsg("⏹ Fine playlist");
+          setIsPlaying(false);
+        }
+
+        setTimeout(() => {
+          advancingRef.current = false;
+        }, 350);
+        return;
+      }
+
+      playQueueEntry(base[0], `resume-start (${reason})`, true);
+      setTimeout(() => {
+        advancingRef.current = false;
+      }, 350);
+      return;
+    }
+
+    if (!base.length) {
+      advancingRef.current = false;
+      return;
+    }
+
+    const idx = base.findIndex((p) => p._queueKey === curKey);
+
+    if (idx < 0) {
+      playQueueEntry(base[0], `start (${reason})`, true);
+      setTimeout(() => {
+        advancingRef.current = false;
+      }, 350);
+      return;
+    }
+
+    const next = base[idx + 1];
     if (next) {
       playQueueEntry(next, `next (${reason})`, true);
       setTimeout(() => {
@@ -492,7 +553,7 @@ function armLoadWatchdog(queueKey: string) {
     }
 
     if (loopRef.current) {
-      playQueueEntry(list[0], `loop (${reason})`, true);
+      playQueueEntry(base[0], `loop (${reason})`, true);
       setTimeout(() => {
         advancingRef.current = false;
       }, 350);
@@ -508,60 +569,60 @@ function armLoadWatchdog(queueKey: string) {
   }
 
   function handleUserStart() {
-  startedRef.current = true;
-  setUserStarted(true);
+    startedRef.current = true;
+    setUserStarted(true);
 
-  try {
-    localStorage.setItem(startedKey(code), "1");
-  } catch {}
+    try {
+      localStorage.setItem(startedKey(code), "1");
+    } catch {}
 
-  const p = playerRef.current;
+    const p = playerRef.current;
 
-  try {
-    p?.unMute?.();
-    p?.playVideo?.();
-    pendingAutoplayRef.current = true;
-    setStatusMsg("✅ Jukebox avviato");
-    setIsPlaying(true);
-  } catch {}
-}
-
-function playCurrent() {
-  if (!startedRef.current) {
-    handleUserStart();
-    return;
+    try {
+      p?.unMute?.();
+      p?.playVideo?.();
+      pendingAutoplayRef.current = true;
+      setStatusMsg("✅ Jukebox avviato");
+      setIsPlaying(true);
+    } catch {}
   }
 
-  const p = playerRef.current;
+  function playCurrent() {
+    if (!startedRef.current) {
+      handleUserStart();
+      return;
+    }
 
-  if (!currentKey && queueRef.current.length) {
-    playQueueEntry(queueRef.current[0], "manual start", true);
-    return;
+    const p = playerRef.current;
+
+    if (!currentKey && queueRef.current.length) {
+      playQueueEntry(queueRef.current[0], "manual start", true);
+      return;
+    }
+
+    if (!p) return;
+
+    try {
+      p.unMute?.();
+      pendingAutoplayRef.current = true;
+      p.playVideo?.();
+      setIsPlaying(true);
+      setStatusMsg("▶️ Riproduzione");
+    } catch {}
   }
 
-  if (!p) return;
+  function pauseCurrent() {
+    const p = playerRef.current;
+    if (!p) return;
 
-  try {
-    p.unMute?.();
-    pendingAutoplayRef.current = true;
-    p.playVideo?.();
-    setIsPlaying(true);
-    setStatusMsg("▶️ Riproduzione");
-  } catch {}
-}
-
-function pauseCurrent() {
-  const p = playerRef.current;
-  if (!p) return;
-
-  try {
-    p.pauseVideo?.();
-    clearLoadWatchdog();
-    setIsPlaying(false);
-    pendingAutoplayRef.current = false;
-    setStatusMsg("⏸ Pausa");
-  } catch {}
-}
+    try {
+      p.pauseVideo?.();
+      clearLoadWatchdog();
+      setIsPlaying(false);
+      pendingAutoplayRef.current = false;
+      setStatusMsg("⏸ Pausa");
+    } catch {}
+  }
 
   function playNext() {
     advancingRef.current = false;
@@ -587,6 +648,10 @@ function pauseCurrent() {
     setQueue((prev) =>
       prev.filter((x) => !(x.id === id && x._queueKey !== currentKeyRef.current))
     );
+
+    setRequestQueue((prev) =>
+      prev.filter((x) => !(x.id === id && x._queueKey !== currentKeyRef.current))
+    );
   }
 
   useEffect(() => {
@@ -602,11 +667,14 @@ function pauseCurrent() {
       return;
     }
 
-    const stillThere = queue.some((p) => p._queueKey === currentKey);
+    const stillThere =
+      queue.some((p) => p._queueKey === currentKey) ||
+      requestQueue.some((p) => p._queueKey === currentKey);
+
     if (!stillThere) {
       setNowPlayingFromEntry(queue[0]);
     }
-  }, [queue, currentKey]);
+  }, [queue, requestQueue, currentKey]);
 
   useEffect(() => {
     let cancelled = false;
@@ -642,88 +710,87 @@ function pauseCurrent() {
             origin,
             ...(isPl && listId ? { listType: "playlist", list: listId } : {}),
           },
-events: {
-onReady: (e: any) => {
-  setPlayerReady(true);
-  setStatusMsg("✅ Player pronto");
+          events: {
+            onReady: (e: any) => {
+              setPlayerReady(true);
+              setStatusMsg("✅ Player pronto");
 
-  try {
-    if (!startedRef.current) {
-      e.target?.mute?.();
-    } else {
-      e.target?.unMute?.();
-    }
-  } catch {}
+              try {
+                if (!startedRef.current) {
+                  e.target?.mute?.();
+                } else {
+                  e.target?.unMute?.();
+                }
+              } catch {}
 
-  if (pendingAutoplayRef.current) {
-    try {
-      e.target?.playVideo?.();
-      setIsPlaying(true);
-    } catch {}
-  }
-},
+              if (pendingAutoplayRef.current) {
+                try {
+                  e.target?.playVideo?.();
+                  setIsPlaying(true);
+                } catch {}
+              }
+            },
 
-  onStateChange: (e: any) => {
-    if (e.data === 1) {
-  setIsPlaying(true);
-  clearLoadWatchdog();
-}
+            onStateChange: (e: any) => {
+              if (e.data === 1) {
+                setIsPlaying(true);
+                clearLoadWatchdog();
+              }
 
-if (e.data === 2) {
-  setIsPlaying(false);
-  clearLoadWatchdog();
-}
+              if (e.data === 2) {
+                setIsPlaying(false);
+                clearLoadWatchdog();
+              }
 
-    if (e.data === 0) {
-      const cur = getCurrentQueueEntry();
-      const p = playerRef.current;
+              if (e.data === 0) {
+                const cur = getCurrentQueueEntry();
+                const p = playerRef.current;
 
-      if (cur?._kind === "playlist" && p?.getPlaylist && p?.getPlaylistIndex) {
-        try {
-          const pl = p.getPlaylist?.() || [];
-          const idx = p.getPlaylistIndex?.() ?? -1;
-          const hasMoreInside =
-            Array.isArray(pl) && idx >= 0 && idx < pl.length - 1;
+                if (cur?._kind === "playlist" && p?.getPlaylist && p?.getPlaylistIndex) {
+                  try {
+                    const pl = p.getPlaylist?.() || [];
+                    const idx = p.getPlaylistIndex?.() ?? -1;
+                    const hasMoreInside =
+                      Array.isArray(pl) && idx >= 0 && idx < pl.length - 1;
 
-          if (hasMoreInside) return;
-        } catch {
-          return;
-        }
-      }
+                    if (hasMoreInside) return;
+                  } catch {
+                    return;
+                  }
+                }
 
-      pendingAutoplayRef.current = true;
-      advancingRef.current = false;
-      advance("ended");
-    }
-  },
+                pendingAutoplayRef.current = true;
+                advancingRef.current = false;
+                advance("ended");
+              }
+            },
 
-  onError: (e: any) => {
-    const code = e?.data;
-    clearLoadWatchdog();
+            onError: (e: any) => {
+              const code = e?.data;
+              clearLoadWatchdog();
 
-    console.log("YT ERROR:", code);
+              console.log("YT ERROR:", code);
 
-    if (code === 150 || code === 101) {
-      setStatusMsg("⏭ Video bloccato, salto...");
-    } else {
-      setStatusMsg(`⚠️ YouTube error ${code}`);
-    }
+              if (code === 150 || code === 101) {
+                setStatusMsg("⏭ Video bloccato, salto...");
+              } else {
+                setStatusMsg(`⚠️ YouTube error ${code}`);
+              }
 
-    const cur = getCurrentQueueEntry();
-    const p = playerRef.current;
+              const cur = getCurrentQueueEntry();
+              const p = playerRef.current;
 
-    if (cur?._kind === "playlist" && p?.nextVideo) {
-      try {
-        p.nextVideo();
-        return;
-      } catch {}
-    }
+              if (cur?._kind === "playlist" && p?.nextVideo) {
+                try {
+                  p.nextVideo();
+                  return;
+                } catch {}
+              }
 
-    pendingAutoplayRef.current = true;
-    advancingRef.current = false;
-    advance(`error-${code}`);
-  },
-
+              pendingAutoplayRef.current = true;
+              advancingRef.current = false;
+              advance(`error-${code}`);
+            },
           },
         });
 
@@ -733,37 +800,37 @@ if (e.data === 2) {
       const p = playerRef.current;
 
       try {
-  if (!startedRef.current) {
-    p?.mute?.();
-  } else {
-    p?.unMute?.();
-  }
+        if (!startedRef.current) {
+          p?.mute?.();
+        } else {
+          p?.unMute?.();
+        }
 
-  if (current._kind === "playlist") {
-    const listId = current._listId || extractYouTubeListId(current.url);
-    if (listId && p.loadPlaylist) {
-      p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
-      if (shouldAutoplay) {
-        p.playVideo?.();
-      }
-    }
-  } else {
-    const vid = current.youtubeVideoId || "";
-    if (vid && p.loadVideoById) {
-      p.loadVideoById(vid);
-      if (shouldAutoplay) {
-        p.playVideo?.();
-      }
-    }
-  }
-} catch {}
+        if (current._kind === "playlist") {
+          const listId = current._listId || extractYouTubeListId(current.url);
+          if (listId && p.loadPlaylist) {
+            p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
+            if (shouldAutoplay) {
+              p.playVideo?.();
+            }
+          }
+        } else {
+          const vid = current.youtubeVideoId || "";
+          if (vid && p.loadVideoById) {
+            p.loadVideoById(vid);
+            if (shouldAutoplay) {
+              p.playVideo?.();
+            }
+          }
+        }
+      } catch {}
     }
 
     initOrLoadCurrent();
 
     return () => {
-     cancelled = true;
-     clearLoadWatchdog();
+      cancelled = true;
+      clearLoadWatchdog();
     };
   }, [currentKey, eventExpired]);
 
@@ -777,7 +844,7 @@ if (e.data === 2) {
       const p = playerRef.current;
       if (!p || !p.getDuration || !p.getCurrentTime || !p.getPlayerState) return;
 
-   try {
+      try {
         const state = p.getPlayerState();
         if (state !== 1) return;
 
@@ -796,7 +863,9 @@ if (e.data === 2) {
   }, [eventExpired]);
 
   const currentSourceKey =
-    queue.find((q) => q._queueKey === currentKey)?._key || "";
+    queue.find((q) => q._queueKey === currentKey)?._key ||
+    requestQueue.find((q) => q._queueKey === currentKey)?._key ||
+    "";
 
   if (redirecting) return null;
 
