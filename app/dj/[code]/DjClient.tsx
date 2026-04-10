@@ -188,6 +188,8 @@ function makeEventCodeFromName(name: string) {
 
 
 export default function DjClient({ code }: { code: string }) {
+
+  const ENABLE_PAYMENT = false;
   const [mode, setMode] = useState<"dj" | "party">("dj");
   const [items, setItems] = useState<RequestItem[]>([]);
   const [eventName, setEventName] = useState("");
@@ -386,6 +388,26 @@ useEffect(() => {
 
   return () => clearTimeout(t);
 }, [toast]);
+
+useEffect(() => {
+  const url = new URL(window.location.href);
+  const isSuccess = url.searchParams.get("paypal") === "success";
+
+  if (!isSuccess || !code) return;
+
+  fetch("/api/paypal/confirm", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      eventCode: code,
+    }),
+  }).then(() => {
+    console.log("Evento attivato 💸");
+    window.history.replaceState({}, "", `/dj/${code}`);
+  });
+}, [code]);
 
   useEffect(() => {
     load();
@@ -926,6 +948,32 @@ if (redirecting) {
       </div>
     )}
 
+    {ENABLE_PAYMENT && (
+  <button
+    onClick={async () => {
+      const res = await fetch("/api/paypal/create-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ eventCode: code }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data?.approveUrl) {
+        alert(data?.error || "Errore creazione pagamento");
+        return;
+      }
+
+      window.open(data.approveUrl, "_blank");
+    }}
+    className="rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,191,36,0.25)] hover:brightness-110 transition"
+  >
+    💸 PAGA EVENTO
+  </button>
+)}
+
     {/* create event */}
     {code === "TEST123" &&
   (
@@ -973,6 +1021,7 @@ if (redirecting) {
           {joinMsg}
          </div>
         )}
+
 
 
 {/* mode buttons */}
