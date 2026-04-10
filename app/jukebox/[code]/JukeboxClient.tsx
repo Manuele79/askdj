@@ -968,11 +968,12 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
           </div>
 
           {/* SPECTRUM */}
-          <div className="hidden lg:flex justify-end mb-3">
+          <div className="flex flex-col items-end gap-3">
+            <div className="hidden lg:flex">
             <FakeSpectrumWide />
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
+  <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
             {code && code !== "TEST123" && !eventExpired && (
               <button
                 onClick={() => setShowQr(true)}
@@ -1064,6 +1065,7 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
               ⏭ Avanti
             </button>
           </div>
+         </div>
         </header>
 
         <section className="rounded-3xl border border-yellow-400/40 bg-zinc-950/70 p-4 shadow-[0_0_30px_rgba(250,204,21,0.12)]">
@@ -1121,11 +1123,11 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
 
                 return (
                    <li
-                     key={r.id}
-                     className={`rounded-2xl border px-4 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
-                       isCurrentSource
-                         ? "border-yellow-300 bg-zinc-900/80 ring-2 ring-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.6)] animate-pulse"
-                         : "border-zinc-700/40 bg-zinc-950/50"
+                    key={r.id}
+                    className={`rounded-2xl border px-4 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
+                      isCurrentSource
+                        ? "border-yellow-300 bg-zinc-900/80 ring-2 ring-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
+                        : "border-zinc-700/40 bg-zinc-950/50"
                     }`}
                    >
 
