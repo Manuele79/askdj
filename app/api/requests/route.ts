@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+const PAYMENT_REQUIRED = false;
+
 // --- SIMPLE IN-MEMORY RATE LIMIT (good as first shield on Vercel) ---
 const _rl = (globalThis as any).__dj_rl || new Map<string, number>();
 (globalThis as any).__dj_rl = _rl;
@@ -295,12 +297,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Bad Request" }, { status: 400 });
   }
 
+  const isDemo = eventCode.startsWith("DEMO-");
+
   // evento deve esistere ed essere non scaduto
   const { data: ev, error: evErr } = await supabase
     .from("events")
-    .select("event_code, expires_at")
+    .select("event_code, expires_at, payment_status, payment_expires_at")
     .eq("event_code", eventCode)
-    .single();
+    .single();  
 
   if (evErr || !ev) {
     return NextResponse.json({ ok: false, error: "Evento non valido" }, { status: 404 });
@@ -310,6 +314,25 @@ export async function POST(req: Request) {
   if (exp && Date.now() > exp) {
     return NextResponse.json({ ok: false, error: "Evento scaduto" }, { status: 410 });
   }
+
+  if (PAYMENT_REQUIRED && !isDemo) {
+  const paymentStatus = String(ev.payment_status || "").trim().toLowerCase();
+  const paymentExp = ev.payment_expires_at ? Date.parse(ev.payment_expires_at) : 0;
+
+  if (paymentStatus !== "paid") {
+    if (paymentExp && Date.now() > paymentExp) {
+      return NextResponse.json(
+        { ok: false, error: "Evento non attivo: pagamento scaduto" },
+        { status: 402 }
+      );
+    }
+
+    return NextResponse.json(
+      { ok: false, error: "Evento non attivo: pagamento richiesto" },
+      { status: 402 }
+    );
+  }
+}
 
 const rawUrl = url; // ✅ FIX 1
 const cleanUrl = extractFirstUrl(rawUrl) || rawUrl;
@@ -499,8 +522,6 @@ const { data: upd, error: e2 } = await supabase
     return NextResponse.json({ ok: true, merged: true, request: mapRow(upd) });
   }
 }
-
-const isDemo = eventCode.startsWith("DEMO-");
 
 if (isDemo) {
   const { count, error: cErr } = await supabase
