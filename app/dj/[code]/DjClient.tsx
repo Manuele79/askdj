@@ -780,12 +780,27 @@ if (redirecting) {
           INIZIA QUI 👇
         </p>
 
-        <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
-          <li>Scegli la modalià:<b>DJ/PARTY (for MIX Tidal) o JUKEBOX(Playlist)</b></li>
-          <li>Scrivi un nome evento e premi <b>Crea Evento</b></li>
-          <li>Quando l’evento è attivo, <b>stampa il QR</b></li>
-          <li>Gli ospiti lo scansionano e inviano richieste</li>
-        </ol>
+<ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
+  <li>
+    Scegli la modalità:
+    <br />
+    <b>🎧 DJ / Party</b> → richieste live + gestione DJ  
+    <br />
+    <b>📻 Jukebox</b> → playlist automatica (senza DJ)
+  </li>
+
+  <li>
+    Scrivi un nome evento e premi <b>Crea Evento</b>
+  </li>
+
+  <li>
+    Quando l’evento è attivo, <b>stampa o condividi il QR</b>
+  </li>
+
+  <li>
+    Gli ospiti scansionano il QR e inviano le canzoni 🎵
+  </li>
+</ol>
 
         <div className="mt-3 text-xs text-yellow-300 leading-snug">
           ⚠️ Gli ospiti NON entrano da questa pagina.
