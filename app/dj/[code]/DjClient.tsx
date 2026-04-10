@@ -803,8 +803,8 @@ if (redirecting) {
 </ol>
 
         <div className="mt-3 text-xs text-yellow-300 leading-snug">
-          ⚠️ Gli ospiti NON entrano da questa pagina.
-          Entrano solo scansionando il QR dell’evento."Dopo che crei l’evento, questa guida sparisce"
+         ⚠️ Gli ospiti NON usano questa pagina.  
+          Entrano solo tramite il QR dell’evento. "Dopo che crei l’evento, questa guida sparisce"
         </div>
       </div>
     )}
@@ -1403,7 +1403,7 @@ if (redirecting) {
             textAlign: "center",
           }}
         >
-          © {new Date().getFullYear()} info@askdj.app — Manuele Martino
+          © {new Date().getFullYear()} info@askdj.app — M.M.
         </footer>
 
     </div>
