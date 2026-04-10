@@ -968,8 +968,8 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
           </div>
 
           {/* SPECTRUM */}
-          <div className="hidden lg:flex justify-end mt-2">
-           <FakeSpectrumWide />
+          <div className="hidden lg:flex justify-end mb-3">
+            <FakeSpectrumWide />
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
@@ -1070,7 +1070,7 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                Libreria evento: YouTube
+                Libreria Evento: 
               </div>
               <div className="mt-1 text-xs text-zinc-400">
                 Le richieste YouTube vengono riprodotte automaticamente in sequenza.
@@ -1078,17 +1078,15 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
             </div>
 
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
-             🔥: VOTI  - 🎵 : {playable.length} BRANI
+             🔥: VOTI   - 🎵 : {playable.length} BRANI
             </span>
           </div>
 
-          <div className={`mb-4 rounded-2xl border border-yellow-400/30 bg-zinc-950/60 p-4 ${
-             isPlaying ? "animate-pulse shadow-[0_0_10px_rgba(255,221,0,0.35)]" : ""
-             }`}>
+          <div className="mb-4 rounded-2xl border border-yellow-400/30 bg-zinc-950/60 p-4">
             <div className="mb-2 text-xs text-zinc-400">{statusMsg}</div>
 
             <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-              Ora in riproduzione
+             🎵 Ora in Riproduzione:
             </div>
 
             <div className="mt-2 text-base font-bold leading-tight text-zinc-100 break-words">
@@ -1122,18 +1120,18 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
                 const isCurrentSource = r._key === currentSourceKey;
 
                 return (
-                  <li
-                    key={r.id}
-                    className={`rounded-2xl border px-4 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
-                      isCurrentSource
-                        ? "border-yellow-300 bg-zinc-900/80 ring-2 ring-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
-                        : "border-zinc-700/40 bg-zinc-950/50"
+                   <li
+                     key={r.id}
+                     className={`rounded-2xl border px-4 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
+                       isCurrentSource
+                         ? "border-yellow-300 bg-zinc-900/80 ring-2 ring-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.6)] animate-pulse"
+                         : "border-zinc-700/40 bg-zinc-950/50"
                     }`}
-                  >
+                   >
 
                       {isCurrentSource && (
                        <div className="text-xs text-yellow-300 font-bold mb-1">
-                         ▶ IN RIPRODUZIONE
+                         ▶ IN RIPRODUZIONE:
                        </div>
                       )}
 
