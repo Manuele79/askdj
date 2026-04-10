@@ -189,7 +189,8 @@ function makeEventCodeFromName(name: string) {
 
 export default function DjClient({ code }: { code: string }) {
 
-  const ENABLE_PAYMENT = false;
+  const ENABLE_PAYMENT = true;
+
   const [mode, setMode] = useState<"dj" | "party">("dj");
   const [items, setItems] = useState<RequestItem[]>([]);
   const [eventName, setEventName] = useState("");
