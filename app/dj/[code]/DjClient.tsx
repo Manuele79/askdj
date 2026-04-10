@@ -118,7 +118,7 @@ function FakeSpectrumWide() {
       {Array.from({ length: 28 }).map((_, i) => (
         <span
           key={i}
-          className="w-2 rounded-full bg-gradient-to-t from-amber-400 via-orange-400 to-pink-400 opacity-80 animate-[eqwide_1.4s_ease-in-out_infinite]"
+          className="w-2 rounded-full bg-gradient-to-t from-yellow-300 via-emerald-400 to-pink-400 opacity-85 animate-[eqwide_1.4s_ease-in-out_infinite]"
           style={{ animationDelay: `${i * 60}ms` }}
         />
       ))}
@@ -207,6 +207,9 @@ export default function DjClient({ code }: { code: string }) {
   const [eventMode, setEventMode] = useState<"dj_party" | "jukebox" | "">("");
   const router = useRouter();
   const [jukeboxDuration, setJukeboxDuration] = useState<"1d" | "1m" | "1y" | "">("");
+
+  const isLanding = code === "TEST123";
+  const showDjPartyUi = !isLanding || eventMode === "dj_party";
 
   function resetPartyUnlock() {
     try {
@@ -771,7 +774,7 @@ if (redirecting) {
     <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
 
     {/* INIZIA QUI */}
-     {code ! == "TEST123" && ( 
+     {isLanding && (
       <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
         <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
           INIZIA QUI 👇
@@ -822,33 +825,53 @@ if (redirecting) {
 
     {code === "TEST123" && (
       <div className="flex flex-col gap-3 sm:items-end">
-        <div className="text-sm sm:text-base font-black text-yellow-300 tracking-wide drop-shadow-[0_0_10px_rgba(250,204,21,0.7)]">
-        SCEGLI MODALITÀ EVENTO
-          </div>
-
-        <div className="flex flex-wrap gap-2 sm:justify-end">
-          <button
-            onClick={() => setEventMode("dj_party")}
-            className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
-              eventMode === "dj_party"
-                ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950"
-                : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
-            }`}
-          >
-            🎧 DJ / Party
-          </button>
-
-          <button
-            onClick={() => setEventMode("jukebox")}
-            className={`rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
-              eventMode === "jukebox"
-                ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950"
-                : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
-            }`}
-          >
-            📻 Jukebox
-          </button>
+        <div className="text-xl sm:text-2xl md:text-3xl font-black text-yellow-300 tracking-wide text-right drop-shadow-[0_0_14px_rgba(250,204,21,0.9)]">
+         SCEGLI MODALITÀ EVENTO
         </div>
+
+<div className="flex flex-col gap-3 sm:w-full sm:max-w-[420px] sm:items-end">
+  <button
+    onClick={() => setEventMode("dj_party")}
+    className={`w-full rounded-3xl px-5 py-4 text-left transition ${
+      eventMode === "dj_party"
+        ? "bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-400 text-zinc-950 shadow-[0_0_24px_rgba(250,204,21,0.35)]"
+        : "bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-yellow-300/40"
+    }`}
+  >
+    <div className="flex items-center gap-3">
+      <span className="text-2xl">🎧</span>
+      <div>
+        <div className="text-base sm:text-lg font-extrabold">DJ / Party</div>
+        <div className={`text-xs sm:text-sm ${
+          eventMode === "dj_party" ? "text-zinc-800/80" : "text-zinc-400"
+        }`}>
+          Richieste live + gestione DJ + Party Mode
+        </div>
+      </div>
+    </div>
+  </button>
+
+  <button
+    onClick={() => setEventMode("jukebox")}
+    className={`w-full rounded-3xl px-5 py-4 text-left transition ${
+      eventMode === "jukebox"
+        ? "bg-gradient-to-r from-cyan-400 via-emerald-400 to-teal-300 text-zinc-950 shadow-[0_0_24px_rgba(34,211,238,0.30)]"
+        : "bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-cyan-300/40"
+    }`}
+  >
+    <div className="flex items-center gap-3">
+      <span className="text-2xl">📻</span>
+      <div>
+        <div className="text-base sm:text-lg font-extrabold">Jukebox</div>
+        <div className={`text-xs sm:text-sm ${
+          eventMode === "jukebox" ? "text-zinc-800/80" : "text-zinc-400"
+        }`}>
+          Playlist autoplay con durata personalizzata
+        </div>
+      </div>
+    </div>
+  </button>
+</div>
 {eventMode === "jukebox" && (
   <div className="flex flex-wrap gap-2 sm:justify-end">
     <button
@@ -937,36 +960,36 @@ if (redirecting) {
         )}
 
 
-          {/* mode buttons */}
-          <div className="flex gap-4 justify-center">
-            <ModeButton
-              active={mode === "dj"}
-              onClick={() => {
-                resetPartyUnlock();
-                setMode("dj");
-              }}
-
-              icon="🎛"
-              label="DJ"
-              variant="dj"
-            />
-            <ModeButton
-              active={mode === "party"}
-              onClick={() => {
-                resetPartyUnlock();
-                setMode("party");
-              }}
-
-              icon="🎉"
-              label="Party"
-              variant="party"
-            />
-          </div>
+{/* mode buttons */}
+{showDjPartyUi && (
+  <div className="flex gap-4 justify-center">
+    <ModeButton
+      active={mode === "dj"}
+      onClick={() => {
+        resetPartyUnlock();
+        setMode("dj");
+      }}
+      icon="🎛"
+      label="DJ"
+      variant="dj"
+    />
+    <ModeButton
+      active={mode === "party"}
+      onClick={() => {
+        resetPartyUnlock();
+        setMode("party");
+      }}
+      icon="🎉"
+      label="Party"
+      variant="party"
+    />
+  </div>
+)}
         </div>
     
 
     {/* Spiegazione DJ / Party (mostra solo prima che esista un evento vero) */}
-{code === "TEST123" && (
+{isLanding && eventMode === "dj_party" && (
   <div className="mt-3 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] p-3 text-center">
     <div className="text-xs font-extrabold text-cyan-300"> 🎧 👆   - Cosa cambia -   👆 🎉 </div>
 
@@ -1014,8 +1037,9 @@ if (redirecting) {
               </div>
 
               </section>
-            ) : (
-<>
+) : (
+  showDjPartyUi && (
+    <>
 <div className="mt-3 mb-2 flex items-center gap-3 pl-2 text-sm font-bold text-yellow-300">
   ⭐ Playlist selezionata:
   <span className="rounded-full bg-yellow-400 px-3 py-0.5 text-xs font-extrabold text-black">
@@ -1315,11 +1339,13 @@ if (redirecting) {
   )}
    </section>
    </>
+     )
   )}
  </div>
 
           {/* RIGHT: QR */}
-          <aside className="lg:col-span-1">
+          {showDjPartyUi && (
+           <aside className="lg:col-span-1">
             <div className="sticky top-4 p-[1px] rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/80 via-zinc-900/70 to-zinc-900/80 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
 
              <div className="rounded-3xl 
@@ -1349,6 +1375,7 @@ if (redirecting) {
             </div>
            </div> 
           </aside>
+          )}
         </div>
       </div>
  {/* Footer */}
