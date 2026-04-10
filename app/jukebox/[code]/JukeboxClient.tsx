@@ -119,6 +119,31 @@ function buildPlayableList(
     .sort((a, b) => a.createdAt - b.createdAt);
 }
 
+function FakeSpectrumWide() {
+  return (
+    <div className="flex items-end justify-center gap-1.5 h-8">
+      {Array.from({ length: 28 }).map((_, i) => (
+        <span
+          key={i}
+          className="w-1.5 rounded-full bg-gradient-to-t from-yellow-300 via-emerald-400 to-pink-400 opacity-80 animate-[eqwide_1.4s_ease-in-out_infinite]"
+          style={{ animationDelay: `${i * 60}ms` }}
+        />
+      ))}
+
+      <style jsx>{`
+        @keyframes eqwide {
+          0%   { height: 20%; opacity: .5; }
+          25%  { height: 100%; opacity: 1; }
+          50%  { height: 40%; opacity: .6; }
+          75%  { height: 90%; opacity: .9; }
+          100% { height: 20%; opacity: .5; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+
 export default function JukeboxClient({ code }: { code: string }) {
   const [redirecting, setRedirecting] = useState(true);
 
@@ -942,13 +967,18 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
             )}
           </div>
 
+          {/* SPECTRUM */}
+          <div className="hidden lg:flex justify-end mt-2">
+           <FakeSpectrumWide />
+          </div>
+
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
             {code && code !== "TEST123" && !eventExpired && (
               <button
                 onClick={() => setShowQr(true)}
                 className="rounded-xl px-5 py-3 text-sm font-extrabold transition bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110"
               >
-                🔳 QR ospiti
+                🔳 QR Ospiti
               </button>
             )}
 
@@ -969,7 +999,7 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
                : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
             ].join(" ")}
            >
-              ➕ Importa brani
+              ➕ Importa Brani
           </button>
           )}
 
@@ -1048,11 +1078,13 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
             </div>
 
             <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
-              🎵 {playable.length} BRANI
+             🔥: VOTI  - 🎵 : {playable.length} BRANI
             </span>
           </div>
 
-          <div className="mb-4 rounded-2xl border border-yellow-400/30 bg-zinc-950/60 p-4">
+          <div className={`mb-4 rounded-2xl border border-yellow-400/30 bg-zinc-950/60 p-4 ${
+             isPlaying ? "animate-pulse shadow-[0_0_10px_rgba(255,221,0,0.35)]" : ""
+             }`}>
             <div className="mb-2 text-xs text-zinc-400">{statusMsg}</div>
 
             <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
