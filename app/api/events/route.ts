@@ -132,6 +132,7 @@ if (mode === "jukebox") {
   payment_status: "pending",
   payment_expires_at: paymentExpiresAt,
   mode: mode,
+  duration: duration,
 },
       { onConflict: "event_code" }
     )
