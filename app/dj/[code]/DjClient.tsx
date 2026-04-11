@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import EventQr from "@/app/components/EventQr";
+import { ENABLE_PAYMENT } from "../../lib/features";
 
 type Platform = "youtube" | "spotify" | "apple" | "amazon" | "tidal" | "other";
 
@@ -188,9 +189,6 @@ function makeEventCodeFromName(name: string) {
 
 
 export default function DjClient({ code }: { code: string }) {
-
-  const ENABLE_PAYMENT = false;
-
 
   const [mode, setMode] = useState<"dj" | "party">("dj");
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
@@ -826,42 +824,115 @@ if (redirecting) {
     <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
 
     {/* INIZIA QUI */}
-     {isLanding && !eventMode && (
-      <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
+{/* BOX DINAMICO SPIEGAZIONE */}
+{isLanding && (
+  <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
+
+    {/* ===== GENERALE ===== */}
+    {!eventMode && (
+      <>
         <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
           INIZIA QUI 👇
         </p>
 
-<ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
-  <li>
-    Scegli la modalità evento:
-    <br />
-    <b>🎧 DJ / Party</b> → richieste live con console DJ
-    <br />
-    <b>📻 Jukebox</b> → player automatico con durata personalizzata
-  </li>
+        <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
+          <li>
+            Scegli la modalità evento:
+            <br />
+            <b>🎧 DJ / Party</b> → richieste live con console DJ
+            <br />
+            <b>📻 Jukebox</b> → player automatico con durata personalizzata
+          </li>
 
-  <li>
-    Inserisci il nome evento e crea il tuo codice
-  </li>
+          <li>
+            Inserisci il nome evento e crea il tuo codice
+          </li>
 
-  <li>
-    Dopo la creazione puoi attivare l’evento e usare le funzioni dedicate
-  </li>
+          <li>
+            Dopo la creazione puoi attivare l’evento e usare le funzioni dedicate
+          </li>
 
-  <li>
-    Gli ospiti entrano solo tramite QR o codice evento
-  </li>
-</ol>
+          <li>
+            Gli ospiti entrano solo tramite QR o codice evento
+          </li>
+        </ol>
 
-<div className="mt-3 text-xs text-yellow-300 leading-snug">
-  ⚠️ Questa è la schermata iniziale.
-  Dopo la scelta modalità vedrai il flusso specifico dell’evento.
-</div>
-      </div>
+        <div className="mt-3 text-xs text-yellow-300 leading-snug">
+          ⚠️ Questa è la schermata iniziale.
+          Dopo la scelta modalità vedrai il flusso specifico dell’evento.
+        </div>
+      </>
     )}
-  </div>
 
+    {/* ===== DJ / PARTY ===== */}
+    {eventMode === "dj_party" && (
+      <>
+        <div className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
+          🎧 COME FUNZIONA DJ / PARTY
+        </div>
+
+        <div className="text-sm text-zinc-200">
+          Crea un evento e condividi il QR con gli ospiti.
+        </div>
+
+        <div className="mt-1 text-sm text-zinc-200">
+          Ricevi richieste, dediche e voti in tempo reale, e decidi se utilizzare i brani.
+        </div>
+
+        <div className="mt-1 text-sm text-zinc-200">
+          Gestisci BPM, playlist e selezione brani dalla console.
+        </div>
+
+        <div className="mt-1 text-sm text-zinc-200">
+          Puoi creare automaticamente la playlist su <span className="font-bold text-cyan-300">TIDAL</span> utilizzandola istantaneamente.
+        </div>
+
+        <div className="mt-1 text-sm text-zinc-200">
+          Modalità PARTY ti permette di riprodurre i link di YOUTUBE in autolay.
+        </div>
+
+        <div className="mt-1 text-sm text-zinc-200">
+          I pulsanti <b>DJ</b> / <b>Party</b> e la console compaiono solo dopo la creazione dell’evento.
+        </div>
+
+        <div className="mt-3 text-xs text-yellow-300">
+          Dopo che crei l’evento, questa guida sparisce.
+        </div>
+      </>
+    )}
+
+    {/* ===== JUKEBOX ===== */}
+    {eventMode === "jukebox" && (
+      <>
+        <div className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
+          📻 COME FUNZIONA JUKEBOX
+        </div>
+
+        <div className="text-sm text-zinc-200">
+          Scegli la durata e crea l’evento.
+        </div>
+
+        <div className="mt-1 text-sm text-zinc-200">
+          Dopo il pagamento entri direttamente nel player automatico di JUKEBOXE.
+        </div>
+
+        <div className="mt-1 text-sm text-zinc-200">
+          Nessun DJ: la musica va in autoplay ricevendo i link di YOUTUBE.🎶
+        </div>
+
+        <div className="text-sm text-zinc-200">
+          Gli aspiti possono mandare le dediche con brani inivati.
+        </div>
+
+        <div className="mt-3 text-xs text-yellow-300">
+          Dopo che crei l’evento, questa guida sparisce.
+        </div>
+      </>
+    )}
+
+  </div>
+)}
+</div>
   <div className="flex flex-col gap-4 sm:items-end">
     {code && code !== "TEST123" && tidalChecked && (
       <div className="flex flex-col items-end gap-2">
@@ -1085,57 +1156,7 @@ if (redirecting) {
     
 
 
-{isLanding && eventMode === "dj_party" && (
-  <div className="mt-3 rounded-2xl border border-yellow-400/40 shadow-[0_0_18px_rgba(250,204,21,0.20)] p-3 text-center">
-    <div className="text-xs font-extrabold text-cyan-300">
-      🎧 👆 - Come funziona DJ / Party -
-    </div>
 
-    <div className="mt-2 text-xs text-zinc-200">
-      Crea un evento e condividi il QR con gli ospiti.
-    </div>
-
-    <div className="mt-1 text-xs text-zinc-200">
-      Ricevi richieste, dediche e voti in tempo reale.
-    </div>
-
-    <div className="mt-1 text-xs text-zinc-200">
-      Gestisci tutto dalla console: BPM, playlist e selezione brani.
-    </div>
-
-    <div className="mt-1 text-xs text-zinc-200">
-      Puoi creare automaticamente la playlist su <span className="font-bold text-cyan-300">TIDAL</span>.
-    </div>
-
-    <div className="mt-2 text-[11px] text-yellow-300">
-      Dopo che crei l’evento, questa guida sparisce.
-    </div>
-  </div>
-)}
-
-{isLanding && eventMode === "jukebox" && (
-  <div className="mt-3 rounded-2xl border border-cyan-400/40 shadow-[0_0_18px_rgba(34,211,238,0.25)] p-3 text-center">
-    <div className="text-xs font-extrabold text-cyan-300">
-      📻 👆 - Come funziona Jukebox -
-    </div>
-
-    <div className="mt-2 text-xs text-zinc-200">
-      Scegli la durata e crea l’evento.
-    </div>
-
-    <div className="mt-1 text-xs text-zinc-200">
-      Dopo il pagamento entri direttamente nel player automatico.
-    </div>
-
-    <div className="mt-1 text-xs text-zinc-200">
-      Nessun DJ: la musica va in autoplay 🎶
-    </div>
-
-    <div className="mt-2 text-[11px] text-yellow-300">
-      Dopo che crei l’evento, questa guida sparisce.
-    </div>
-  </div>
-)}
 
 
     {/* Spiegazione DJ / Party (mostra solo prima che esista un evento vero) */}
