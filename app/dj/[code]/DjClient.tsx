@@ -192,6 +192,7 @@ export default function DjClient({ code }: { code: string }) {
 
   const [mode, setMode] = useState<"dj" | "party">("dj");
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
+  const showFullUi = !ENABLE_PAYMENT || paymentStatus === "paid";
 
   const isPaid = !ENABLE_PAYMENT || paymentStatus === "paid";
   const isPending = ENABLE_PAYMENT && !!paymentStatus && paymentStatus !== "paid";
@@ -410,10 +411,17 @@ useEffect(() => {
     body: JSON.stringify({
       eventCode: code,
     }),
-  }).then(() => {
-    console.log("Evento attivato 💸");
-    window.history.replaceState({}, "", `/dj/${code}`);
-  });
+  })
+.then(() => {
+  console.log("Evento attivato 💸");
+
+  if (currentEventMode === "jukebox") {
+    window.location.href = `/jukebox/${code}`;
+    return;
+  }
+
+  window.history.replaceState({}, "", `/dj/${code}`);
+});
 }, [code]);
 
   useEffect(() => {
@@ -1091,6 +1099,12 @@ if (redirecting) {
               >
                 💸 PAGA EVENTO
               </button>
+              {ENABLE_PAYMENT && isPending && (
+             <div className="text-xs text-yellow-300 text-center mt-2">
+              ⚠️ Evento creato ma non attivo. Completa il pagamento per sbloccare le funzioni.
+             </div>
+            )}
+
             </div>
           )}
         </>
@@ -1208,7 +1222,7 @@ if (redirecting) {
 
               </section>
 ) : (
-  showDjPartyUi && (
+  showDjPartyUi && showFullUi && (
     <>
 <div className="mt-3 mb-2 flex items-center gap-3 pl-2 text-sm font-bold text-yellow-300">
   ⭐ Playlist selezionata:
@@ -1514,7 +1528,7 @@ if (redirecting) {
  </div>
 
           {/* RIGHT: QR */}
-          {showDjPartyUi && effectiveEventMode === "dj_party" && (
+          {showDjPartyUi && effectiveEventMode === "dj_party" && showFullUi && (
             <aside className="lg:col-span-1">
               <div className="sticky top-4 p-[1px] rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/80 via-zinc-900/70 to-zinc-900/80 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
                 <div className="rounded-3xl border border-yellow-400/80 bg-zinc-800/40 backdrop-blur p-4 overflow-hidden shadow-[0_0_20px_rgba(250,204,21,0.25)]">
