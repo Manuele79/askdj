@@ -968,12 +968,12 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
           </div>
 
           {/* SPECTRUM */}
-          <div className="flex flex-col items-end gap-3">
+          <div className="flex flex-col gap-3 lg:items-end">
             <div className="hidden lg:flex">
             <FakeSpectrumWide />
           </div>
 
-  <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
+           <div className="flex flex-col gap-3 w-full sm:flex-row sm:flex-wrap lg:w-auto lg:justify-end">
             {code && code !== "TEST123" && !eventExpired && (
               <button
                 onClick={() => setShowQr(true)}
