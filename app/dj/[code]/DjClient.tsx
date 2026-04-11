@@ -191,7 +191,13 @@ export default function DjClient({ code }: { code: string }) {
 
   const ENABLE_PAYMENT = false;
 
+
   const [mode, setMode] = useState<"dj" | "party">("dj");
+  const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
+
+  const isPaid = !ENABLE_PAYMENT || paymentStatus === "paid";
+  const isPending = ENABLE_PAYMENT && !!paymentStatus && paymentStatus !== "paid";
+
   const [items, setItems] = useState<RequestItem[]>([]);
   const [eventName, setEventName] = useState("");
   const [joinCode, setJoinCode] = useState("");
@@ -208,11 +214,13 @@ export default function DjClient({ code }: { code: string }) {
   const [redirecting, setRedirecting] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
   const [eventMode, setEventMode] = useState<"dj_party" | "jukebox" | "">("");
+  const [currentEventMode, setCurrentEventMode] = useState<"dj_party" | "jukebox" | "">("");
   const router = useRouter();
   const [jukeboxDuration, setJukeboxDuration] = useState<"1d" | "1m" | "1y" | "">("");
 
   const isLanding = code === "TEST123";
   const showDjPartyUi = !isLanding || eventMode === "dj_party";
+  const effectiveEventMode = isLanding ? eventMode : currentEventMode;
 
   function resetPartyUnlock() {
     try {
@@ -223,7 +231,7 @@ export default function DjClient({ code }: { code: string }) {
   }
 
   const [bpmDraft, setBpmDraft] = useState<string>("");
-const [bpmTarget, setBpmTarget] = useState<number | null>(null);
+  const [bpmTarget, setBpmTarget] = useState<number | null>(null);
 
 const confirmBpmTarget = () => {
   const n = Number(bpmDraft);
@@ -454,6 +462,23 @@ useEffect(() => {
 }
 }
 
+async function handlePayEvent() {
+  const res = await fetch("/api/paypal/create-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ eventCode: code }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data?.approveUrl) {
+    alert(data?.error || "Errore creazione pagamento");
+    return;
+  }
+
+  window.location.href = data.approveUrl;
+}
+
 async function loadEventStatus() {
   if (!code || code === "TEST123") return;
 
@@ -465,11 +490,15 @@ async function loadEventStatus() {
     if (!res.ok) return;
 
     const data = await res.json();
+    setPaymentStatus(data.payment_status ?? null);
+    setCurrentEventMode(data.mode ?? "");
     setTidalConnected(!!data.tidal_connected);
     setTidalChecked(true);
-  } catch {
-    setTidalChecked(true);
-  }
+    } catch {
+      setPaymentStatus(null);
+      setCurrentEventMode("");
+     setTidalChecked(true);
+    }
 }
 
 async function disconnectTidal() {
@@ -660,12 +689,12 @@ async function exportPlaylist() {
       });
 
       const addJson = await addRes.json();
-if (!addRes.ok || !addJson.ok) {
-  console.error("ADD TRACK ERROR FULL:", JSON.stringify({
-    title: r.title,
-    trackId,
-    response: addJson,
-  }, null, 2));
+      if (!addRes.ok || !addJson.ok) {
+        console.error("ADD TRACK ERROR FULL:", JSON.stringify({
+         title: r.title,
+         trackId,
+         response: addJson,
+      }, null, 2));
 
   alert(
     `Errore add-track\nTitolo: ${r.title}\nTrackId: ${trackId}\nDettagli: ${JSON.stringify(addJson)}`
@@ -797,7 +826,7 @@ if (redirecting) {
     <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
 
     {/* INIZIA QUI */}
-     {isLanding && (
+     {isLanding && !eventMode && (
       <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
         <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
           INIZIA QUI 👇
@@ -805,30 +834,30 @@ if (redirecting) {
 
 <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
   <li>
-    Scegli la modalità:
+    Scegli la modalità evento:
     <br />
-    <b>🎧 DJ / Party</b> → richieste live + gestione DJ  
+    <b>🎧 DJ / Party</b> → richieste live con console DJ
     <br />
-    <b>📻 Jukebox</b> → playlist automatica (senza DJ)
+    <b>📻 Jukebox</b> → player automatico con durata personalizzata
   </li>
 
   <li>
-    Scrivi un nome evento e premi <b>Crea Evento</b>
+    Inserisci il nome evento e crea il tuo codice
   </li>
 
   <li>
-    Quando l’evento è attivo, <b>stampa o condividi il QR</b>
+    Dopo la creazione puoi attivare l’evento e usare le funzioni dedicate
   </li>
 
   <li>
-    Gli ospiti scansionano il QR e inviano le canzoni 🎵
+    Gli ospiti entrano solo tramite QR o codice evento
   </li>
 </ol>
 
-        <div className="mt-3 text-xs text-yellow-300 leading-snug">
-         ⚠️ Gli ospiti NON usano questa pagina.  
-          Entrano solo tramite il QR dell’evento. "Dopo che crei l’evento, questa guida sparisce"
-        </div>
+<div className="mt-3 text-xs text-yellow-300 leading-snug">
+  ⚠️ Questa è la schermata iniziale.
+  Dopo la scelta modalità vedrai il flusso specifico dell’evento.
+</div>
       </div>
     )}
   </div>
@@ -949,80 +978,82 @@ if (redirecting) {
       </div>
     )}
 
-    {ENABLE_PAYMENT && (
-  <button
-    onClick={async () => {
-      const res = await fetch("/api/paypal/create-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ eventCode: code }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data?.approveUrl) {
-        alert(data?.error || "Errore creazione pagamento");
-        return;
-      }
-
-      window.open(data.approveUrl, "_blank");
-    }}
-    className="rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,191,36,0.25)] hover:brightness-110 transition"
-  >
-    💸 PAGA EVENTO
-  </button>
-)}
-
     {/* create event */}
     {code === "TEST123" &&
-  (
-    eventMode === "dj_party" ||
-    (eventMode === "jukebox" && jukeboxDuration)
-  ) && (
-      <div className="flex flex-col gap-2 sm:items-end">
-        <input
-          value={eventName}
-          onChange={(e) => setEventName(e.target.value)}
-          placeholder="Scrivi: Nome Nuovo Evento..."
-          className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
-        />
-        <button
-          onClick={createEvent}
-          className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
-        >
-          CREA NUOVO EVENTO
-        </button>
-      </div>
-    )}
-  </div>
-</div>
-          
-          {/* join event */}
-          <div className="flex flex-col gap-2 sm:flex-col sm:items-end mt-4">
+      (
+        eventMode === "dj_party" ||
+        (eventMode === "jukebox" && jukeboxDuration)
+      ) && (
+        <>
+          <div className="flex flex-col gap-2 sm:items-end">
             <input
-              value={joinCode}
-              onChange={(e) => setJoinCode(e.target.value)}
-              placeholder="Scrivi: Nome Evento Esistente..."
-              className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
-
+              value={eventName}
+              onChange={(e) => setEventName(e.target.value)}
+              placeholder="Scrivi: Nome Nuovo Evento..."
+              className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
             />
             <button
-              onClick={joinExistingEvent}
-              className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
-
+              onClick={createEvent}
+              className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
             >
-              RIENTRA IN EVENTO 
+              CREA NUOVO EVENTO
             </button>
           </div>
 
-           {joinMsg && (
-          <div className="mt-2 text-sm text-zinc-400">
-          {joinMsg}
-         </div>
-        )}
+          {ENABLE_PAYMENT && !isLanding && !isPaid && (
+            <div className="flex flex-col gap-3 sm:items-end">
+              <div className="w-full sm:w-72 rounded-2xl border border-yellow-400/40 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.16)]">
+                <div className="font-extrabold text-yellow-300">
+                  Evento creato ma non attivo
+                </div>
 
+                <div className="mt-1 text-xs text-zinc-300 leading-snug">
+                  {effectiveEventMode === "dj_party"
+                    ? "Paga per attivare QR, richieste e console DJ."
+                    : "Paga per attivare il tuo evento Jukebox."}
+                </div>
+              </div>
+
+              <button
+                onClick={handlePayEvent}
+                className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,191,36,0.25)] hover:brightness-110 transition"
+              >
+                💸 PAGA EVENTO
+              </button>
+            </div>
+          )}
+        </>
+      )}
+
+    
+  </div>
+</div>
+          
+{isLanding && (
+  <>
+    {/* join event */}
+    <div className="flex flex-col gap-2 sm:flex-col sm:items-end mt-4">
+      <input
+        value={joinCode}
+        onChange={(e) => setJoinCode(e.target.value)}
+        placeholder="Scrivi: Nome Evento Esistente..."
+        className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
+      />
+      <button
+        onClick={joinExistingEvent}
+        className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
+      >
+        RIENTRA IN EVENTO
+      </button>
+    </div>
+
+    {joinMsg && (
+      <div className="mt-2 text-sm text-zinc-400">
+        {joinMsg}
+      </div>
+    )}
+  </>
+)}
 
 
 {/* mode buttons */}
@@ -1053,6 +1084,60 @@ if (redirecting) {
         </div>
     
 
+
+{isLanding && eventMode === "dj_party" && (
+  <div className="mt-3 rounded-2xl border border-yellow-400/40 shadow-[0_0_18px_rgba(250,204,21,0.20)] p-3 text-center">
+    <div className="text-xs font-extrabold text-cyan-300">
+      🎧 👆 - Come funziona DJ / Party -
+    </div>
+
+    <div className="mt-2 text-xs text-zinc-200">
+      Crea un evento e condividi il QR con gli ospiti.
+    </div>
+
+    <div className="mt-1 text-xs text-zinc-200">
+      Ricevi richieste, dediche e voti in tempo reale.
+    </div>
+
+    <div className="mt-1 text-xs text-zinc-200">
+      Gestisci tutto dalla console: BPM, playlist e selezione brani.
+    </div>
+
+    <div className="mt-1 text-xs text-zinc-200">
+      Puoi creare automaticamente la playlist su <span className="font-bold text-cyan-300">TIDAL</span>.
+    </div>
+
+    <div className="mt-2 text-[11px] text-yellow-300">
+      Dopo che crei l’evento, questa guida sparisce.
+    </div>
+  </div>
+)}
+
+{isLanding && eventMode === "jukebox" && (
+  <div className="mt-3 rounded-2xl border border-cyan-400/40 shadow-[0_0_18px_rgba(34,211,238,0.25)] p-3 text-center">
+    <div className="text-xs font-extrabold text-cyan-300">
+      📻 👆 - Come funziona Jukebox -
+    </div>
+
+    <div className="mt-2 text-xs text-zinc-200">
+      Scegli la durata e crea l’evento.
+    </div>
+
+    <div className="mt-1 text-xs text-zinc-200">
+      Dopo il pagamento entri direttamente nel player automatico.
+    </div>
+
+    <div className="mt-1 text-xs text-zinc-200">
+      Nessun DJ: la musica va in autoplay 🎶
+    </div>
+
+    <div className="mt-2 text-[11px] text-yellow-300">
+      Dopo che crei l’evento, questa guida sparisce.
+    </div>
+  </div>
+)}
+
+
     {/* Spiegazione DJ / Party (mostra solo prima che esista un evento vero) */}
 {isLanding && eventMode === "dj_party" && (
   <div className="mt-3 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] p-3 text-center">
@@ -1071,7 +1156,6 @@ if (redirecting) {
     </div>
   </div>
 )}
-
 
 
         {/* MAIN GRID */}
@@ -1409,37 +1493,42 @@ if (redirecting) {
  </div>
 
           {/* RIGHT: QR */}
-          {showDjPartyUi && (
-           <aside className="lg:col-span-1">
-            <div className="sticky top-4 p-[1px] rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/80 via-zinc-900/70 to-zinc-900/80 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+          {showDjPartyUi && effectiveEventMode === "dj_party" && (
+            <aside className="lg:col-span-1">
+              <div className="sticky top-4 p-[1px] rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/80 via-zinc-900/70 to-zinc-900/80 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+                <div className="rounded-3xl border border-yellow-400/80 bg-zinc-800/40 backdrop-blur p-4 overflow-hidden shadow-[0_0_20px_rgba(250,204,21,0.25)]">
+                  <div className="mb-3">
+                    <div className="text-lg font-extrabold text-yellow-300">
+                      INVITA GLI OSPITI (QR):
+                    </div>
+                    <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-100 via-cyan-400 to-pink-200">
+                      Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui
+                    </div>
+                  </div>
 
-             <div className="rounded-3xl 
-                border border-yellow-400/80 
-                bg-zinc-800/40 
-                backdrop-blur 
-                p-4 overflow-hidden shadow-[0_0_20px_rgba(250,204,21,0.25)]">
+                  <div className="mt-2 flex justify-center">
+                    <EventQr eventCode={code} />
+                  </div>
 
+                  {ENABLE_PAYMENT && isPending && (
+                    <div className="mt-4 flex flex-col items-center gap-3">
+                      <div className="text-sm text-yellow-300 text-center">
+                        ⚠️ Evento creato ma NON attivo
+                      </div>
 
-              <div className="mb-3">
-                <div className="text-lg font-extrabold text-yellow-300">
-                  INVITA GLI OSPITI (QR):
+                      <div className="text-xs text-zinc-400 text-center max-w-[220px]">
+                        Paga per attivare richieste e funzionalità
+                      </div>
+                    </div>
+                  )}
+
+                  <p className="mt-3 text-xs text-yellow-300 text-center">
+                    ⚠️ Gli ospiti NON entrano da DJ/Party.  
+                    Devono scansionare questo QR.
+                  </p>
                 </div>
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-100 via-cyan-400 to-pink-200">Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui</div>
               </div>
-
-             <div className="mt-2 flex justify-center">
-              <EventQr eventCode={code} />
-              </div>
-
-
-               <p className="mt-3 text-xs text-yellow-300 text-center">
-               ⚠️ Gli ospiti NON entrano da DJ/Party.  
-               Devono scansionare questo QR.
-              </p>
-
-            </div>
-           </div> 
-          </aside>
+            </aside>
           )}
         </div>
       </div>
