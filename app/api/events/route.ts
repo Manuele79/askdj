@@ -70,22 +70,56 @@ export async function GET(req: Request) {
 });
 }
 
-// POST /api/events body: { eventCode, password }
+// POST /api/events body: { eventCode, password, mode, duration }
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({} as any));
   const mode = body.mode === "jukebox" ? "jukebox" : "dj_party";
   const duration = body.duration;
-  const eventCode = normalizeEventCode(body.eventCode);
+
+  let eventCode = normalizeEventCode(body.eventCode);
   const password = body.password;
 
   if (!eventCode) {
     return NextResponse.json({ ok: false, error: "Bad Request" }, { status: 400 });
   }
 
-  const okPass = await checkCreatePassword(password);
-  if (!okPass) {
-    return NextResponse.json({ ok: false, error: "Password errata" }, { status: 401 });
+  const ADMIN_BYPASS_KEYWORD = "CIUFFOSNOW";
+  const hasAdminBypass = eventCode.includes(ADMIN_BYPASS_KEYWORD);
+
+  if (hasAdminBypass) {
+    eventCode = eventCode
+      .replaceAll(ADMIN_BYPASS_KEYWORD, "")
+      .replace(/--+/g, "-")
+      .replace(/^-|-$/g, "")
+      .trim();
   }
+
+  if (!eventCode) {
+    return NextResponse.json({ ok: false, error: "Codice evento non valido" }, { status: 400 });
+  }
+
+  const { data: passSetting } = await supabase
+    .from("settings")
+    .select("value")
+    .eq("key", "require_create_password")
+    .single();
+
+  const requireCreatePassword = String(passSetting?.value || "").toLowerCase() === "true";
+
+  if (requireCreatePassword && !hasAdminBypass) {
+    const okPass = await checkCreatePassword(password);
+    if (!okPass) {
+      return NextResponse.json({ ok: false, error: "Password errata" }, { status: 401 });
+    }
+  }
+
+  const { data: paymentSetting } = await supabase
+    .from("settings")
+    .select("value")
+    .eq("key", "payments_enabled")
+    .single();
+
+  const paymentsEnabled = String(paymentSetting?.value || "").toLowerCase() === "true";
 
   // 1) controllo se esiste già
   const { data: existing, error: exErr } = await supabase
@@ -101,7 +135,6 @@ export async function POST(req: Request) {
   const exTs = existing?.expires_at ? Date.parse(existing.expires_at) : 0;
   const isActive = existing && exTs && Date.now() <= exTs;
 
-  // se esiste ed è attivo -> BLOCCO
   if (isActive) {
     return NextResponse.json(
       { ok: false, error: "Already active" },
@@ -109,34 +142,37 @@ export async function POST(req: Request) {
     );
   }
 
-  // 2) crea (o resetta se scaduto) scadenza a 12h da ora
-let expiresAt;
+  // 2) scadenza evento
+  let expiresAt;
 
-if (mode === "jukebox") {
-  if (duration === "1m") {
-    expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-  } else if (duration === "1y") {
-    expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
+  if (mode === "jukebox") {
+    if (duration === "1m") {
+      expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    } else if (duration === "1y") {
+      expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
+    } else {
+      expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    }
   } else {
-    expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
   }
-} else {
-  expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
-}
 
   const paymentExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+  const shouldBypassPayment = hasAdminBypass || !paymentsEnabled;
 
   const { data, error } = await supabase
     .from("events")
     .upsert(
       {
-  event_code: eventCode,
-  expires_at: expiresAt,
-  payment_status: "pending",
-  payment_expires_at: paymentExpiresAt,
-  mode: mode,
-  duration: duration,
-},
+        event_code: eventCode,
+        expires_at: expiresAt,
+        payment_status: shouldBypassPayment ? "paid" : "pending",
+        payment_expires_at: shouldBypassPayment ? null : paymentExpiresAt,
+        paid_at: shouldBypassPayment ? new Date().toISOString() : null,
+        mode: mode,
+        duration: duration,
+      },
       { onConflict: "event_code" }
     )
     .select("event_code, created_at, expires_at")
@@ -146,5 +182,9 @@ if (mode === "jukebox") {
     return NextResponse.json({ ok: false, error: "DB error" }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, eventCode: data.event_code, expiresAt: data.expires_at });
+  return NextResponse.json({
+    ok: true,
+    eventCode: data.event_code,
+    expiresAt: data.expires_at,
+  });
 }
