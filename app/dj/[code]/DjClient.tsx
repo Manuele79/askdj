@@ -1063,14 +1063,21 @@ if (redirecting) {
   >
     <div className="flex items-center gap-3">
       <span className="text-2xl">🎧</span>
-      <div>
-        <div className="text-base sm:text-lg font-extrabold">DJ / Party</div>
-        <div className={`text-xs sm:text-sm ${
-          eventMode === "dj_party" ? "text-zinc-800/80" : "text-zinc-400"
-        }`}>
-          Richieste live + gestione DJ + Party Mode
-        </div>
-      </div>
+<div>
+  <div className="text-base sm:text-lg font-extrabold">DJ / Party</div>
+
+  <div className={`text-xs sm:text-sm ${
+    eventMode === "dj_party" ? "text-zinc-800/80" : "text-zinc-400"
+  }`}>
+    Richieste live + gestione DJ + Party Mode
+  </div>
+
+  {paymentsEnabled && (
+    <div className="mt-1 text-xs font-extrabold text-yellow-300">
+      10€
+    </div>
+  )}
+</div>
     </div>
   </button>
 
@@ -1105,7 +1112,12 @@ if (redirecting) {
           : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
       }`}
     >
-      1 giorno
+      <div className="flex flex-col items-center">
+  <span>1 giorno</span>
+  {paymentsEnabled && (
+    <span className="text-[10px] font-bold text-cyan-300">2€</span>
+  )}
+</div>
     </button>
 
     <button
@@ -1116,7 +1128,12 @@ if (redirecting) {
           : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
       }`}
     >
-      1 mese
+      <div className="flex flex-col items-center">
+  <span>1 mese</span>
+  {paymentsEnabled && (
+    <span className="text-[10px] font-bold text-cyan-300">8.99€</span>
+  )}
+</div>
     </button>
 
     <button
@@ -1127,7 +1144,12 @@ if (redirecting) {
           : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
       }`}
     >
-      1 anno
+      <div className="flex flex-col items-center">
+  <span>1 anno</span>
+  {paymentsEnabled && (
+    <span className="text-[10px] font-bold text-cyan-300">69€</span>
+  )}
+</div>
     </button>
   </div>
 )}
@@ -1192,7 +1214,7 @@ if (redirecting) {
 
 
 {/* mode buttons */}
-{showDjPartyUi && showFullUi && (
+{eventMode === "dj_party" && (
   <div className="flex gap-4 justify-center">
     <ModeButton
       active={mode === "dj"}
