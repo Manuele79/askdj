@@ -309,21 +309,30 @@ function splitDedications(raw: string | null | undefined) {
     );
   }, [items]);
 
-  async function load() {
-    try {
-      const res = await fetch(`/api/requests?eventCode=${encodeURIComponent(code)}`);
-      const data = await res.json();
-      const next: RequestItem[] = (data.requests || []).map((r: any) => ({
-     ...r,
-     dedication: String(r.dedication ?? ""),
+async function load() {
+  if (!code || code === "TEST123") return;
+
+  try {
+    const res = await fetch(`/api/requests?eventCode=${encodeURIComponent(code)}`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      return;
+    }
+
+    const data = await res.json();
+
+    const next: RequestItem[] = (data.requests || []).map((r: any) => ({
+      ...r,
+      dedication: String(r.dedication ?? ""),
     }));
 
-
-      setItems((prev) =>
-        JSON.stringify(prev) === JSON.stringify(next) ? prev : next
-      );
-    } catch {}
-  }
+    setItems((prev) =>
+      JSON.stringify(prev) === JSON.stringify(next) ? prev : next
+    );
+  } catch {}
+}
 
   async function voteUp(r: RequestItem) {
     await fetch("/api/requests", {
@@ -435,11 +444,19 @@ useEffect(() => {
 });
 }, [code]);
 
-  useEffect(() => {
-    load();
+useEffect(() => {
+  if (!code) return;
+
+  if (code === "TEST123") {
     loadEventStatus();
-    const t = setInterval(load, 1500);
-    const t2 = setInterval(loadEventStatus, 2000);
+    return;
+  }
+
+  load();
+  loadEventStatus();
+
+  const t = setInterval(load, 1500);
+  const t2 = setInterval(loadEventStatus, 2000);
 
   return () => {
     clearInterval(t);
