@@ -973,6 +973,35 @@ if (redirecting) {
       </div>
     )}
 
+              {ENABLE_PAYMENT && !isLanding && !isPaid && (
+            <div className="flex flex-col gap-3 sm:items-end">
+              <div className="w-full sm:w-72 rounded-2xl border border-yellow-400/40 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.16)]">
+                <div className="font-extrabold text-yellow-300">
+                  Evento creato ma non attivo
+                </div>
+
+                <div className="mt-1 text-xs text-zinc-300 leading-snug">
+                  {effectiveEventMode === "dj_party"
+                    ? "Paga per attivare QR, richieste e console DJ."
+                    : "Paga per attivare il tuo evento Jukebox."}
+                </div>
+              </div>
+
+              <button
+                onClick={handlePayEvent}
+                className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,191,36,0.25)] hover:brightness-110 transition"
+              >
+                💸 PAGA EVENTO
+              </button>
+              {ENABLE_PAYMENT && isPending && (
+             <div className="text-xs text-yellow-300 text-center mt-2">
+              ⚠️ Evento creato ma non attivo. Completa il pagamento per sbloccare le funzioni.
+             </div>
+            )}
+
+            </div>
+          )}
+
     {code === "TEST123" && (
       <div className="flex flex-col gap-3 sm:items-end">
         <div className="text-xl sm:text-2xl md:text-3xl font-black text-yellow-300 tracking-wide text-right drop-shadow-[0_0_14px_rgba(250,204,21,0.9)]">
@@ -1083,34 +1112,7 @@ if (redirecting) {
             </button>
           </div>
 
-          {ENABLE_PAYMENT && !isLanding && !isPaid && (
-            <div className="flex flex-col gap-3 sm:items-end">
-              <div className="w-full sm:w-72 rounded-2xl border border-yellow-400/40 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.16)]">
-                <div className="font-extrabold text-yellow-300">
-                  Evento creato ma non attivo
-                </div>
 
-                <div className="mt-1 text-xs text-zinc-300 leading-snug">
-                  {effectiveEventMode === "dj_party"
-                    ? "Paga per attivare QR, richieste e console DJ."
-                    : "Paga per attivare il tuo evento Jukebox."}
-                </div>
-              </div>
-
-              <button
-                onClick={handlePayEvent}
-                className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,191,36,0.25)] hover:brightness-110 transition"
-              >
-                💸 PAGA EVENTO
-              </button>
-              {ENABLE_PAYMENT && isPending && (
-             <div className="text-xs text-yellow-300 text-center mt-2">
-              ⚠️ Evento creato ma non attivo. Completa il pagamento per sbloccare le funzioni.
-             </div>
-            )}
-
-            </div>
-          )}
         </>
       )}
 
