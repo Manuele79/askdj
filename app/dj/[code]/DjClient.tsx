@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import EventQr from "@/app/components/EventQr";
-import { ENABLE_PAYMENT } from "../../lib/features";
+
 
 type Platform = "youtube" | "spotify" | "apple" | "amazon" | "tidal" | "other";
 
@@ -192,10 +192,10 @@ export default function DjClient({ code }: { code: string }) {
 
   const [mode, setMode] = useState<"dj" | "party">("dj");
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
-  const showFullUi = !ENABLE_PAYMENT || paymentStatus === "paid";
-
-  const isPaid = !ENABLE_PAYMENT || paymentStatus === "paid";
-  const isPending = ENABLE_PAYMENT && !!paymentStatus && paymentStatus !== "paid";
+  const [paymentsEnabled, setPaymentsEnabled] = useState(false);
+  const isPaid = !paymentsEnabled || paymentStatus === "paid";
+  const isPending = paymentsEnabled && !!paymentStatus && paymentStatus !== "paid";
+  const showFullUi = !paymentsEnabled || paymentStatus === "paid";
 
   const [items, setItems] = useState<RequestItem[]>([]);
   const [eventName, setEventName] = useState("");
@@ -398,6 +398,17 @@ useEffect(() => {
 }, [toast]);
 
 useEffect(() => {
+  fetch("/api/settings", { cache: "no-store" })
+    .then((res) => res.json())
+    .then((data) => {
+      setPaymentsEnabled(!!data.payments_enabled);
+    })
+    .catch(() => {
+      setPaymentsEnabled(false);
+    });
+}, []);
+
+useEffect(() => {
   const url = new URL(window.location.href);
   const isSuccess = url.searchParams.get("paypal") === "success";
 
@@ -461,7 +472,7 @@ useEffect(() => {
     return;
   }
 
-  if (ENABLE_PAYMENT) {
+  if (paymentsEnabled) {
   router.push(`/dj/${eventCode}`);
 } else {
   if (eventMode === "jukebox") {
@@ -544,7 +555,7 @@ async function joinExistingEvent() {
       const data = await res.json();
       const paymentStatus = String(data.payment_status || "").toLowerCase();
 
-      if (ENABLE_PAYMENT && paymentStatus !== "paid") {
+      if (paymentsEnabled && paymentStatus !== "paid") {
         router.push(`/dj/${safe}`);
         return;
       }
@@ -979,7 +990,7 @@ if (redirecting) {
       </div>
     )}
 
-              {ENABLE_PAYMENT && !isLanding && !isPaid && (
+            {paymentsEnabled && !isLanding && !isPaid && (
             <div className="flex flex-col gap-3 sm:items-end">
               <div className="w-full sm:w-72 rounded-2xl border border-yellow-400/40 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.16)]">
                 <div className="font-extrabold text-yellow-300">
@@ -999,7 +1010,7 @@ if (redirecting) {
               >
                 💸 ATTIVA CON PAYPAL
               </button>
-              {ENABLE_PAYMENT && isPending && (
+              {paymentsEnabled && isPending && (
              <div className="text-xs text-yellow-300 text-center mt-2">
               ⚠️ Evento creato ma non attivo. Completa il pagamento per sbloccare le funzioni.
              </div>
@@ -1558,7 +1569,7 @@ if (redirecting) {
                     <EventQr eventCode={code} />
                   </div>
 
-                  {ENABLE_PAYMENT && isPending && (
+                  {paymentsEnabled && isPending && (
                     <div className="mt-4 flex flex-col items-center gap-3">
                       <div className="text-sm text-yellow-300 text-center">
                         ⚠️ Evento creato ma NON attivo
