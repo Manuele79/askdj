@@ -193,6 +193,7 @@ export default function DjClient({ code }: { code: string }) {
   const [mode, setMode] = useState<"dj" | "party">("dj");
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
   const [paymentsEnabled, setPaymentsEnabled] = useState(false);
+  const [requireCreatePassword, setRequireCreatePassword] = useState(false);
   const isPaid = !paymentsEnabled || paymentStatus === "paid";
   const isPending = paymentsEnabled && !!paymentStatus && paymentStatus !== "paid";
   const showFullUi = !paymentsEnabled || paymentStatus === "paid";
@@ -411,9 +412,11 @@ useEffect(() => {
     .then((res) => res.json())
     .then((data) => {
       setPaymentsEnabled(!!data.payments_enabled);
+      setRequireCreatePassword(!!data.require_create_password);
     })
     .catch(() => {
       setPaymentsEnabled(false);
+      setRequireCreatePassword(false);
     });
 }, []);
 
@@ -470,8 +473,13 @@ useEffect(() => {
 
 
 
-  const password = prompt("Password per creare evento:");
-  if (!password) return;
+let password = "";
+
+if (requireCreatePassword) {
+  const asked = prompt("Password per creare evento:");
+  if (!asked) return;
+  password = asked;
+}
 
   const res = await fetch("/api/events", {
     method: "POST",
