@@ -542,6 +542,12 @@ async function joinExistingEvent() {
 
     if (res.status === 200) {
       const data = await res.json();
+      const paymentStatus = String(data.payment_status || "").toLowerCase();
+
+      if (ENABLE_PAYMENT && paymentStatus !== "paid") {
+        router.push(`/dj/${safe}`);
+        return;
+      }
 
       if (data.mode === "jukebox") {
         router.push(`/jukebox/${safe}`);
@@ -946,7 +952,7 @@ if (redirecting) {
 )}
 </div>
   <div className="flex flex-col gap-4 sm:items-end">
-    {code && code !== "TEST123" && tidalChecked && (
+    {code && code !== "TEST123" && tidalChecked && showFullUi && (
       <div className="flex flex-col items-end gap-2">
         {tidalConnected ? (
           <div className="mb-4 flex items-center gap-2">
@@ -991,7 +997,7 @@ if (redirecting) {
                 onClick={handlePayEvent}
                 className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,191,36,0.25)] hover:brightness-110 transition"
               >
-                💸 PAGA EVENTO
+                💸 ATTIVA CON PAYPAL
               </button>
               {ENABLE_PAYMENT && isPending && (
              <div className="text-xs text-yellow-300 text-center mt-2">
@@ -1148,7 +1154,7 @@ if (redirecting) {
 
 
 {/* mode buttons */}
-{showDjPartyUi && (
+{showDjPartyUi && showFullUi && (
   <div className="flex gap-4 justify-center">
     <ModeButton
       active={mode === "dj"}
@@ -1203,7 +1209,8 @@ if (redirecting) {
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
           {/* LEFT */}
           <div className="lg:col-span-2">
-            {mode === "party" ? (
+            {showDjPartyUi && showFullUi ? (
+              mode === "party" ? (
               <section className="rounded-3xl border border-yellow-400/40 bg-zinc-950/70 shadow-[0_0_35px_rgba(253,224,71,0.35)] p-2 sm:p-3 ">
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-4 text-xs text-cyan-400">
                   <span className="pl-4 min-w-0 truncate">Modalità Party:Autoplay YouTube</span>
@@ -1225,11 +1232,11 @@ if (redirecting) {
                  allow="autoplay; encrypted-media; picture-in-picture"
                 />
               </div>
+             </section>
 
-              </section>
-) : (
-  showDjPartyUi && showFullUi && (
-    <>
+      ) : (
+        <>
+
 <div className="mt-3 mb-2 flex items-center gap-3 pl-2 text-sm font-bold text-yellow-300">
   ⭐ Playlist selezionata:
   <span className="rounded-full bg-yellow-400 px-3 py-0.5 text-xs font-extrabold text-black">
@@ -1529,12 +1536,12 @@ if (redirecting) {
   )}
    </section>
    </>
-     )
-  )}
- </div>
+      )
+    ) : null}
+  </div>
 
           {/* RIGHT: QR */}
-          {showDjPartyUi && effectiveEventMode === "dj_party" && showFullUi && (
+          {!isLanding && effectiveEventMode === "dj_party" && (
             <aside className="lg:col-span-1">
               <div className="sticky top-4 p-[1px] rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/80 via-zinc-900/70 to-zinc-900/80 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
                 <div className="rounded-3xl border border-yellow-400/80 bg-zinc-800/40 backdrop-blur p-4 overflow-hidden shadow-[0_0_20px_rgba(250,204,21,0.25)]">
