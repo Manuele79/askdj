@@ -467,45 +467,47 @@ useEffect(() => {
   };
 }, [code]);
 
-  async function createEvent() { 
-  const eventCode = makeEventCodeFromName(eventName);
-  if (!eventCode) return;
+async function createEvent() { 
+  const rawEventCode = makeEventCodeFromName(eventName);
+  if (!rawEventCode) return;
 
+  let password = "";
 
-
-let password = "";
-
-if (requireCreatePassword) {
-  const asked = prompt("Password per creare evento:");
-  if (!asked) return;
-  password = asked;
-}
+  if (requireCreatePassword) {
+    const asked = prompt("Password per creare evento:");
+    if (!asked) return;
+    password = asked;
+  }
 
   const res = await fetch("/api/events", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-    eventCode,
-    password,
-    mode: eventMode,
-    duration: jukeboxDuration,
-  }),
+      eventCode: rawEventCode,
+      password,
+      mode: eventMode,
+      duration: jukeboxDuration,
+    }),
   });
 
   if (!res.ok) {
-    alert("Password errata o errore creazione evento");
+    const err = await res.json().catch(() => null);
+    alert(err?.error || "Errore creazione evento");
     return;
   }
 
+  const data = await res.json();
+  const finalEventCode = data?.eventCode || rawEventCode;
+
   if (paymentsEnabled) {
-  router.push(`/dj/${eventCode}`);
-} else {
-  if (eventMode === "jukebox") {
-    router.push(`/jukebox/${eventCode}`);
+    router.push(`/dj/${finalEventCode}`);
   } else {
-    router.push(`/dj/${eventCode}`);
+    if (eventMode === "jukebox") {
+      router.push(`/jukebox/${finalEventCode}`);
+    } else {
+      router.push(`/dj/${finalEventCode}`);
+    }
   }
-}
 }
 
 async function handlePayEvent() {
