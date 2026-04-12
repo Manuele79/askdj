@@ -461,10 +461,14 @@ useEffect(() => {
     return;
   }
 
-  if (eventMode === "jukebox") {
-  router.push(`/jukebox/${eventCode}`);
-} else {
+  if (ENABLE_PAYMENT) {
   router.push(`/dj/${eventCode}`);
+} else {
+  if (eventMode === "jukebox") {
+    router.push(`/jukebox/${eventCode}`);
+  } else {
+    router.push(`/dj/${eventCode}`);
+  }
 }
 }
 
