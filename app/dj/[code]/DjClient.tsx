@@ -1186,7 +1186,7 @@ if (redirecting) {
 
 
     {/* Spiegazione DJ / Party (mostra solo prima che esista un evento vero) */}
-{isLanding && eventMode === "dj_party" && (
+{eventMode === "dj_party" && (
   <div className="mt-3 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] p-3 text-center">
     <div className="text-xs font-extrabold text-cyan-300"> 🎧 👆   - Cosa cambia -   👆 🎉 </div>
 
