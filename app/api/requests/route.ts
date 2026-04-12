@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const PAYMENT_REQUIRED = false;
 
 // --- SIMPLE IN-MEMORY RATE LIMIT (good as first shield on Vercel) ---
 const _rl = (globalThis as any).__dj_rl || new Map<string, number>();
@@ -298,6 +297,13 @@ export async function POST(req: Request) {
   }
 
   const isDemo = eventCode.startsWith("DEMO-");
+  const { data: paymentSetting } = await supabase
+  .from("settings")
+  .select("value")
+  .eq("key", "payments_enabled")
+  .single();
+
+const PAYMENT_REQUIRED = paymentSetting?.value === "true";
 
   // evento deve esistere ed essere non scaduto
   const { data: ev, error: evErr } = await supabase
