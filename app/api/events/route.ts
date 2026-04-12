@@ -183,8 +183,10 @@ export async function POST(req: Request) {
   }
 
   return NextResponse.json({
-    ok: true,
-    eventCode: data.event_code,
-    expiresAt: data.expires_at,
-  });
+  ok: true,
+  eventCode: data.event_code,
+  expiresAt: data.expires_at,
+  payment_status: shouldBypassPayment ? "paid" : "pending",
+  mode,
+});
 }
