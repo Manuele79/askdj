@@ -1076,7 +1076,7 @@ if (redirecting) {
   </div>
 
   {paymentsEnabled && (
-    <div className="mt-1 text-xs font-extrabold text-yellow-300">
+    <div className="mt-1 text-xs font-extrabold text-cyan-300">
       10€
     </div>
   )}
