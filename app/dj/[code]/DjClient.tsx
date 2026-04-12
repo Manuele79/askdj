@@ -499,14 +499,17 @@ async function createEvent() {
   const data = await res.json();
   const finalEventCode = data?.eventCode || rawEventCode;
 
-  if (paymentsEnabled) {
-    router.push(`/dj/${finalEventCode}`);
-  } else {
-    if (eventMode === "jukebox") {
-      router.push(`/jukebox/${finalEventCode}`);
+  const finalPaymentStatus = data?.payment_status || "pending";
+  const finalMode = data?.mode || eventMode;
+
+  if (finalPaymentStatus === "paid") {
+   if (finalMode === "jukebox") {
+     router.push(`/jukebox/${finalEventCode}`);
     } else {
-      router.push(`/dj/${finalEventCode}`);
-    }
+     router.push(`/dj/${finalEventCode}`);
+   }
+  } else {
+   router.push(`/dj/${finalEventCode}`);
   }
 }
 
