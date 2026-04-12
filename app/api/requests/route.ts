@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const PAYMENT_REQUIRED = false;
+const PAYMENT_REQUIRED = true;
 
 // --- SIMPLE IN-MEMORY RATE LIMIT (good as first shield on Vercel) ---
 const _rl = (globalThis as any).__dj_rl || new Map<string, number>();
