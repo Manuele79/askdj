@@ -42,7 +42,7 @@ export async function GET(req: Request) {
 
   const { data: ev, error } = await supabase
     .from("events")
-    .select("event_code, expires_at, mode, duration, payment_status, paid_at, tidal_connected, tidal_user_id, tidal_playlist_id, tidal_playlist_url")
+    .select("event_code, expires_at, mode, payment_status, paid_at, duration, tidal_connected, tidal_user_id, tidal_playlist_id, tidal_playlist_url")
     .eq("event_code", eventCode)
     .single();
 
