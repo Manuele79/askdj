@@ -194,9 +194,12 @@ export default function DjClient({ code }: { code: string }) {
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
   const [paymentsEnabled, setPaymentsEnabled] = useState(false);
   const [requireCreatePassword, setRequireCreatePassword] = useState(false);
+
+  const isLanding = code === "TEST123";
+
   const isPaid = !paymentsEnabled || paymentStatus === "paid";
   const isPending = paymentsEnabled && !!paymentStatus && paymentStatus !== "paid";
-  const showFullUi = !paymentsEnabled || paymentStatus === "paid";
+  const showFullUi = !isLanding && (!paymentsEnabled || paymentStatus === "paid");
 
   const [items, setItems] = useState<RequestItem[]>([]);
   const [eventName, setEventName] = useState("");
@@ -218,7 +221,6 @@ export default function DjClient({ code }: { code: string }) {
   const router = useRouter();
   const [jukeboxDuration, setJukeboxDuration] = useState<"1d" | "1m" | "1y" | "">("");
 
-  const isLanding = code === "TEST123";
   const showDjPartyUi = !isLanding || eventMode === "dj_party";
   const effectiveEventMode = isLanding ? eventMode : currentEventMode;
 
@@ -1050,10 +1052,10 @@ if (redirecting) {
           )}
 
     {code === "TEST123" && (
-      <div className="flex flex-col gap-3 sm:items-end">
-        <div className="text-xl sm:text-2xl md:text-3xl font-black text-yellow-300 tracking-wide text-right drop-shadow-[0_0_14px_rgba(250,204,21,0.9)]">
-         SCEGLI MODALITÀ EVENTO
-        </div>
+    <div className="flex flex-col items-center gap-3 sm:items-end">
+    <div className="w-full text-center sm:text-right text-xl sm:text-2xl md:text-3xl font-black text-yellow-300 tracking-wide drop-shadow-[0_0_14px_rgba(250,204,21,0.9)]">
+     SCEGLI MODALITÀ EVENTO
+    </div>
 
 <div className="flex flex-col gap-3 sm:w-full sm:max-w-[420px] sm:items-end">
   <button
@@ -1118,7 +1120,7 @@ if (redirecting) {
       <div className="flex flex-col items-center">
   <span>1 giorno</span>
   {paymentsEnabled && (
-    <span className="text-[10px] font-bold text-cyan-300">2€</span>
+    <span className="mt-0.5 text-xs sm:text-sm font-extrabold text-cyan-300">2€</span>
   )}
 </div>
     </button>
@@ -1134,7 +1136,7 @@ if (redirecting) {
       <div className="flex flex-col items-center">
   <span>1 mese</span>
   {paymentsEnabled && (
-    <span className="text-[10px] font-bold text-cyan-300">8.99€</span>
+    <span className="mt-0.5 text-xs sm:text-sm font-extrabold text-cyan-300">8.99€</span>
   )}
 </div>
     </button>
@@ -1150,7 +1152,7 @@ if (redirecting) {
       <div className="flex flex-col items-center">
   <span>1 anno</span>
   {paymentsEnabled && (
-    <span className="text-[10px] font-bold text-cyan-300">69€</span>
+    <span className="mt-0.5 text-xs sm:text-sm font-extrabold text-cyan-300">69€</span>
   )}
 </div>
     </button>
