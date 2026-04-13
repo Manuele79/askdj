@@ -14,7 +14,7 @@ const supabase = createClient(
 );
 
 function getPaypalBaseUrl() {
-  return "https://api-m.sandbox.paypal.com";
+  return "https://api-m.paypal.com";
 }
 
 async function getPaypalAccessToken() {
@@ -47,7 +47,7 @@ function getPrice(mode: string, duration: string | null) {
   if (mode === "jukebox") {
     if (duration === "1m") return "8.99";
     if (duration === "1y") return "69.00";
-    return "2.00";
+    return "1.00";
   }
 
   throw new Error("Prezzo non configurato");
@@ -80,6 +80,7 @@ export async function POST(req: Request) {
     const accessToken = await getPaypalAccessToken();
 
     const baseAppUrl = "https://www.askdj.app";
+    const modePath = ev.mode === "jukebox" ? "jukebox" : "dj";
 
     const paypalRes = await fetch(`${getPaypalBaseUrl()}/v2/checkout/orders`, {
       method: "POST",
@@ -102,8 +103,8 @@ export async function POST(req: Request) {
         application_context: {
           brand_name: "AskDJ",
           user_action: "PAY_NOW",
-          return_url: `${baseAppUrl}/dj/${ev.event_code}?paypal=success`,
-          cancel_url: `${baseAppUrl}/dj/${ev.event_code}?paypal=cancel`,
+          return_url: `${baseAppUrl}/${modePath}/${ev.event_code}?paypal=success`,
+          cancel_url: `${baseAppUrl}/${modePath}/${ev.event_code}?paypal=cancel`,
         },
       }),
     });
