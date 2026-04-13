@@ -982,7 +982,7 @@ if (redirecting) {
         </div>
 
         <div className="text-sm text-zinc-200">
-          Gli aspiti possono mandare le dediche con brani inivati.
+          Gli ospiti possono mandare le dediche con brani inviati.
         </div>
 
         <div className="mt-3 text-xs text-yellow-300">
