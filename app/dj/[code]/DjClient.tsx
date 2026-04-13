@@ -929,19 +929,19 @@ if (redirecting) {
     {eventMode === "dj_party" && (
       <>
         <div className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
-          🎧 COME FUNZIONA DJ / PARTY
+          🎧 COME FUNZIONA DJ / PARTY (la durarta dell evento è di 12 ore)
         </div>
 
         <div className="text-sm text-zinc-200">
-          Crea un evento e condividi il QR con gli ospiti.
+          Srivi il nome dell'evento, clicca crea evento e condividi il QR creato con gli ospiti.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          Ricevi richieste, dediche e voti in tempo reale, e decidi se utilizzare i brani.
+          Ricevi richieste, dediche e voti in tempo reale, e decidi se utilizzare i brani in console, .
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          Gestisci BPM, playlist e selezione brani dalla console.
+          Gestisci BPM, playlist e la selezione brani dalla console.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
@@ -949,11 +949,11 @@ if (redirecting) {
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          Modalità PARTY ti permette di riprodurre i link di YOUTUBE in autolay.
+          Modalità PARTY ti permette di riprodurre i link di YOUTUBE in autoplay.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          I pulsanti <b>DJ</b> / <b>Party</b> e la console compaiono solo dopo la creazione dell’evento.
+          I pulsanti <b>DJ</b> / <b>Party</b> si attiveranno e la console comparirà solo dopo la creazione dell’evento.
         </div>
 
         <div className="mt-3 text-xs text-yellow-300">
@@ -970,7 +970,7 @@ if (redirecting) {
         </div>
 
         <div className="text-sm text-zinc-200">
-          Scegli la durata e crea l’evento.
+          Scegli la durata e crea l’evento compilando il box con il nome evento.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
@@ -1074,7 +1074,7 @@ if (redirecting) {
   <div className={`text-xs sm:text-sm ${
     eventMode === "dj_party" ? "text-zinc-800/80" : "text-zinc-400"
   }`}>
-    Richieste live + gestione DJ + Party Mode
+    Richieste live + Gestione DJ + Party Mode
   </div>
 
   {paymentsEnabled && (
@@ -1083,7 +1083,7 @@ if (redirecting) {
         eventMode === "dj_party" ? "text-zinc-950" : "text-cyan-300"
       }`}
     >
-      Costo: 10€
+      Durarata evento 12 ore - Costo 10€ 
     </div>
   )}
 </div>
@@ -1241,11 +1241,12 @@ if (redirecting) {
 
 
 {/* mode buttons */}
-{eventMode === "dj_party" && (
+{effectiveEventMode === "dj_party" && (
   <div className="flex gap-4 justify-center">
     <ModeButton
       active={mode === "dj"}
       onClick={() => {
+        if (isLanding) return;
         resetPartyUnlock();
         setMode("dj");
       }}
@@ -1256,6 +1257,7 @@ if (redirecting) {
     <ModeButton
       active={mode === "party"}
       onClick={() => {
+        if (isLanding) return;
         resetPartyUnlock();
         setMode("party");
       }}
@@ -1265,12 +1267,8 @@ if (redirecting) {
     />
   </div>
 )}
-        </div>
+</div>
     
-
-
-
-
 
     {/* Spiegazione DJ / Party (mostra solo prima che esista un evento vero) */}
 {eventMode === "dj_party" && (
@@ -1668,17 +1666,48 @@ if (redirecting) {
         </div>
       </div>
  {/* Footer */}
-        <footer
-          style={{
-            marginTop: 34,
-            padding: "22px 4px",
-            opacity: 0.58,
-            fontSize: 12.5,
-            textAlign: "center",
-          }}
-        >
-          © {new Date().getFullYear()} info@askdj.app — M.M.
-        </footer>
+<footer
+  style={{
+    marginTop: 34,
+    padding: "22px 4px 28px",
+    opacity: 0.82,
+    fontSize: 12.5,
+    textAlign: "center",
+  }}
+>
+  <div style={{ marginBottom: 10, color: "#d4d4d8" }}>
+    Nessun audio viene inviato. AskDJ gestisce solo link, titolo brano e dedica.
+  </div>
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: 12,
+      flexWrap: "wrap",
+      color: "#a1a1aa",
+    }}
+  >
+    <span>© {new Date().getFullYear()} info@askdj.app — M.M.</span>
+
+    <a
+      href="/privacy"
+      style={{
+        display: "inline-block",
+        padding: "6px 12px",
+        borderRadius: 999,
+        textDecoration: "none",
+        fontWeight: 800,
+        color: "#0b0b14",
+        background: "linear-gradient(90deg, #22d3ee, #f472b6)",
+        boxShadow: "0 0 16px rgba(34,211,238,0.18)",
+      }}
+    >
+      Privacy
+    </a>
+  </div>
+</footer>
 
     </div>
   );
