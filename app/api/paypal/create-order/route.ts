@@ -45,8 +45,8 @@ function getPrice(mode: string, duration: string | null) {
   if (mode === "dj_party") return "10.00";
 
   if (mode === "jukebox") {
-    if (duration === "1m") return "15.00";
-    if (duration === "1y") return "99.00";
+    if (duration === "1m") return "8.99";
+    if (duration === "1y") return "69.00";
     return "2.00";
   }
 
