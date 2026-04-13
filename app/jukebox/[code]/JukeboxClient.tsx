@@ -158,6 +158,26 @@ export default function JukeboxClient({ code }: { code: string }) {
   }, [code]);
 
   useEffect(() => {
+  const url = new URL(window.location.href);
+  const isSuccess = url.searchParams.get("paypal") === "success";
+
+  if (!isSuccess || !code) return;
+
+  fetch("/api/paypal/confirm", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      eventCode: code,
+    }),
+  }).then(() => {
+    console.log("Evento Jukebox attivato 💸");
+    window.history.replaceState({}, "", `/jukebox/${code}`);
+  });
+    }, [code]);
+
+  useEffect(() => {
     if (!code) return;
     localStorage.setItem("jukebox_event", code);
   }, [code]);
