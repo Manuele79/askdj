@@ -1068,7 +1068,7 @@ if (redirecting) {
   >
     <div className="flex items-center gap-3">
       <span className="text-2xl">🎧</span>
-<div>
+<div className="flex flex-col">
   <div className="text-base sm:text-lg font-extrabold">DJ / Party</div>
 
   <div className={`text-xs sm:text-sm ${
@@ -1078,8 +1078,12 @@ if (redirecting) {
   </div>
 
   {paymentsEnabled && (
-    <div className="mt-1 text-xs font-extrabold text-cyan-300">
-      10€
+    <div
+      className={`mt-2 text-sm sm:text-base font-black ${
+        eventMode === "dj_party" ? "text-zinc-950" : "text-cyan-300"
+      }`}
+    >
+      Costo: 10€
     </div>
   )}
 </div>
@@ -1117,10 +1121,16 @@ if (redirecting) {
           : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
       }`}
     >
-      <div className="flex flex-col items-center">
-  <span>1 giorno</span>
+<div className="flex flex-col items-center leading-tight">
+  <span>1 Giorno</span>
   {paymentsEnabled && (
-    <span className="mt-0.5 text-xs sm:text-sm font-extrabold text-cyan-300">2€</span>
+    <span
+      className={`mt-1 text-sm sm:text-base font-black ${
+        jukeboxDuration === "1d" ? "text-zinc-950" : "text-cyan-300"
+      }`}
+    >
+      2€
+    </span>
   )}
 </div>
     </button>
@@ -1133,10 +1143,16 @@ if (redirecting) {
           : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
       }`}
     >
-      <div className="flex flex-col items-center">
-  <span>1 mese</span>
+<div className="flex flex-col items-center leading-tight">
+  <span>1 Mese</span>
   {paymentsEnabled && (
-    <span className="mt-0.5 text-xs sm:text-sm font-extrabold text-cyan-300">8.99€</span>
+    <span
+      className={`mt-1 text-sm sm:text-base font-black ${
+        jukeboxDuration === "1m" ? "text-zinc-950" : "text-cyan-300"
+      }`}
+    >
+      8.99€
+    </span>
   )}
 </div>
     </button>
@@ -1149,10 +1165,16 @@ if (redirecting) {
           : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800"
       }`}
     >
-      <div className="flex flex-col items-center">
-  <span>1 anno</span>
+<div className="flex flex-col items-center leading-tight">
+  <span>1 Anno</span>
   {paymentsEnabled && (
-    <span className="mt-0.5 text-xs sm:text-sm font-extrabold text-cyan-300">69€</span>
+    <span
+      className={`mt-1 text-sm sm:text-base font-black ${
+        jukeboxDuration === "1y" ? "text-zinc-950" : "text-cyan-300"
+      }`}
+    >
+      69€
+    </span>
   )}
 </div>
     </button>
@@ -1179,7 +1201,7 @@ if (redirecting) {
               onClick={createEvent}
               className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
             >
-              CREA NUOVO EVENTO
+              CREA NUOVO EVENTO:
             </button>
           </div>
 
@@ -1205,7 +1227,7 @@ if (redirecting) {
         onClick={joinExistingEvent}
         className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
       >
-        RIENTRA IN EVENTO
+        RIENTRA IN EVENTO:
       </button>
     </div>
 
