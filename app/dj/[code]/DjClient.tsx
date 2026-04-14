@@ -196,6 +196,7 @@ export default function DjClient({ code }: { code: string }) {
   const [requireCreatePassword, setRequireCreatePassword] = useState(false);
 
   const isLanding = code === "TEST123";
+  const isDemo = code?.startsWith("DEMO-");
 
   const isPaid = !paymentsEnabled || paymentStatus === "paid";
   const isPending = paymentsEnabled && !!paymentStatus && paymentStatus !== "paid";
@@ -996,31 +997,41 @@ if (redirecting) {
 </div>
   <div className="flex flex-col gap-4 sm:items-end">
     {code && code !== "TEST123" && tidalChecked && showFullUi && (
-      <div className="flex flex-col items-end gap-2">
-        {tidalConnected ? (
-          <div className="mb-4 flex items-center gap-2">
-            <div className="inline-flex items-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-300">
-              ✅ TIDAL collegato
-            </div>
-
-            <button
-              onClick={disconnectTidal}
-              className="rounded-md bg-red-500/20 px-3 py-1 text-xs font-bold text-red-300 hover:bg-red-500/40"
-            >
-              Scollega TIDAL
-            </button>
-          </div>
-        ) : (
-          <a
-            href={`/api/tidal/connect?eventCode=${encodeURIComponent(code)}`}
-            title="Collega il tuo account TIDAL per usare i brani matchati nell’evento"
-            className="inline-flex items-center rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-4 py-2 text-sm font-bold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-300 transition"
-          >
-            🔗 Collega TIDAL
-          </a>
-        )}
+  <div className="flex flex-col items-end gap-2">
+    {isDemo ? (
+      <div className="mb-4 flex items-center gap-2">
+        <button
+          disabled
+          title="Disponibile nella versione completa"
+          className="inline-flex items-center rounded-2xl border border-zinc-600 bg-zinc-800/60 px-4 py-2 text-sm font-bold text-zinc-400 opacity-75 cursor-not-allowed"
+        >
+          🔗 Collega TIDAL
+        </button>
       </div>
+    ) : tidalConnected ? (
+      <div className="mb-4 flex items-center gap-2">
+        <div className="inline-flex items-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-300">
+          ✅ TIDAL collegato
+        </div>
+
+        <button
+          onClick={disconnectTidal}
+          className="rounded-md bg-red-500/20 px-3 py-1 text-xs font-bold text-red-300 hover:bg-red-500/40"
+        >
+          Scollega TIDAL
+        </button>
+      </div>
+    ) : (
+      <a
+        href={`/api/tidal/connect?eventCode=${encodeURIComponent(code)}`}
+        title="Collega il tuo account TIDAL per usare i brani matchati nell’evento"
+        className="inline-flex items-center rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-4 py-2 text-sm font-bold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-300 transition"
+      >
+        🔗 Collega TIDAL
+      </a>
     )}
+  </div>
+)}
 
             {paymentsEnabled && !isLanding && !isPaid && (
             <div className="flex flex-col gap-3 sm:items-end">
@@ -1285,6 +1296,18 @@ if (redirecting) {
 
     <div className="mt-2 text-[11px] text-yellow-300">
       Dopo che crei l’evento, questa guida sparisce.
+    </div>
+  </div>
+)}
+
+
+{isDemo && (
+  <div className="mb-5 rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-4 py-3 text-sm text-cyan-100 shadow-[0_0_18px_rgba(34,211,238,0.16)]">
+    <div className="font-extrabold text-cyan-300">
+      MODALITÀ DEMO
+    </div>
+    <div className="mt-1 text-xs sm:text-sm leading-snug text-zinc-200">
+      Stai provando una demo reale limitata di AskDJ. Alcune funzioni avanzate sono visibili ma non disponibili nella demo.
     </div>
   </div>
 )}
