@@ -1276,11 +1276,11 @@ if (redirecting) {
     <div className="text-xs font-extrabold text-cyan-300"> 🎧 👆   - Cosa cambia -   👆 🎉 </div>
 
     <div className="mt-2 text-xs text-zinc-200">
-      <span className="font-bold">DJ:</span> gestisci la coda, apri i link e decidi cosa suonare.
+      <span className="font-bold">DJ:</span> gestisci la coda, apri i link, crea playlist esportabile su TIDAL, e decidi cosa suonare.
     </div>
 
     <div className="mt-1 text-xs text-zinc-200">
-      <span className="font-bold">Party:</span> modalità “festa”: apri i link e fai partire la musica in sequenza.
+      <span className="font-bold">Party:</span> modalità “festa”: apri i link TOUTUBE e fai partire la musica in sequenza.
     </div>
 
     <div className="mt-2 text-[11px] text-yellow-300">
