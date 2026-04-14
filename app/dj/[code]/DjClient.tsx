@@ -1311,10 +1311,10 @@ if (redirecting) {
 
 
                 <div className="rounded-3xl border border-yellow-400/40 bg-zinc-950/70 p-2 overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.45)]">
-                   <iframe
+                  <iframe
                     src={`/party/${code}`}
-                  className="h-[82vh] w-full rounded-2xl bg-zinc-950"
-                 allow="autoplay; encrypted-media; picture-in-picture"
+                    className="h-[1200px] w-full rounded-2xl bg-zinc-950"
+                    allow="autoplay; encrypted-media; picture-in-picture"
                 />
               </div>
              </section>
