@@ -569,16 +569,21 @@ function resetParty() {
             <button
               type="button"
               onClick={resetParty}
-              className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-extrabold text-zinc-950 ring-2 ring-yellow-300/40 bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg hover:brightness-110 transition"
+              className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-extrabold text-zinc-950 ring-2 ring-yellow-300/40 bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg hover:brightness-110 transition"
               title="Reset Party"
             >
              <span>🎉</span>
              <span>Party Mode</span>
             </button>
 
-            <h1 className="mt-4 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-              Riproduzione Automatica Solo YouTube
-            </h1>
+            <h1 className="mt-4 text-3xl font-extrabold">
+  <span className="text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]">
+    Party Mode
+  </span>
+  <span className="ml-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+    · Autoplay YouTube
+  </span>
+</h1>
 
             {code && code !== "TEST123" && (
             <p className="mt-2 text-lg text-yellow-300">
