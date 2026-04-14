@@ -24,10 +24,14 @@ export async function POST() {
   const expiresAt = new Date(Date.now() + 20 * 60 * 1000).toISOString();
 
   const { data, error } = await supabase
-    .from("events")
-    .insert({ event_code: eventCode, expires_at: expiresAt })
-    .select("event_code, expires_at")
-    .single();
+  .from("events")
+  .insert({
+    event_code: eventCode,
+    expires_at: expiresAt,
+    mode: "dj_party",
+  })
+  .select("event_code, expires_at, mode")
+  .single();
 
   if (error || !data) {
     return NextResponse.json({ ok: false, error: "DB error" }, { status: 500 });
