@@ -543,10 +543,10 @@ function resetParty() {
 
 
   return (
-    <div className="relative min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-zinc-950 text-zinc-100">
       <div className="pointer-events-none absolute top-[-120px] right-[-100px] h-[420px] w-[420px] rounded-full bg-amber-400/10 blur-[120px]" />
 
-      <div className="mx-auto max-w-4xl px-4 py-8">
+      <div className="mx-auto w-full max-w-4xl px-4 py-8">
         <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <button
@@ -691,151 +691,147 @@ function resetParty() {
           </ul>
         </section>
 
-        {/* --- SPOTIFY QUEUE (solo lista + link) --- */}
-        <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: Spotify</h2>
-            <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
-              {spotifyList.length}
-            </span>
-          </div>
+{/* --- SPOTIFY QUEUE (solo lista + link) --- */}
+{spotifyList.length > 0 && (
+  <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
+    <div className="mb-3 flex items-center justify-between">
+      <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+        Coda: Spotify
+      </h2>
+      <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
+        {spotifyList.length}
+      </span>
+    </div>
 
-          {spotifyList.length === 0 ? (
-            <p className="text-sm text-zinc-400">Nessun brano Spotify inviato.</p>
-          ) : (
-            <ul className="space-y-2">
-              {spotifyList.map((r) => (
-                <li
-                  key={r.id}
-                  className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                        {r.title}
-                      </div>
-                      <div className="mt-0.5 truncate text-xs text-zinc-500">
-                        🔥 {r.votes}
-                      </div>
-                    </div>
-
-                    <a
-                      href={r.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="shrink-0 rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
-                    >
-                      🎵 Apri
-                    </a>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-
-                {/* --- TIDAL QUEUE (solo lista + link) --- */}
-        <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">Coda: TIDAL</h2>
-            <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
-              {tidalList.length}
-            </span>
-          </div>
-
-          {tidalList.length === 0 ? (
-            <p className="text-sm text-zinc-400">Nessun brano Tidal inviato.</p>
-          ) : (
-            <ul className="space-y-2">
-              {tidalList.map((r) => (
-                <li
-                  key={r.id}
-                  className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                        {r.title}
-                      </div>
-                      <div className="mt-0.5 truncate text-xs text-zinc-500">
-                        🔥 {r.votes}
-                      </div>
-                    </div>
-
-                    <a
-                      href={r.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="shrink-0 rounded-xl bg-cyan-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
-                    >
-                      🌊 Apri
-                    </a>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-
-        {/* --- APPLE MUSIC QUEUE (solo lista + link) --- */}
-          <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                Coda: Apple Music
-              </h2>
-              <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
-                {appleList.length}
-              </span>
-            </div>
-
-          {appleList.length === 0 ? (
-              <p className="text-sm text-zinc-400">Nessun brano Apple Music inviato.</p>
-          ) : (
-           <ul className="space-y-2">
-            {appleList.map((r) => (
-           <li
-            key={r.id}
-           className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
-         >
-            <div className="flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                  {r.title}
-                </div>
-                <div className="mt-0.5 truncate text-xs text-zinc-500">
-                  🔥 {r.votes}
-                </div>
+    <ul className="space-y-2">
+      {spotifyList.map((r) => (
+        <li
+          key={r.id}
+          className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+                {r.title}
               </div>
-
-              <a
-                href={r.url}
-                target="_blank"
-                rel="noreferrer"
-                className="shrink-0 rounded-xl bg-zinc-100 px-3 py-2 text-xs font-extrabold text-zinc-900 hover:bg-white transition"
-              >
-                🍎 Apri
-              </a>
+              <div className="mt-0.5 truncate text-xs text-zinc-500">
+                🔥 {r.votes}
+              </div>
             </div>
-          </li>
-        ))}
-      </ul>
-    )}
+
+            <a
+              href={r.url}
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
+            >
+              🎵 Apri
+            </a>
+          </div>
+        </li>
+      ))}
+    </ul>
   </section>
+)}
 
-          {/* --- AMAZON MUSIC QUEUE (solo lista + link) --- */}
-<section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
-  <div className="mb-3 flex items-center justify-between">
-    <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-      Coda: Amazon Music
-    </h2>
-    <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
-      {amazonList.length}
-    </span>
-  </div>
+{/* --- TIDAL QUEUE --- */}
+{tidalList.length > 0 && (
+  <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
+    <div className="mb-3 flex items-center justify-between">
+      <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+        Coda: TIDAL
+      </h2>
+      <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
+        {tidalList.length}
+      </span>
+    </div>
 
-  {amazonList.length === 0 ? (
-    <p className="text-sm text-zinc-400">Nessun brano Amazon Music inviato.</p>
-  ) : (
+    <ul className="space-y-2">
+      {tidalList.map((r) => (
+        <li
+          key={r.id}
+          className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+                {r.title}
+              </div>
+              <div className="mt-0.5 truncate text-xs text-zinc-500">
+                🔥 {r.votes}
+              </div>
+            </div>
+
+            <a
+              href={r.url}
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 rounded-xl bg-cyan-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
+            >
+              🌊 Apri
+            </a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{/* --- APPLE MUSIC QUEUE --- */}
+{appleList.length > 0 && (
+  <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
+    <div className="mb-3 flex items-center justify-between">
+      <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+        Coda: Apple Music
+      </h2>
+      <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
+        {appleList.length}
+      </span>
+    </div>
+
+    <ul className="space-y-2">
+      {appleList.map((r) => (
+        <li
+          key={r.id}
+          className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+                {r.title}
+              </div>
+              <div className="mt-0.5 truncate text-xs text-zinc-500">
+                🔥 {r.votes}
+              </div>
+            </div>
+
+            <a
+              href={r.url}
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 rounded-xl bg-zinc-100 px-3 py-2 text-xs font-extrabold text-zinc-900 hover:bg-white transition"
+            >
+              🍎 Apri
+            </a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{/* --- AMAZON MUSIC QUEUE --- */}
+{amazonList.length > 0 && (
+  <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
+    <div className="mb-3 flex items-center justify-between">
+      <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+        Coda: Amazon Music
+      </h2>
+      <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
+        {amazonList.length}
+      </span>
+    </div>
+
     <ul className="space-y-2">
       {amazonList.map((r) => (
         <li
@@ -864,10 +860,8 @@ function resetParty() {
         </li>
       ))}
     </ul>
-  )}
-</section>
-
-
+  </section>
+)}
 
       </div>
     </div>
