@@ -681,7 +681,7 @@ function resetParty() {
                 key={r.id}
                 className={`rounded-2xl border px-4 py-3 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-300 ${
                    r._key === currentKey
-                     ? "bg-zinc-900/80 border-cyan-400/50 ring-2 ring-cyan-400/40 shadow-[0_0_22px_rgba(34,211,238,0.22)]"
+                     ? "bg-zinc-900/90 border-yellow-300 ring-2 ring-yellow-300 shadow-[0_0_35px_rgba(250,204,21,0.8)]"
                      : "border-zinc-700/40 bg-zinc-950/50 hover:bg-zinc-900/60"
                 }`}
 
