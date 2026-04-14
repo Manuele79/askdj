@@ -581,7 +581,7 @@ function resetParty() {
             </h1>
 
             {code && code !== "TEST123" && (
-            <p className="mt-2 text-lg text-cyan-500">
+            <p className="mt-2 text-lg text-yellow-300">
              Evento: <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">{code}</span>
             </p>
              )}
@@ -619,13 +619,14 @@ function resetParty() {
             </p>
           ) : (
             <>
-              <div className="mb-2 text-xs text-zinc-400">{statusMsg}</div>
+              <div className="mb-2 text-xs font-semibold text-yellow-200/90">{statusMsg}
+              </div>
 
-              <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                Ora in Riproduzione:
-                <span className="ml-2 font-semibold text-zinc-100">
-                  {currentTitle || "—"}
-                </span>
+              <div className="text-lg font-extrabold text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.75)]">
+                Ora in riproduzione:
+               <span className="ml-2 font-semibold text-zinc-100">
+                 {currentTitle || "—"}
+               </span>
               </div>
                   {currentDedication && (
                    <div className="mt-2 text-sm sm:text-base italic">
@@ -642,10 +643,10 @@ function resetParty() {
   <div className="mb-3 rounded-2xl border border-yellow-400/40 bg-zinc-950 p-3 ring-1 ring-white/5 shadow-[0_12px_30px_rgba(0,0,0,0.28)]">
     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
-        <div className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+        <div className="text-sm font-extrabold text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.75)]">
           ▶ Sblocca Autoplay
         </div>
-        <div className="mt-0.5 text-[11px] text-zinc-400">
+        <div className="mt-0.5 text-[11px] text-zinc-300">
           Premi una volta per attivare Party Autoplay.
         </div>
       </div>
