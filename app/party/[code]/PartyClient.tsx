@@ -679,9 +679,11 @@ function resetParty() {
             {playable.map((r) => (
               <li
                 key={r.id}
-                className={`rounded-2xl border border-zinc-700/40 px-4 py-3 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.25)] hover:bg-zinc-900/60 transition-colors  ${
-                r._key === currentKey ? "bg-zinc-900/70 ring-1 ring-cyan-400/30" : "bg-zinc-950/50" 
-              }`}
+                className={`rounded-2xl border px-4 py-3 text-sm shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-300 ${
+                   r._key === currentKey
+                     ? "bg-zinc-900/80 border-cyan-400/50 ring-2 ring-cyan-400/40 shadow-[0_0_22px_rgba(34,211,238,0.22)]"
+                     : "border-zinc-700/40 bg-zinc-950/50 hover:bg-zinc-900/60"
+                }`}
 
               >
                 <div className="flex items-start justify-between gap-3">
@@ -734,24 +736,34 @@ function resetParty() {
           className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
         >
           <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                {r.title}
-              </div>
-              <div className="mt-0.5 truncate text-xs text-zinc-500">
-                🔥 {r.votes}
-              </div>
-            </div>
+  <div className="min-w-0 flex-1">
+    <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+      {r.title}
+    </div>
+    <div className="mt-0.5 truncate text-xs text-zinc-500">
+      🔥 {r.votes}
+    </div>
+  </div>
 
-            <a
-              href={r.url}
-              target="_blank"
-              rel="noreferrer"
-              className="shrink-0 rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
-            >
-              🎵 Apri
-            </a>
-          </div>
+  <div className="flex shrink-0 items-center gap-2">
+    <a
+      href={r.url}
+      target="_blank"
+      rel="noreferrer"
+      className="rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
+    >
+      🎵 Apri
+    </a>
+
+    <button
+      onClick={() => deleteRequest(r.id)}
+      className="rounded-md px-2 py-1 text-xs text-zinc-400 opacity-70 hover:text-red-400 hover:opacity-100 transition"
+      title="Elimina"
+    >
+      🗑️
+    </button>
+  </div>
+</div>
         </li>
       ))}
     </ul>
@@ -776,25 +788,35 @@ function resetParty() {
           key={r.id}
           className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
         >
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                {r.title}
-              </div>
-              <div className="mt-0.5 truncate text-xs text-zinc-500">
-                🔥 {r.votes}
-              </div>
-            </div>
+<div className="flex items-center justify-between gap-3">
+  <div className="min-w-0 flex-1">
+    <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+      {r.title}
+    </div>
+    <div className="mt-0.5 truncate text-xs text-zinc-500">
+      🔥 {r.votes}
+    </div>
+  </div>
 
-            <a
-              href={r.url}
-              target="_blank"
-              rel="noreferrer"
-              className="shrink-0 rounded-xl bg-cyan-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
-            >
-              🌊 Apri
-            </a>
-          </div>
+  <div className="flex shrink-0 items-center gap-2">
+    <a
+      href={r.url}
+      target="_blank"
+      rel="noreferrer"
+      className="rounded-xl bg-cyan-600 px-3 py-2 text-xs font-semibold text-white hover:opacity-90"
+    >
+      🌊 Apri
+    </a>
+
+    <button
+      onClick={() => deleteRequest(r.id)}
+      className="rounded-md px-2 py-1 text-xs text-zinc-400 opacity-70 hover:text-red-400 hover:opacity-100 transition"
+      title="Elimina"
+    >
+      🗑️
+    </button>
+  </div>
+</div>
         </li>
       ))}
     </ul>
@@ -819,25 +841,35 @@ function resetParty() {
           key={r.id}
           className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
         >
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                {r.title}
-              </div>
-              <div className="mt-0.5 truncate text-xs text-zinc-500">
-                🔥 {r.votes}
-              </div>
-            </div>
+<div className="flex items-center justify-between gap-3">
+  <div className="min-w-0 flex-1">
+    <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+      {r.title}
+    </div>
+    <div className="mt-0.5 truncate text-xs text-zinc-500">
+      🔥 {r.votes}
+    </div>
+  </div>
 
-            <a
-              href={r.url}
-              target="_blank"
-              rel="noreferrer"
-              className="shrink-0 rounded-xl bg-zinc-100 px-3 py-2 text-xs font-extrabold text-zinc-900 hover:bg-white transition"
-            >
-              🍎 Apri
-            </a>
-          </div>
+  <div className="flex shrink-0 items-center gap-2">
+    <a
+      href={r.url}
+      target="_blank"
+      rel="noreferrer"
+      className="rounded-xl bg-zinc-100 px-3 py-2 text-xs font-extrabold text-zinc-900 hover:bg-white transition"
+    >
+      🍎 Apri
+    </a>
+
+    <button
+      onClick={() => deleteRequest(r.id)}
+      className="rounded-md px-2 py-1 text-xs text-zinc-400 opacity-70 hover:text-red-400 hover:opacity-100 transition"
+      title="Elimina"
+    >
+      🗑️
+    </button>
+  </div>
+</div>
         </li>
       ))}
     </ul>
@@ -862,25 +894,35 @@ function resetParty() {
           key={r.id}
           className="rounded-xl border border-zinc-800 bg-zinc-950/50 px-3 py-2 text-sm"
         >
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                {r.title}
-              </div>
-              <div className="mt-0.5 truncate text-xs text-zinc-500">
-                🔥 {r.votes}
-              </div>
-            </div>
+<div className="flex items-center justify-between gap-3">
+  <div className="min-w-0 flex-1">
+    <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
+      {r.title}
+    </div>
+    <div className="mt-0.5 truncate text-xs text-zinc-500">
+      🔥 {r.votes}
+    </div>
+  </div>
 
-            <a
-              href={r.url}
-              target="_blank"
-              rel="noreferrer"
-              className="shrink-0 rounded-xl bg-yellow-500 px-3 py-2 text-xs font-extrabold text-black hover:bg-yellow-400 transition"
-            >
-              🛒 Apri
-            </a>
-          </div>
+  <div className="flex shrink-0 items-center gap-2">
+    <a
+      href={r.url}
+      target="_blank"
+      rel="noreferrer"
+      className="rounded-xl bg-yellow-500 px-3 py-2 text-xs font-extrabold text-black hover:bg-yellow-400 transition"
+    >
+      🛒 Apri
+    </a>
+
+    <button
+      onClick={() => deleteRequest(r.id)}
+      className="rounded-md px-2 py-1 text-xs text-zinc-400 opacity-70 hover:text-red-400 hover:opacity-100 transition"
+      title="Elimina"
+    >
+      🗑️
+    </button>
+  </div>
+</div>
         </li>
       ))}
     </ul>
