@@ -540,7 +540,7 @@ if (isDemo) {
   }
 
   // max 2 richieste (righe) in demo
-  if ((count ?? 0) >= 2) {
+  if ((count ?? 0) >= 4) {
     return NextResponse.json(
       { ok: false, error: "Demo finita: massimo 2 canzoni." },
       { status: 429 }
