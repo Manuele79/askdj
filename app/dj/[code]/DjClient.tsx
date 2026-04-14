@@ -1296,28 +1296,29 @@ if (redirecting) {
           <div className="lg:col-span-2">
             {showDjPartyUi && showFullUi ? (
               mode === "party" ? (
-              <section className="rounded-3xl border border-yellow-400/40 bg-zinc-950/70 shadow-[0_0_35px_rgba(253,224,71,0.35)] p-2 sm:p-3 ">
-                <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-4 text-xs text-cyan-400">
-                  <span className="pl-4 min-w-0 truncate">Modalità Party:Autoplay YouTube</span>
-                  <a
-                    href={`/party/${code}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="whitespace-nowrap pr-4 text-cyan-400 hover:underline"
-                  >
-                    Apri-Fullscreen👉
-                  </a>
-                 </div>
+<section className="rounded-3xl border border-yellow-300/50 bg-zinc-950/70 shadow-[0_0_35px_rgba(253,224,71,0.28)] p-2 sm:p-3">
+  <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-4 text-xs">
+    <span className="pl-4 min-w-0 truncate font-semibold text-cyan-300">
+      Party Mode · Autoplay YouTube
+    </span>
+    <a
+      href={`/party/${code}`}
+      target="_blank"
+      rel="noreferrer"
+      className="whitespace-nowrap pr-4 font-medium text-cyan-300 hover:underline"
+    >
+      Apri-Fullscreen👉
+    </a>
+  </div>
 
-
-                <div className="rounded-3xl border border-yellow-400/40 bg-zinc-950/70 p-2 overflow-visible shadow-[0_0_25px_rgba(0,0,0,0.45)]">
-                  <iframe
-                    src={`/party/${code}`}
-                    className="h-[1200px] w-full rounded-2xl bg-zinc-950"
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                />
-              </div>
-             </section>
+  <div className="rounded-3xl bg-zinc-950/40 p-1 overflow-visible">
+    <iframe
+      src={`/party/${code}`}
+      className="h-[1200px] w-full rounded-[22px] bg-zinc-950"
+      allow="autoplay; encrypted-media; picture-in-picture"
+    />
+  </div>
+</section>
 
       ) : (
         <>
