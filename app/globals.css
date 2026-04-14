@@ -92,3 +92,32 @@ body {
 .party-scroll::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #facc15, #f59e0b);
 }
+
+html,
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #facc15 #18181b;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: #18181b;
+  border-radius: 9999px;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #fde047, #f59e0b);
+  border-radius: 9999px;
+  border: 2px solid #18181b;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #facc15, #f59e0b);
+}
