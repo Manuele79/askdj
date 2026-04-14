@@ -148,6 +148,23 @@ function startedKey(code: string) {
     }
   }
 
+  const deleteRequest = async (id: string) => {
+  if (!confirm("Cancellare questa richiesta?")) return;
+
+  const r = await fetch("/api/requests", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
+
+  if (!r.ok) {
+    alert("Errore cancellazione");
+    return;
+  }
+
+  setItems((prev) => prev.filter((x) => x.id !== id));
+};
+
   const playable = useMemo<PlayableItem[]>(() => {
     const base = (items || [])
       .filter((r) => r.platform === "youtube" && (r.youtubeVideoId || isYouTubePlaylistUrl(r.url)))
@@ -605,7 +622,7 @@ function resetParty() {
               <div className="mb-2 text-xs text-zinc-400">{statusMsg}</div>
 
               <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                Ora in riproduzione:
+                Ora in Riproduzione:
                 <span className="ml-2 font-semibold text-zinc-100">
                   {currentTitle || "—"}
                 </span>
@@ -621,8 +638,6 @@ function resetParty() {
                  )}
 
                 
-              
-
              {!userStarted && (
                <div className="mb-3 rounded-2xl border border-yellow-400/40 bg-zinc-950 p-4 ring-1 ring-white/5 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
                 <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
@@ -670,21 +685,30 @@ function resetParty() {
 
               >
                 <div className="flex items-start justify-between gap-3">
-                  <button
-                    onClick={() => {
-                      advancingRef.current = false;
-                      playItem(r, "manual pick");
-                    }}
-                    className="text-left font-semibold text-zinc-100 hover:underline"
-                  >
-                    {r.title || (r._kind === "playlist" ? "Playlist YouTube" : "—")}
-                    {r._kind === "playlist" ? "  📃" : ""}
-                  </button>
+             <button
+              onClick={() => {
+              advancingRef.current = false;
+                playItem(r, "manual pick");
+             }}
+                className="min-w-0 flex-1 text-left font-semibold text-zinc-100 hover:underline"
+            >
+              {r.title || (r._kind === "playlist" ? "Playlist YouTube" : "—")}
+               {r._kind === "playlist" ? "  📃" : ""}
+              </button>
 
-                  <span className="shrink-0 rounded-full bg-zinc-900/60 ring-1 ring-white/10 px-3 py-1 text-xs font-extrabold text-zinc-100"
-                  >
-                    🔥 {r.votes}
-                  </span>
+                <div className="flex shrink-0 items-center gap-2">
+                   <span className="rounded-full bg-zinc-900/60 ring-1 ring-white/10 px-3 py-1 text-xs font-extrabold text-zinc-100">
+                   🔥 {r.votes}
+                   </span>
+
+                   <button
+                    onClick={() => deleteRequest(r.id)}
+                       className="rounded-md px-2 py-1 text-xs text-zinc-400 opacity-70 hover:text-red-400 hover:opacity-100 transition"
+                       title="Elimina"
+                     >
+                       🗑️
+                    </button>
+                 </div>
                 </div>
               </li>
             ))}
