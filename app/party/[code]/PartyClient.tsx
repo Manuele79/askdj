@@ -249,7 +249,7 @@ function startedKey(code: string) {
         return;
       }
 
-      setStatusMsg(reason ? `▶️ Playlist (${reason})` : `▶️ Playlist`);
+      setStatusMsg(reason ? `▶️ Playlist: (${reason})` : `▶️ Playlist`);
       setNowPlayingFromItem({ ...item, _key: `list:${listId}`, _listId: listId });
 
       // se player esiste già → loadPlaylist
@@ -269,7 +269,7 @@ function startedKey(code: string) {
     const id = normalizeVideoId(item.youtubeVideoId);
     if (!id) return;
 
-    setStatusMsg(reason ? `▶️ Play: ${id} (${reason})` : `▶️ Play: ${id}`);
+    setStatusMsg(reason ? `▶️ Play: (${reason})` : `▶️ Play`);
     setNowPlayingFromItem(item);
 
     if (p?.loadVideoById) {
