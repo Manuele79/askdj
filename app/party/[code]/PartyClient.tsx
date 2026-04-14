@@ -560,7 +560,7 @@ function resetParty() {
 
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-zinc-950 text-zinc-100">
+    <div className="party-scroll relative min-h-screen w-full overflow-x-hidden bg-zinc-950 text-zinc-100">
       <div className="pointer-events-none absolute top-[-120px] right-[-100px] h-[420px] w-[420px] rounded-full bg-amber-400/10 blur-[120px]" />
 
       <div className="mx-auto w-full max-w-4xl px-4 py-8">
