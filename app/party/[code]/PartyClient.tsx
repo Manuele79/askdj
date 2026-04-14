@@ -725,7 +725,7 @@ function resetParty() {
 
 {/* --- SPOTIFY QUEUE (solo lista + link) --- */}
 {spotifyList.length > 0 && (
-  <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
+  <section className="mt-6 rounded-2xl border border-yellow-300/40 bg-zinc-950 backdrop-blur-sm p-4">
     <div className="mb-3 flex items-center justify-between">
       <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
         Coda: Spotify
@@ -778,7 +778,7 @@ function resetParty() {
 
 {/* --- TIDAL QUEUE --- */}
 {tidalList.length > 0 && (
-  <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
+  <section className="mt-6 rounded-2xl border border-yellow-300/40 bg-zinc-950 backdrop-blur-sm p-4">
     <div className="mb-3 flex items-center justify-between">
       <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
         Coda: TIDAL
@@ -831,7 +831,7 @@ function resetParty() {
 
 {/* --- APPLE MUSIC QUEUE --- */}
 {appleList.length > 0 && (
-  <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
+  <section className="mt-6 rounded-2xl border border-yellow-300/40 bg-zinc-950 backdrop-blur-sm p-4">
     <div className="mb-3 flex items-center justify-between">
       <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
         Coda: Apple Music
@@ -884,7 +884,7 @@ function resetParty() {
 
 {/* --- AMAZON MUSIC QUEUE --- */}
 {amazonList.length > 0 && (
-  <section className="mt-6 rounded-2xl border border-yellow-400/40 bg-zinc-950 backdrop-blur-sm p-4">
+  <section className="mt-6 rounded-2xl border border-yellow-300/40 bg-zinc-950 backdrop-blur-sm p-4">
     <div className="mb-3 flex items-center justify-between">
       <h2 className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
         Coda: Amazon Music
