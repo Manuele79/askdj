@@ -132,6 +132,16 @@ export default function RequestClient({ code }: { code: string }) {
   }, [code]);
 
 
+  useEffect(() => {
+  const shared = localStorage.getItem("dj_shared_link");
+
+  if (shared) {
+    setLink(shared);
+    localStorage.removeItem("dj_shared_link");
+  }
+}, []);
+
+
   // salva storico
   useEffect(() => {
     try {
