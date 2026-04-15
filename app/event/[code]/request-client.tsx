@@ -564,7 +564,10 @@ function FakeSpectrumWide() {
       <input
         value={link}
         onChange={(e) => setLink(e.target.value)}
-        placeholder=" "
+        placeholder={ eventMode === "jukebox"
+            ? "Incolla qui il link YouTube"
+           : "Incolla qui il link della canzone"
+       }
       className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-yellow-400/20"
       />
     </div>
