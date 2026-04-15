@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function ShareTargetPage() {
+function ShareHandler() {
   const params = useSearchParams();
 
   useEffect(() => {
@@ -14,20 +14,23 @@ export default function ShareTargetPage() {
       return;
     }
 
-    // prendi ultimo evento salvato (guest)
     const eventCode = localStorage.getItem("dj_guest_event");
 
     if (eventCode) {
-      // salva temporaneamente il link
       localStorage.setItem("dj_shared_link", url);
-
-      // vai all'evento
       window.location.href = `/event/${eventCode}`;
     } else {
-      // fallback: vai in DJ
       window.location.href = "/dj/TEST123";
     }
   }, [params]);
 
   return null;
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={null}>
+      <ShareHandler />
+    </Suspense>
+  );
 }
