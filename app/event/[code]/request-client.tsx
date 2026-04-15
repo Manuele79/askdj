@@ -72,6 +72,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [link, setLink] = useState("");
   const [dedication, setDedication] = useState("");
   const [eventMode, setEventMode] = useState<"dj_party" | "jukebox" | null>(null);
+  const [modeLoaded, setModeLoaded] = useState(false);
   const [sent, setSent] = useState<SentItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hint, setHint] = useState("");
@@ -241,7 +242,10 @@ async function loadEventMode() {
       cache: "no-store",
     });
 
-    if (!resp.ok) return;
+    if (!resp.ok) {
+      setModeLoaded(true);
+      return;
+    }
 
     const data = await resp.json().catch(() => null);
     const mode = data?.mode;
@@ -249,8 +253,10 @@ async function loadEventMode() {
     if (mode === "jukebox" || mode === "dj_party") {
       setEventMode(mode);
     }
+
+    setModeLoaded(true);
   } catch {
-    // ignore
+    setModeLoaded(true);
   }
 }
 
@@ -492,6 +498,7 @@ function FakeSpectrumWide() {
 <section className="rounded-3xl border border-yellow-400/60 bg-zinc-900/50 p-5 shadow-[0_18px_60px_rgba(0,0,0,0.35)] ring-1 ring-white/5">
   <div className="space-y-4">
     {/* Bottoni piattaforme */}
+    {modeLoaded && (
     <div className="space-y-3">
       <div className="flex flex-wrap justify-center gap-2">
         {visiblePlatforms.map((p) => {
@@ -538,7 +545,7 @@ function FakeSpectrumWide() {
         </div>
       )}
     </div>
-
+  )}
     {/* Campo link */}
     <div>
       <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
@@ -551,28 +558,23 @@ function FakeSpectrumWide() {
         <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
     </label>
 
+      {!link.trim() && (
       <div className="mt-2">
-        <button
+       <button
           type="button"
-          onClick={pasteFromClipboard}
-          className={`w-full rounded-xl bg-gradient-to-r from-cyan-400 via-emerald-400 to-lime-300 px-3 py-3 text-sm font-extrabold text-zinc-950 transition hover:brightness-110 ${
-            !link
-              ? "animate-pulse shadow-[0_0_28px_rgba(74,222,128,0.55)]"
-              : "shadow-[0_0_16px_rgba(34,211,238,0.22)] opacity-90"
-        }`}
-        >
+         onClick={pasteFromClipboard}
+          className="w-full rounded-2xl bg-gradient-to-r from-emerald-400 via-lime-300 to-yellow-300 px-4 py-4 text-base font-extrabold text-zinc-950 transition hover:brightness-110 animate-pulse shadow-[0_0_35px_rgba(132,204,22,0.7)]"
+       >
          {eventMode === "jukebox" ? "📋 INCOLLA" : "INCOLLA IL LINK"}
-        </button>
-      </div>
+       </button>
+     </div>
+    )}
 
 
       <input
         value={link}
         onChange={(e) => setLink(e.target.value)}
-        placeholder={ eventMode === "jukebox"
-            ? "Incolla qui il link YouTube"
-           : "Incolla qui il link della canzone"
-       }
+        placeholder=" "
       className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-yellow-400/20"
       />
     </div>
