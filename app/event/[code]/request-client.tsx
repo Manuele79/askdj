@@ -572,21 +572,18 @@ function FakeSpectrumWide() {
       />
     </div>
 
-    {/* Invia al DJ */}
-    <button
-      onClick={addRequest}
-      disabled={!canSend || loading}
-     className={`w-full rounded-xl px-4 py-3 text-sm font-extrabold transition
-  ${canSend && !loading
-    ? link.trim()
-      ? "bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-400 text-black shadow-[0_0_40px_rgba(250,204,21,0.9)] animate-pulse"
-      : "bg-gradient-to-r from-yellow-200 via-yellow-300 to-amber-300 text-black shadow-[0_0_20px_rgba(250,204,21,0.4)]"
-    : "bg-gradient-to-r from-emerald-950 via-zinc-900 to-cyan-950 text-zinc-400 shadow-[0_0_12px_rgba(34,211,238,0.12)]"
-  }
-  disabled:cursor-not-allowed disabled:opacity-80`}
-    >
-      {loading ? "Invio..." : canSend ? "🔥 INVIA AL DJ" : "🚀 INVIA AL DJ"}
-    </button>
+{/* Invia al DJ */}
+{link.trim() && (
+  <button
+    onClick={addRequest}
+    disabled={loading}
+    className={`w-full rounded-xl px-4 py-3 text-sm font-extrabold transition
+    bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-400 text-black shadow-[0_0_40px_rgba(250,204,21,0.9)] animate-pulse
+    disabled:cursor-not-allowed disabled:opacity-80`}
+  >
+    {loading ? "Invio..." : "🔥 INVIA AL DJ"}
+  </button>
+)}
 
         {/* Dedica */}
     <div>
