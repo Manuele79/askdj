@@ -548,16 +548,6 @@ function FakeSpectrumWide() {
   )}
     {/* Campo link */}
     <div>
-      <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-        {eventMode === "jukebox" 
-           ? <>INCOLLA IL LINK <span className="text-white">YOUTUBE</span></> 
-           : "LINK CANZONE:"
-        }
-
-         <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
-        <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
-    </label>
-
       {!link.trim() && (
       <div className="mt-2">
        <button
@@ -584,11 +574,13 @@ function FakeSpectrumWide() {
       onClick={addRequest}
       disabled={!canSend || loading}
      className={`w-full rounded-xl px-4 py-3 text-sm font-extrabold transition
-      ${canSend && !loading
-       ? "bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-400 text-black shadow-[0_0_35px_rgba(250,204,21,0.8)] animate-pulse"
-       : "bg-gradient-to-r from-emerald-950 via-zinc-900 to-cyan-950 text-zinc-400 shadow-[0_0_12px_rgba(34,211,238,0.12)]"
-      }
-      disabled:cursor-not-allowed disabled:opacity-80`}
+  ${canSend && !loading
+    ? link.trim()
+      ? "bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-400 text-black shadow-[0_0_40px_rgba(250,204,21,0.9)] animate-pulse"
+      : "bg-gradient-to-r from-yellow-200 via-yellow-300 to-amber-300 text-black shadow-[0_0_20px_rgba(250,204,21,0.4)]"
+    : "bg-gradient-to-r from-emerald-950 via-zinc-900 to-cyan-950 text-zinc-400 shadow-[0_0_12px_rgba(34,211,238,0.12)]"
+  }
+  disabled:cursor-not-allowed disabled:opacity-80`}
     >
       {loading ? "Invio..." : canSend ? "🔥 INVIA AL DJ" : "🚀 INVIA AL DJ"}
     </button>
