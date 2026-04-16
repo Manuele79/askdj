@@ -82,6 +82,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [showTitle, setShowTitle] = useState(false);
   const [openedPlatform, setOpenedPlatform] = useState(false);
   const [showMyRequests, setShowMyRequests] = useState(true);
+  const [showGuestVotes, setShowGuestVotes] = useState(false);
 
 
   // carica storico da localStorage (solo questo telefono)
@@ -389,6 +390,7 @@ const platform = (serverPlatform as Platform) || fallbackPlatform;
       setTitle("");
       setLink("");
       setDedication("");
+      setOpenedPlatform(false);
       setHint("✅ Inviata!");
       setTimeout(() => setHint(""), 1400);
     } finally {
@@ -616,7 +618,7 @@ function FakeSpectrumWide() {
     </div>
 
     {eventMode !== "jukebox" && (
-   <div className="flex justify-center">
+   <div className="mt-0 flex justify-center">
     <button
      type="button"
       onClick={() => setShowTitle((v) => !v)}
@@ -656,139 +658,147 @@ function FakeSpectrumWide() {
   </div>
 </section>
 
-        <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
-          <div
-  onClick={() => setShowMyRequests((v) => !v)}
-  className="flex items-center justify-between gap-3 cursor-pointer"
->
-  <div>
-    <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-      Le tue Richieste:
-    </h2>
-    <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
-    <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
-  </div>
-
-  <div className="flex items-center gap-2">
-    <span className="text-[11px] text-zinc-400 font-bold">
-      {showMyRequests ? "NASCONDI" : "VEDI"}
-    </span>
-    <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
-      {sent.length}
-    </span>
-  </div>
-</div>
-
-{showMyRequests && (
-  <>
-    {sent.length === 0 ? (
-      <p className="mt-3 text-sm text-zinc-400">Nessuna Richiesta</p>
-    ) : (
-      <ul className="mt-3 space-y-2">
-        {sent.slice(0, 10).map((r, i) => (
-          <li key={r.ts || i} className="rounded-xl border border-yellow-400 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-100">
-            <div className="flex items-center justify-between gap-2">
-              <div className="font-medium">{r.title}</div>
-              <span className="text-[11px] text-zinc-400">
-                {r.platform}
-              </span>
-            </div>
-
-            {r.dedication && r.dedication.trim() && (
-              <div className="mt-1 text-xs text-zinc-200">
-                “{r.dedication}”
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-    )}
-
-    {sent.length > 0 && (
-      <div className="mt-3 text-xs text-zinc-500">
-        Se svuoti i dati del browser o cambi telefono, questo storico non segue.
-      </div>
-    )}
-
-    <p className="mt-4 text-sm text-zinc-400">
-      Invia il tuo brano al DJ in pochi secondi 🎧
-    </p>
-  </>
-)}
-
-        </section>
-
 <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
-  <div className="flex items-center justify-between gap-3">
+  <div
+    onClick={() => setShowMyRequests((v) => !v)}
+    className="flex items-center justify-between gap-3 cursor-pointer"
+  >
     <div>
       <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-       Vota le Richieste degli ospiti 🔥
+        Le tue Richieste:
+      </h2>
+      <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+      <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+    </div>
+
+    <div className="flex items-center gap-2">
+      <span className="text-[11px] text-zinc-400 font-bold">
+        {showMyRequests ? "CHIUDI🎶" : "APRI🎶"}
+      </span>
+
+      <span className="text-[11px] font-bold uppercase tracking-wide text-zinc-400">
+        Brani
+      </span>
+
+      <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+        {sent.length}
+      </span>
+    </div>
+  </div>
+
+  {showMyRequests && (
+    <>
+      {sent.length === 0 ? (
+        <p className="mt-3 text-sm text-zinc-400">Nessuna richiesta</p>
+      ) : (
+        <ul className="mt-3 space-y-2">
+          {sent.slice(0, 10).map((r, i) => (
+            <li
+              key={r.ts || i}
+              className="rounded-xl border border-yellow-400 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-100"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div className="font-medium">{r.title}</div>
+                <span className="text-[11px] text-zinc-400">{r.platform}</span>
+              </div>
+
+              {r.dedication && r.dedication.trim() && (
+                <div className="mt-1 text-xs text-zinc-200">
+                  “{r.dedication}”
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {sent.length > 0 && (
+        <div className="mt-3 text-xs text-zinc-500">
+          Se svuoti i dati del browser o cambi telefono, questo storico non segue.
+        </div>
+      )}
+
+      <p className="mt-4 text-sm text-zinc-400">
+        Invia il tuo brano al DJ in pochi secondi 🎧
+      </p>
+    </>
+  )}
+</section>
+
+<section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
+  <div
+    onClick={() => setShowGuestVotes((v) => !v)}
+    className="flex items-center justify-between gap-3 cursor-pointer"
+  >
+    <div>
+      <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
+        Vota le Richieste degli ospiti 🔥
       </h2>
       <div className="mt-2 h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
       <div className="mt-[-3px] h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
     </div>
 
-    <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
-      {partyRequests.length}
-    </span>
+    <div className="flex items-center gap-2">
+      <span className="text-[11px] text-zinc-400 font-bold">
+        {showGuestVotes ? "CHIUDI" : "APRI"}
+      </span>
+
+      <span className="text-[11px] font-bold uppercase tracking-wide text-zinc-400">
+        Brani
+      </span>
+
+      <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+        {partyRequests.length}
+      </span>
+    </div>
   </div>
 
-  {partyRequests.length === 0 ? (
-    <p className="mt-3 text-sm text-zinc-400">Nessuna richiesta del party</p>
-  ) : (
+  {showGuestVotes && (
     <>
-    
-    <div className="mt-3 flex justify-center">
-  <button
-    onClick={() => setShowPartyRequests((v) => !v)}
-    className="rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 px-4 py-2 text-xs font-extrabold text-black shadow-[0_0_12px_rgba(250,204,21,0.4)] hover:brightness-110 transition"
-  >
-    {showPartyRequests ? "⬆ Nascondi Richieste Party" : "🔥 Mostra Richieste Party"}
-  </button>
-</div>
-
-  {showPartyRequests && (
-
-    <ul className="mt-3 space-y-2">
-      {[...partyRequests]
-        .sort((a, b) => {
-          const byVotes = Number(b.votes || 0) - Number(a.votes || 0);
-          if (byVotes !== 0) return byVotes;
-          return Number(b.ts || 0) - Number(a.ts || 0);
-        })
-        .slice(0, 20)
-        .map((r) => (
-          <li
-            key={r.id}
-            className="rounded-xl border border-yellow-400 bg-zinc-950/50 px-3 py-3 text-sm text-zinc-100"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="font-medium truncate">{r.title}</div>
-
-                <div className="mt-1 flex items-center gap-2 text-[11px] text-zinc-400">
-                  <span>{r.platform}</span>
-                  <span>🔥 {r.votes}</span>
-                </div>               
-              </div>
-              <button
-                onClick={() => voteGuest(r)}
-                disabled={!!votedMap[r.id]}
-                className="shrink-0 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 px-3 py-2 text-xs font-extrabold text-zinc-950 shadow-[0_0_18px_rgba(250,204,21,0.28)] disabled:cursor-not-allowed disabled:opacity-50"
+      {partyRequests.length === 0 ? (
+        <p className="mt-3 text-sm text-zinc-400">Nessuna richiesta del party</p>
+      ) : (
+        <ul className="mt-3 space-y-2">
+          {[...partyRequests]
+            .sort((a, b) => {
+              const byVotes = Number(b.votes || 0) - Number(a.votes || 0);
+              if (byVotes !== 0) return byVotes;
+              return Number(b.ts || 0) - Number(a.ts || 0);
+            })
+            .slice(0, 20)
+            .map((r) => (
+              <li
+                key={r.id}
+                className="rounded-xl border border-yellow-400 bg-zinc-950/50 px-3 py-3 text-sm text-zinc-100"
               >
-                {votedMap[r.id] ? "✅ Votata" : "👍 Vota"}
-              </button>
-            </div>
-          </li>
-        ))}
-    </ul>
-   )}
-  </>
-)}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="font-medium truncate">{r.title}</div>
 
-  <div className="mt-3 text-xs text-zinc-500">
-    Puoi votare le richieste del Party direttamente da qui.
-  </div>
+                    <div className="mt-1 flex items-center gap-2 text-[11px] text-zinc-400">
+                      <span>{r.platform}</span>
+                      <span>🔥 {r.votes}</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => voteGuest(r)}
+                    disabled={!!votedMap[r.id]}
+                    className="shrink-0 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 px-3 py-2 text-xs font-extrabold text-zinc-950 shadow-[0_0_18px_rgba(250,204,21,0.28)] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {votedMap[r.id] ? "✅ Votata" : "👍 Vota"}
+                  </button>
+                </div>
+              </li>
+            ))}
+        </ul>
+      )}
+
+      <div className="mt-3 text-xs text-zinc-500">
+        Puoi votare le richieste del Party direttamente da qui.
+      </div>
+    </>
+  )}
 </section>
 
 <div className="mt-6 flex justify-center">
