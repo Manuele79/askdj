@@ -527,7 +527,11 @@ function FakeSpectrumWide() {
               eventMode === "jukebox" && p.key === "youtube"
                ? "w-full max-w-[260px] py-3 text-sm mx-auto"
                : "px-3 py-2 text-xs"
-              } ${color}`}
+            } ${color} ${
+              eventMode === "jukebox" && p.key === "youtube" && !openedPlatform && !link.trim()
+               ? "animate-pulse shadow-[0_0_25px_rgba(239,68,68,0.7)]"
+               : ""
+             }`}
             >
              {p.label}
            </a>
@@ -537,7 +541,7 @@ function FakeSpectrumWide() {
 
       <div className="text-center text-xs text-zinc-500">
         {eventMode === "jukebox"
-         ? "Apri YouTube → copia link → incolla qui → invia al DJ"
+         ? "Apri YouTube → copia link → invia al DJ"
          : "Apri App → copia link → invia al DJ "}
       </div>
 
