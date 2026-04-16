@@ -80,6 +80,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [votedMap, setVotedMap] = useState<Record<string, true>>({});
   const [showPartyRequests, setShowPartyRequests] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
+  const [openedPlatform, setOpenedPlatform] = useState(false);
 
 
   // carica storico da localStorage (solo questo telefono)
@@ -521,14 +522,15 @@ function FakeSpectrumWide() {
               href={p.href}
               target="_blank"
               rel="noreferrer"
-             className={`rounded-full font-extrabold transition flex items-center justify-center ${
-             eventMode === "jukebox" && p.key === "youtube"
-                ? "w-full max-w-[260px] py-3 text-sm mx-auto"
-                : "px-3 py-2 text-xs"
-            } ${color}`}
+              onClick={() => setOpenedPlatform(true)}
+              className={`rounded-full font-extrabold transition flex items-center justify-center ${
+              eventMode === "jukebox" && p.key === "youtube"
+               ? "w-full max-w-[260px] py-3 text-sm mx-auto"
+               : "px-3 py-2 text-xs"
+              } ${color}`}
             >
-              {p.label}
-            </a>
+             {p.label}
+           </a>
           );
         })}
       </div>
@@ -536,7 +538,7 @@ function FakeSpectrumWide() {
       <div className="text-center text-xs text-zinc-500">
         {eventMode === "jukebox"
          ? "Apri YouTube → copia link → incolla qui → invia al DJ"
-         : "Apri app → copia link → incolla qui → invia al DJ "}
+         : "Apri App → copia link → invia al DJ "}
       </div>
 
       {!!hint && (
@@ -547,6 +549,8 @@ function FakeSpectrumWide() {
     </div>
   )}
     {/* Campo link */}
+
+    {(openedPlatform || link.trim()) && (
     <div>
       {!link.trim() && (
       <div className="mt-2">
@@ -566,11 +570,13 @@ function FakeSpectrumWide() {
         onChange={(e) => setLink(e.target.value)}
         placeholder={ eventMode === "jukebox"
             ? "Incolla qui il link YouTube"
-           : "Incolla qui il link della canzone"
+            : "Incolla qui il link della canzone"
        }
-      className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-yellow-400/20"
+       className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/60 px-4 py-3 text-sm outline-none placeholder:text-zinc-600 focus:border-cyan-400/60 focus:ring-2 focus:ring-yellow-400/20"
       />
     </div>
+  )}
+
 
 {/* Invia al DJ */}
 {link.trim() && (
@@ -588,7 +594,7 @@ function FakeSpectrumWide() {
         {/* Dedica */}
     <div>
       <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] bg-clip-text">
-        INVIA UNA DEDICA: <span className="text-white">scrivi qui sotto</span>
+        INVIA UNA DEDICA<span className="text-white"> CON IL TUO BRANO:</span>
 
       <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
        <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -597,26 +603,27 @@ function FakeSpectrumWide() {
       <textarea
         value={dedication}
         onChange={(e) => setDedication(e.target.value)}
-        placeholder="          ❤️❤️ la Dedica viene letta solo in console DJ ❤️❤️"
+        placeholder=" ❤️❤️ la Dedica viene letta solo in Console DJ ❤️❤️"
         rows={2}
         className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
       />
       <div className="mt-1 text-xs text-zinc-500">{dedication.length}/180</div>
     </div>
 
-    <div className="flex justify-center">
-  <button
-    type="button"
-    onClick={() => setShowTitle((v) => !v)}
-    className="text-xs font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] underline opacity-80 hover:opacity-100"
-  >
-    {showTitle ? "➖ Nascondi titolo manuale" : "➕ Aggiungi titolo manuale"}
-  </button>
-</div>
-
+    {eventMode !== "jukebox" && (
+   <div className="flex justify-center">
+    <button
+     type="button"
+      onClick={() => setShowTitle((v) => !v)}
+      className="text-xs font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] underline opacity-80 hover:opacity-100"
+    >
+    {showTitle ? "➖ Nascondi Titolo manuale" : "➕ Aggiungi Titolo manuale"}
+   </button>
+  </div>
+)}
 
     {/* Campo titolo */}
-   {showTitle && (
+  {eventMode !== "jukebox" && showTitle && (
   <div>
     <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] bg-clip-text">
       SCRIVI IL TITOLO DELLA CANZONE : <span className="text-white"> non riproducibile su PARTY</span>
@@ -722,7 +729,7 @@ function FakeSpectrumWide() {
     onClick={() => setShowPartyRequests((v) => !v)}
     className="rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 px-4 py-2 text-xs font-extrabold text-black shadow-[0_0_12px_rgba(250,204,21,0.4)] hover:brightness-110 transition"
   >
-    {showPartyRequests ? "⬆ Nascondi richieste party" : "🔥 Mostra richieste party"}
+    {showPartyRequests ? "⬆ Nascondi Richieste Party" : "🔥 Mostra Richieste Party"}
   </button>
 </div>
 
@@ -766,7 +773,7 @@ function FakeSpectrumWide() {
 )}
 
   <div className="mt-3 text-xs text-zinc-500">
-    Puoi votare le richieste del party direttamente da qui.
+    Puoi votare le richieste del Party direttamente da qui.
   </div>
 </section>
 
@@ -778,7 +785,7 @@ function FakeSpectrumWide() {
     }}
     className="text-xs text-zinc-400 underline hover:text-white"
   >
-    ⬅️ Esci dall’evento
+    ⬅️ Esci Dall’Evento
   </button>
 </div>
 </div>
