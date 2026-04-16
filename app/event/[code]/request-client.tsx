@@ -598,35 +598,43 @@ function FakeSpectrumWide() {
   </button>
 )}
 
-        {/* Dedica */}
+{link.trim() && (
+  <>
+    {/* Dedica */}
     <div>
       <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] bg-clip-text">
         INVIA UNA DEDICA<span className="text-white"> CON IL TUO BRANO:</span>
 
-      <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
-       <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
-
+        <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+        <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
       </label>
+
       <textarea
         value={dedication}
         onChange={(e) => setDedication(e.target.value)}
-        placeholder=" ❤️ La Dedica Arriva In Console DJ ❤️"
+        placeholder="💛 Scrivi una dedica "
         rows={2}
-        className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
+        className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-2 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
       />
-      <div className="mt-1 text-xs text-zinc-500">{dedication.length}/180</div>
+
+      <div className="mt-1 text-xs text-zinc-500">
+        {dedication.length}/180
+      </div>
     </div>
 
+    {/* Titolo manuale */}
     {eventMode !== "jukebox" && (
-   <div className="mt-0 flex justify-center">
-    <button
-     type="button"
-      onClick={() => setShowTitle((v) => !v)}
-      className="text-xs font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] underline opacity-80 hover:opacity-100"
-    >
-    {showTitle ? "➖ Nascondi Titolo manuale" : "➕ Aggiungi Titolo manuale"}
-   </button>
-  </div>
+      <div className="mt-1 flex justify-center">
+        <button
+          type="button"
+          onClick={() => setShowTitle((v) => !v)}
+          className="text-xs font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] underline opacity-80 hover:opacity-100"
+        >
+          {showTitle ? "➖ Nascondi Titolo manuale" : "➕ Aggiungi Titolo manuale"}
+        </button>
+      </div>
+    )}
+  </>
 )}
 
     {/* Campo titolo */}
