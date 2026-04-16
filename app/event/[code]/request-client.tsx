@@ -81,6 +81,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [showPartyRequests, setShowPartyRequests] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
   const [openedPlatform, setOpenedPlatform] = useState(false);
+  const [showMyRequests, setShowMyRequests] = useState(true);
 
 
   // carica storico da localStorage (solo questo telefono)
@@ -407,7 +408,7 @@ const platform = (serverPlatform as Platform) || fallbackPlatform;
     });
 
     if (!resp.ok) {
-      setHint("⚠️ Errore voto. Riprova.");
+      setHint("⚠️ Errore Voto. Riprova.");
       return;
     }
 
@@ -418,7 +419,7 @@ const platform = (serverPlatform as Platform) || fallbackPlatform;
       )
     );
   } catch {
-    setHint("⚠️ Errore voto. Riprova.");
+    setHint("⚠️ Errore Voto. Riprova.");
   }
 }
 
@@ -541,8 +542,8 @@ function FakeSpectrumWide() {
 
       <div className="text-center text-xs text-zinc-500">
         {eventMode === "jukebox"
-         ? "Apri YouTube → copia link → invia al DJ"
-         : "Apri App → copia link → invia al DJ "}
+         ? "Apri YouTube → Copia link → Invia al DJ"
+         : "Apri App → Copia link → Invia al DJ "}
       </div>
 
       {!!hint && (
@@ -607,7 +608,7 @@ function FakeSpectrumWide() {
       <textarea
         value={dedication}
         onChange={(e) => setDedication(e.target.value)}
-        placeholder=" ❤️❤️ la Dedica viene letta solo in Console DJ ❤️❤️"
+        placeholder=" ❤️ La Dedica Arriva In Console DJ ❤️"
         rows={2}
         className="mt-2 w-full rounded-xl border border-yellow-400 bg-zinc-950/40 px-4 py-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-pink-400/60 focus:ring-2 focus:ring-pink-400/20"
       />
@@ -646,65 +647,74 @@ function FakeSpectrumWide() {
 )}
 
 
-   <p className="text-xs text-zinc-500">
-  {eventMode === "jukebox"
-    ? "Questo evento accetta solo richieste YouTube."
-    : "Party autoplay funziona solo con link YouTube. Gli altri link si aprono dal DJ."}
-</p>
+{eventMode !== "jukebox" && (
+  <p className="text-xs text-zinc-500">
+    Party autoplay funziona solo con link YouTube. Gli altri link si aprono dal DJ.
+  </p>
+)}
 
   </div>
 </section>
 
         <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
-          <div className="flex items-center justify-between gap-3">
-           <div>
-           <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-            Le tue Richieste:
-           </h2>
-           <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
-           <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
-          </div>
+          <div
+  onClick={() => setShowMyRequests((v) => !v)}
+  className="flex items-center justify-between gap-3 cursor-pointer"
+>
+  <div>
+    <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
+      Le tue Richieste:
+    </h2>
+    <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+    <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
+  </div>
 
-         <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
-         {sent.length}
-        </span>
-      </div>
+  <div className="flex items-center gap-2">
+    <span className="text-[11px] text-zinc-400 font-bold">
+      {showMyRequests ? "NASCONDI" : "VEDI"}
+    </span>
+    <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+      {sent.length}
+    </span>
+  </div>
+</div>
 
-
-          {sent.length === 0 ? (
-            <p className="mt-3 text-sm text-zinc-400">Nessuna Richiesta</p>
-          ) : (
-            <ul className="mt-3 space-y-2">
-              {sent.slice(0, 10).map((r, i) => (
-                <li key={r.ts || i} className="rounded-xl border border-yellow-400 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-100">
-                <div className="flex items-center justify-between gap-2">
-                <div className="font-medium">{r.title}</div>
-                <span className="text-[11px] text-zinc-400">
-              {r.platform}
+{showMyRequests && (
+  <>
+    {sent.length === 0 ? (
+      <p className="mt-3 text-sm text-zinc-400">Nessuna Richiesta</p>
+    ) : (
+      <ul className="mt-3 space-y-2">
+        {sent.slice(0, 10).map((r, i) => (
+          <li key={r.ts || i} className="rounded-xl border border-yellow-400 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-100">
+            <div className="flex items-center justify-between gap-2">
+              <div className="font-medium">{r.title}</div>
+              <span className="text-[11px] text-zinc-400">
+                {r.platform}
               </span>
             </div>
-       
-              {r.dedication && r.dedication.trim() && (
-             <div className="mt-1 text-xs text-zinc-200">
-               “{r.dedication}”
-             </div>
-             )}
-           </li>
-          ))}
 
-            </ul>
-          )}
+            {r.dedication && r.dedication.trim() && (
+              <div className="mt-1 text-xs text-zinc-200">
+                “{r.dedication}”
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    )}
 
-          {sent.length > 0 && (
-            <div className="mt-3 text-xs text-zinc-500">
-              Se svuoti i dati del browser o cambi telefono, questo storico non segue.
-            </div>
-          )}
+    {sent.length > 0 && (
+      <div className="mt-3 text-xs text-zinc-500">
+        Se svuoti i dati del browser o cambi telefono, questo storico non segue.
+      </div>
+    )}
 
-          <p className="mt-4 text-sm text-zinc-400">
-            Invia il tuo brano al DJ in pochi secondi 🎧
-        </p>
-
+    <p className="mt-4 text-sm text-zinc-400">
+      Invia il tuo brano al DJ in pochi secondi 🎧
+    </p>
+  </>
+)}
 
         </section>
 
