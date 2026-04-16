@@ -81,7 +81,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [showPartyRequests, setShowPartyRequests] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
   const [openedPlatform, setOpenedPlatform] = useState(false);
-  const [showMyRequests, setShowMyRequests] = useState(true);
+  const [showMyRequests, setShowMyRequests] = useState(false);
   const [showGuestVotes, setShowGuestVotes] = useState(false);
 
 
@@ -621,6 +621,8 @@ function FakeSpectrumWide() {
         {dedication.length}/180
       </div>
     </div>
+  </>
+)}
 
     {/* Titolo manuale */}
     {eventMode !== "jukebox" && (
@@ -634,8 +636,9 @@ function FakeSpectrumWide() {
         </button>
       </div>
     )}
-  </>
-)}
+
+
+
 
     {/* Campo titolo */}
   {eventMode !== "jukebox" && showTitle && (
@@ -734,32 +737,32 @@ function FakeSpectrumWide() {
 </section>
 
 <section className="mt-6 rounded-3xl border border-yellow-400 bg-zinc-900/40 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-white/5">
-  <div
-    onClick={() => setShowGuestVotes((v) => !v)}
-    className="flex items-center justify-between gap-3 cursor-pointer"
-  >
-    <div>
-      <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-        Richieste ospiti 🔥VOTA
-      </h2>
-      <div className="mt-2 h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
-      <div className="mt-[-3px] h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
-    </div>
-
-    <div className="flex items-center gap-2">
-      <span className="text-[11px] text-zinc-400 font-bold">
-        {showGuestVotes ? "CHIUDI" : "APRI"}
-      </span>
-
-  <span className="text-[11px] font-bold uppercase tracking-wide text-zinc-400">
-    Richieste
-  </span>
-
-      <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
-        {partyRequests.length}
-      </span>
-    </div>
+<div
+  onClick={() => setShowGuestVotes((v) => !v)}
+  className="flex items-center justify-between gap-3 cursor-pointer"
+>
+  <div>
+    <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
+      Richieste ospiti:
+    </h2>
+    <div className="mt-2 h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
+    <div className="mt-[-3px] h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
   </div>
+
+  <div className="flex items-center gap-2">
+    <span className="text-[11px] font-bold text-yellow-200">
+      {showGuestVotes ? "NASCONDI" : "MOSTRA"}
+    </span>
+
+    <span className="text-[11px] font-bold uppercase tracking-wide text-zinc-400">
+      Richieste
+    </span>
+
+    <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+      {partyRequests.length}
+    </span>
+  </div>
+</div>
 
   {showGuestVotes && (
     <>
