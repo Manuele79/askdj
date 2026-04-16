@@ -542,10 +542,10 @@ function FakeSpectrumWide() {
         })}
       </div>
 
-      <div className="text-center text-xs text-zinc-500">
+      <div className="text-center text-xs text-yellow-300">
         {eventMode === "jukebox"
-         ? "Apri YouTube → Copia link → Invia al DJ"
-         : "Apri App → Copia link → Invia al DJ "}
+         ? "Apri YouTube e condividi il link"
+         : "Apri una piattaforma e condividi il link"}
       </div>
 
       {!!hint && (
@@ -679,19 +679,19 @@ function FakeSpectrumWide() {
       <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
     </div>
 
-    <div className="flex items-center gap-2">
-      <span className="text-[11px] text-zinc-400 font-bold">
-        {showMyRequests ? "CHIUDI🎶" : "APRI🎶"}
-      </span>
+<div className="flex items-center gap-2">
+  <span className="text-[11px] font-bold text-yellow-200">
+    {showMyRequests ? "NASCONDI" : "MOSTRA"}
+  </span>
 
-      <span className="text-[11px] font-bold uppercase tracking-wide text-zinc-400">
-        Brani
-      </span>
+  <span className="text-[11px] font-bold uppercase tracking-wide text-zinc-400">
+    Richieste
+  </span>
 
-      <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
-        {sent.length}
-      </span>
-    </div>
+  <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+    {sent.length}
+  </span>
+</div>
   </div>
 
   {showMyRequests && (
@@ -740,7 +740,7 @@ function FakeSpectrumWide() {
   >
     <div>
       <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-        Vota le Richieste degli ospiti 🔥
+        Richieste ospiti 🔥VOTA
       </h2>
       <div className="mt-2 h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
       <div className="mt-[-3px] h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -751,9 +751,9 @@ function FakeSpectrumWide() {
         {showGuestVotes ? "CHIUDI" : "APRI"}
       </span>
 
-      <span className="text-[11px] font-bold uppercase tracking-wide text-zinc-400">
-        Brani
-      </span>
+  <span className="text-[11px] font-bold uppercase tracking-wide text-zinc-400">
+    Richieste
+  </span>
 
       <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm font-bold text-white shadow-[0_0_10px_rgba(250,204,21,0.3)]">
         {partyRequests.length}
