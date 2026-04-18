@@ -113,11 +113,10 @@ export default function EventQr({ eventCode }: { eventCode: string }) {
         <div className="text-xl font-extrabold text-yellow-400">
           Nome Evento:
          </div>
-         <div className="text-2xl font-black tracking-wide text-cyan-500">
-         {eventCode !== "TEST123" ? eventCode : ""}
-
-         </div>
+        <div className="text-2xl font-black tracking-wide text-cyan-500">
+         {eventCode !== "TEST123" ? eventCode.replace(/-\d+$/, "") : ""}
       </div>
+     </div>
 
 
     <div className="rounded-2xl border border-yellow-400/40 bg-black p-4 print:border-0 print:bg-transparent print:p-0">
