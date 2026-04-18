@@ -206,6 +206,7 @@ export default function DjClient({ code }: { code: string }) {
   const [eventName, setEventName] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [joinMsg, setJoinMsg] = useState("");
+  const [showQr, setShowQr] = useState(true);
  
   const [bpmEdit, setBpmEdit] = useState<Record<string, number | "">>({});
   const [openDedications, setOpenDedications] = useState<Record<string, boolean>>({});
@@ -869,7 +870,7 @@ if (redirecting) {
 {code && code !== "TEST123" && (
   <div className="mt-2 flex flex-wrap items-center gap-4 lg:ml-52">
     <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm gap-4">
-     NOME EVENTO:
+     EVENTO:
     </span>
 
     <span
@@ -1057,6 +1058,16 @@ if (redirecting) {
     )}
   </div>
 )}
+
+<div className="hidden lg:flex justify-end mt-2">
+  <button
+    onClick={() => setShowQr((v) => !v)}
+    className="text-xs text-zinc-400 hover:text-white underline"
+  >
+    {showQr ? "👁 Nascondi QR" : "👁 Mostra QR"}
+  </button>
+</div>
+
 
             {paymentsEnabled && !isLanding && !isPaid && (
             <div className="flex flex-col gap-3 sm:items-end">
@@ -1339,9 +1350,9 @@ if (redirecting) {
 
 
         {/* MAIN GRID */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <div className={`grid grid-cols-1 gap-5 ${showQr ? "lg:grid-cols-3" : "lg:grid-cols-1"}`}>
           {/* LEFT */}
-          <div className="lg:col-span-2">
+        <div className={`min-w-0 ${showQr ? "lg:col-span-2" : "lg:col-span-1"}`}>
             {showDjPartyUi && showFullUi ? (
               mode === "party" ? (
 <section className="rounded-3xl border border-yellow-300/50 bg-zinc-950/70 shadow-[0_0_35px_rgba(253,224,71,0.28)] p-2 sm:p-3">
@@ -1674,47 +1685,88 @@ if (redirecting) {
     ) : null}
   </div>
 
-          {/* RIGHT: QR */}
-          {!isLanding && effectiveEventMode === "dj_party" && (
-            <aside className="lg:col-span-1">
-              <div className="sticky top-4 p-[1px] rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/80 via-zinc-900/70 to-zinc-900/80 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
-                <div className="rounded-3xl border border-yellow-400/80 bg-zinc-800/40 backdrop-blur p-4 overflow-hidden shadow-[0_0_20px_rgba(250,204,21,0.25)]">
-                  <div className="mb-3">
-                    <div className="text-lg font-extrabold text-yellow-300">
-                      INVITA GLI OSPITI (QR):
-                    </div>
-                    <div className="text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-cyan-300 to-emerald-300">
-                       Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui
-                    </div>
-                  </div>
+{/* RIGHT: QR */}
+{!isLanding && effectiveEventMode === "dj_party" && (
+  <>
+    {showQr && (
+      <aside className="hidden lg:block lg:col-span-1">
+        <div className="sticky top-4 p-[1px] rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/80 via-zinc-900/70 to-zinc-900/80 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+          <div className="rounded-3xl border border-yellow-400/80 bg-zinc-800/40 backdrop-blur p-4 overflow-hidden shadow-[0_0_20px_rgba(250,204,21,0.25)]">
+            <div className="mb-3">
+              <div className="text-lg font-extrabold text-yellow-300">
+                INVITA GLI OSPITI:
+              </div>
+              <div className="text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-cyan-300 to-emerald-300">
+                Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui
+              </div>
+            </div>
 
-                  <div className="mt-2 flex justify-center">
-                    <EventQr eventCode={code} />
-                  </div>
+            <div className="mt-2 flex justify-center">
+              <EventQr eventCode={code} />
+            </div>
 
-                  {paymentsEnabled && isPending && (
-                    <div className="mt-4 flex flex-col items-center gap-3">
-                      <div className="text-sm text-yellow-300 text-center">
-                        ⚠️ Evento creato ma NON attivo
-                      </div>
+            {paymentsEnabled && isPending && (
+              <div className="mt-4 flex flex-col items-center gap-3">
+                <div className="text-sm text-yellow-300 text-center">
+                  ⚠️ Evento creato ma NON attivo
+                </div>
 
-                      <div className="text-xs text-zinc-400 text-center max-w-[220px]">
-                        Paga per attivare richieste e funzionalità
-                      </div>
-                    </div>
-                  )}
-
-                  <p className="mt-3 text-xs text-yellow-300 text-center">
-                    ⚠️ Gli ospiti NON entrano da DJ/Party.  
-                    Devono scansionare questo QR.
-                  </p>
+                <div className="text-xs text-zinc-400 text-center max-w-[220px]">
+                  Paga per attivare richieste e funzionalità
                 </div>
               </div>
-            </aside>
-          )}
-        </div>
-      </div>
+            )}
 
+            <p className="mt-3 text-xs text-yellow-300 text-center">
+              ⚠️ Gli ospiti NON entrano da DJ/Party.
+              Devono scansionare questo QR.
+            </p>
+          </div>
+        </div>
+      </aside>
+    )}
+
+    <div className="lg:hidden">
+      <aside>
+        <div className="sticky top-4 p-[1px] rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900/80 via-zinc-900/70 to-zinc-900/80 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+          <div className="rounded-3xl border border-yellow-400/80 bg-zinc-800/40 backdrop-blur p-4 overflow-hidden shadow-[0_0_20px_rgba(250,204,21,0.25)]">
+            <div className="mb-3">
+              <div className="text-lg font-extrabold text-yellow-300">
+                INVITA GLI OSPITI:
+              </div>
+              <div className="text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-cyan-300 to-emerald-300">
+                Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui
+              </div>
+            </div>
+
+            <div className="mt-2 flex justify-center">
+              <EventQr eventCode={code} />
+            </div>
+
+            {paymentsEnabled && isPending && (
+              <div className="mt-4 flex flex-col items-center gap-3">
+                <div className="text-sm text-yellow-300 text-center">
+                  ⚠️ Evento creato ma NON attivo
+                </div>
+
+                <div className="text-xs text-zinc-400 text-center max-w-[220px]">
+                  Paga per attivare richieste e funzionalità
+                </div>
+              </div>
+            )}
+
+            <p className="mt-3 text-xs text-yellow-300 text-center">
+              ⚠️ Gli ospiti NON entrano da DJ/Party.
+              Devono scansionare questo QR.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </>
+)}
+</div>
+</div>
 {!isLanding && (
   <div className="mt-8 flex justify-center">
     <button
