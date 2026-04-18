@@ -333,6 +333,36 @@ function startedKey(code: string) {
     return () => clearInterval(t);
   }, [code]);
 
+  useEffect(() => {
+  sendPartyHeight();
+
+  const timeout = setTimeout(sendPartyHeight, 300);
+  window.addEventListener("resize", sendPartyHeight);
+
+  return () => {
+    clearTimeout(timeout);
+    window.removeEventListener("resize", sendPartyHeight);
+  };
+}, []);
+
+useEffect(() => {
+  const timeout = setTimeout(sendPartyHeight, 50);
+  return () => clearTimeout(timeout);
+}, [
+  items,
+  playable,
+  spotifyList,
+  tidalList,
+  appleList,
+  amazonList,
+  currentKey,
+  currentTitle,
+  currentDedication,
+  statusMsg,
+  userStarted,
+  loopEnabled,
+]);
+
   // scegli primo brano se non c'è corrente / oppure se quello corrente non esiste più
   useEffect(() => {
     if (!playable.length) return;
@@ -558,6 +588,23 @@ function resetParty() {
   }
 }
 
+function sendPartyHeight() {
+  const height = Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight,
+    document.body.offsetHeight,
+    document.documentElement.offsetHeight
+  );
+
+  window.parent.postMessage(
+    {
+      type: "party-height",
+      height,
+    },
+    window.location.origin
+  );
+}
+
 
   return (
     <div className="party-scroll relative min-h-screen w-full overflow-x-hidden bg-zinc-950 text-zinc-100">
@@ -573,7 +620,7 @@ function resetParty() {
               title="Reset Party"
             >
              <span>🎉</span>
-             <span>Party Mode</span>
+             <span>Party Mode Reset</span>
             </button>
 
             <h1 className="mt-4 text-3xl font-extrabold">
