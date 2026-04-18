@@ -492,7 +492,7 @@ function FakeSpectrumWide() {
     </span>
 
     <span className="px-4 py-1.5 rounded-full text-sm font-bold text-black bg-gradient-to-r from-yellow-300 via-amber-300 to-pink-300 shadow-[0_0_15px_rgba(250,204,21,0.4)]">
-    {code.split("-")[0]}
+    {code.replace(/-\d+$/, "")}
     </span>
   </div>
 )}
