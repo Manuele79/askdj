@@ -676,7 +676,7 @@ function FakeSpectrumWide() {
   >
     <div>
       <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-        Le Tue Richieste:
+        Le Tue<span className="text-white"> Richieste:</span>
       </h2>
       <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
       <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -743,7 +743,7 @@ function FakeSpectrumWide() {
 >
   <div>
     <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-      Vota Richieste Ospiti:
+      Vota Richieste <span className="text-white">Ospiti:</span>
     </h2>
     <div className="mt-2 h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
     <div className="mt-[-3px] h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -818,9 +818,9 @@ function FakeSpectrumWide() {
       localStorage.removeItem("dj_guest_event");
       window.location.href = "/";
     }}
-    className="text-xm text-zinc-400 underline hover:text-white"
+    className="text-sm font-bold text-yellow-300 underline opacity-80 hover:opacity-100 transition"
   >
-    ⬅️ Esci Dall’Evento (Entri nella pagina WEB e installi APP)
+    ⬅️ Esci Dall’Evento (Installa APP)
   </button>
 
 </div>
@@ -831,7 +831,7 @@ function FakeSpectrumWide() {
  {/* Footer */}
         <footer
   style={{
-    marginTop: 34,
+    marginTop: 12,
     padding: "22px 4px 28px",
     opacity: 0.82,
     fontSize: 12.5,
