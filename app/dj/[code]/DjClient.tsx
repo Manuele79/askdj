@@ -1358,7 +1358,7 @@ if (redirecting) {
 <section className="rounded-3xl border border-yellow-300/50 bg-zinc-950/70 shadow-[0_0_35px_rgba(253,224,71,0.28)] p-2 sm:p-3">
   <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-4 text-xs">
     <span className="pl-4 min-w-0 truncate font-semibold text-cyan-300">
-      Party Mode · Autoplay YouTube
+      Party Mode: Schiaccia PLAY per Le richieste di YouTube 
     </span>
     <a
       href={`/party/${code}`}
