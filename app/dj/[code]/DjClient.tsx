@@ -1059,12 +1059,12 @@ if (redirecting) {
   </div>
 )}
 
-<div className="hidden lg:flex justify-end mt-2">
+<div className="hidden lg:flex justify-end mt-3">
   <button
     onClick={() => setShowQr((v) => !v)}
-    className="text-xs text-zinc-400 hover:text-white underline"
+    className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-4 py-2 text-xs font-extrabold text-cyan-300 shadow-[0_0_14px_rgba(34,211,238,0.12)] transition hover:bg-cyan-500/20 hover:border-cyan-300 hover:text-white"
   >
-    {showQr ? "👁 Nascondi QR" : "👁 Mostra QR"}
+    {showQr ? "🙈 Chiudi QR" : "👁 Apri QR"}
   </button>
 </div>
 
