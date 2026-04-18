@@ -207,6 +207,7 @@ export default function DjClient({ code }: { code: string }) {
   const [joinCode, setJoinCode] = useState("");
   const [joinMsg, setJoinMsg] = useState("");
   const [showQr, setShowQr] = useState(true);
+  const [partyFrameHeight, setPartyFrameHeight] = useState(1200);
  
   const [bpmEdit, setBpmEdit] = useState<Record<string, number | "">>({});
   const [openDedications, setOpenDedications] = useState<Record<string, boolean>>({});
@@ -447,6 +448,20 @@ useEffect(() => {
       setPaymentsEnabled(false);
       setRequireCreatePassword(false);
     });
+}, []);
+
+useEffect(() => {
+  function handlePartyResize(event: MessageEvent) {
+    if (!event.data || event.data.type !== "party-height") return;
+
+    const nextHeight = Number(event.data.height || 0);
+    if (!Number.isFinite(nextHeight) || nextHeight < 400) return;
+
+    setPartyFrameHeight(nextHeight);
+  }
+
+  window.addEventListener("message", handlePartyResize);
+  return () => window.removeEventListener("message", handlePartyResize);
 }, []);
 
 useEffect(() => {
@@ -1372,10 +1387,11 @@ if (redirecting) {
 
   <div className="rounded-3xl bg-zinc-950/40 p-1 overflow-visible">
     <iframe
-      src={`/party/${code}`}
-      className="h-[1200px] w-full rounded-[22px] bg-zinc-950"
-      allow="autoplay; encrypted-media; picture-in-picture"
-    />
+  src={`/party/${code}`}
+  style={{ height: `${partyFrameHeight}px` }}
+  className="w-full rounded-[22px] bg-zinc-950"
+  allow="autoplay; encrypted-media; picture-in-picture"
+/>
   </div>
 </section>
 
