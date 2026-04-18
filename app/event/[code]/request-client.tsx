@@ -812,7 +812,7 @@ function FakeSpectrumWide() {
   )}
 </section>
 
-<div className="mt-4 text-center">
+<div className="mt-3 text-center">
   <button
     onClick={() => {
       localStorage.removeItem("dj_guest_event");
@@ -832,7 +832,7 @@ function FakeSpectrumWide() {
 
       
 {/* Footer */}
-<footer className="mt-5 pb-6 text-center text-[12px] text-zinc-300">
+<footer className="mt-2 pb-6 text-center text-[12px] text-zinc-300">
 
   <div className="mb-2 opacity-80">
     Nessun audio viene inviato — AskDJ gestisce solo link, titolo e dedica
