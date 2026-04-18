@@ -620,7 +620,7 @@ function sendPartyHeight() {
               title="Reset Party"
             >
              <span>🎉</span>
-             <span>Party Mode Reset</span>
+             <span>Reset Party</span>
             </button>
 
             <h1 className="mt-4 text-3xl font-extrabold">
@@ -634,7 +634,7 @@ function sendPartyHeight() {
 
             {code && code !== "TEST123" && (
             <p className="mt-2 text-lg text-yellow-300">
-             Evento: <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">{code}</span>
+             Evento: <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">{code.replace(/-\d+$/, "")}</span>
             </p>
              )}
           </div>
@@ -674,7 +674,7 @@ function sendPartyHeight() {
               <div className="mb-2 text-xs font-semibold text-yellow-200/90">{statusMsg}
               </div>
 
-              <div className="text-lg font-extrabold text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.75)]">
+              <div className="text-lg font-extrabold text-cyan-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.75)]">
                 Ora in riproduzione:
                <span className="ml-2 font-semibold text-zinc-100">
                  {currentTitle || "—"}
