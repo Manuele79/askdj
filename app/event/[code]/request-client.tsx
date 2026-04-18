@@ -7,8 +7,8 @@ type PlatformKey = "youtube" | "spotify" | "apple" | "amazon" | "tidal";
 const PLATFORM_LINKS: { key: PlatformKey; label: string; href: string }[] = [
   { key: "youtube", label: "YouTube", href: "https://www.youtube.com/" },
   { key: "spotify", label: "Spotify", href: "https://open.spotify.com/" },
-  { key: "apple", label: "Apple Music", href: "https://music.apple.com/" },
-  { key: "amazon", label: "Amazon Music", href: "https://music.amazon.com/" },
+  { key: "apple", label: "Apple", href: "https://music.apple.com/" },
+  { key: "amazon", label: "Amazon", href: "https://music.amazon.com/" },
   { key: "tidal", label: "TIDAL", href: "https://tidal.com/" },
 
 ];
@@ -823,7 +823,7 @@ function FakeSpectrumWide() {
     ⬅️ Esci Dall’Evento
   </button>
 
-  <div className="mt-1 text-[11px] text-zinc-500">
+  <div className="mt-1 text-[11px] text-zinc-400">
     Apri la pagina web e installa l’app
   </div>
 </div>
@@ -832,13 +832,13 @@ function FakeSpectrumWide() {
 
       
 {/* Footer */}
-<footer className="mt-5 pb-6 text-center text-[12px] text-zinc-500">
+<footer className="mt-5 pb-6 text-center text-[12px] text-zinc-300">
 
   <div className="mb-2 opacity-80">
     Nessun audio viene inviato — AskDJ gestisce solo link, titolo e dedica
   </div>
 
-  <div className="flex justify-center items-center gap-3 flex-wrap text-zinc-400">
+  <div className="flex justify-center items-center gap-3 flex-wrap text-zinc-300">
 
     <span>© {new Date().getFullYear()} askdj.app — M.M.</span>
 
