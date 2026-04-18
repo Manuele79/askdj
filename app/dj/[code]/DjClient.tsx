@@ -206,7 +206,7 @@ export default function DjClient({ code }: { code: string }) {
   const [eventName, setEventName] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [joinMsg, setJoinMsg] = useState("");
-  const [currentBpm, setCurrentBpm] = useState<number | "">("");
+ 
   const [bpmEdit, setBpmEdit] = useState<Record<string, number | "">>({});
   const [openDedications, setOpenDedications] = useState<Record<string, boolean>>({});
   const [selected, setSelected] = useState<Record<string, boolean>>({});
@@ -391,14 +391,39 @@ async function load() {
 }
 
 useEffect(() => {
-  const saved = localStorage.getItem("dj_guest_event");
+  async function restoreDjConsoleEvent() {
+    const saved = localStorage.getItem("dj_console_event");
 
-  if (saved && code === "TEST123") {
-    window.location.href = `/event/${saved}`;
-  } else {
-    setRedirecting(false);
+    if (!saved || code !== "TEST123") {
+      setRedirecting(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/events?eventCode=${encodeURIComponent(saved)}`, {
+        cache: "no-store",
+      });
+
+      if (res.ok) {
+        window.location.href = `/dj/${saved}`;
+        return;
+      }
+
+      localStorage.removeItem("dj_console_event");
+      setRedirecting(false);
+    } catch {
+      setRedirecting(false);
+    }
   }
+
+  restoreDjConsoleEvent();
 }, [code]);
+
+useEffect(() => {
+  if (!code || code === "TEST123") return;
+  localStorage.setItem("dj_console_event", code);
+}, [code]);
+
 
 useEffect(() => {
   if (!toast) return;
@@ -1689,48 +1714,48 @@ if (redirecting) {
           )}
         </div>
       </div>
- {/* Footer */}
-<footer
-  style={{
-    marginTop: 34,
-    padding: "22px 4px 28px",
-    opacity: 0.82,
-    fontSize: 12.5,
-    textAlign: "center",
-  }}
->
-  <div style={{ marginBottom: 10, color: "#d4d4d8" }}>
-    Nessun audio viene inviato. AskDJ gestisce solo link, titolo brano e dedica.
+
+{!isLanding && (
+  <div className="mt-8 flex justify-center">
+    <button
+      onClick={() => {
+        localStorage.removeItem("dj_console_event");
+        window.location.href = "/dj/TEST123";
+      }}
+      className="rounded-full border border-zinc-700 bg-zinc-900/60 px-5 py-2 text-xs font-bold text-zinc-400 transition hover:border-yellow-400/50 hover:text-white hover:bg-zinc-800"
+    >
+      ⬅️ Esci dall’evento
+    </button>
+  </div>
+)}
+
+{/* Footer */}
+<footer className="mt-2 pb-6 text-center text-[12px] text-zinc-200">
+
+  <div className="mb-2 opacity-80">
+    Nessun audio viene inviato — AskDJ gestisce solo link, titolo e dedica
   </div>
 
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: 12,
-      flexWrap: "wrap",
-      color: "#a1a1aa",
-    }}
-  >
-    <span>© {new Date().getFullYear()} info@askdj.app — M.M.</span>
+  <div className="flex justify-center items-center gap-3 flex-wrap text-zinc-300">
+
+    <span>© {new Date().getFullYear()} askdj.app — M.M.</span>
+
+    <a
+      href="mailto:info@askdj.app"
+      className="text-[11px] underline hover:text-white transition"
+    >
+      info@askdj.app
+    </a>
 
     <a
       href="/privacy"
-      style={{
-        display: "inline-block",
-        padding: "6px 12px",
-        borderRadius: 999,
-        textDecoration: "none",
-        fontWeight: 800,
-        color: "#0b0b14",
-        background: "linear-gradient(90deg, #22d3ee, #f472b6)",
-        boxShadow: "0 0 16px rgba(34,211,238,0.18)",
-      }}
+      className="px-3 py-1 rounded-full text-xs font-bold text-black bg-gradient-to-r from-cyan-400 to-pink-400 shadow-[0_0_10px_rgba(34,211,238,0.25)] hover:brightness-110 transition"
     >
       Privacy
     </a>
+
   </div>
+
 </footer>
 
     </div>
