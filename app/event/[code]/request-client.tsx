@@ -603,7 +603,7 @@ function FakeSpectrumWide() {
     {/* Dedica */}
     <div>
       <label className="text-sm font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] bg-clip-text">
-        INVIA UNA DEDICA<span className="text-white"> CON IL TUO BRANO:</span>
+        INVIA UNA DEDICA<span className="text-white"> CON IL BRANO:</span>
 
         <div className="mt-2 h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
         <div className="mt-[-3px] h-[3px] w-20 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -743,7 +743,7 @@ function FakeSpectrumWide() {
 >
   <div>
     <h2 className="text-base sm:text-lg font-black tracking-wide text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">
-      Vota Richieste <span className="text-white">Ospiti:</span>
+      Richieste <span className="text-white">Ospiti:</span>
     </h2>
     <div className="mt-2 h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
     <div className="mt-[-3px] h-[3px] w-24 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -832,7 +832,7 @@ function FakeSpectrumWide() {
 
       
 {/* Footer */}
-<footer className="mt-2 pb-6 text-center text-[12px] text-zinc-300">
+<footer className="mt-2 pb-6 text-center text-[12px] text-zinc-200">
 
   <div className="mb-2 opacity-80">
     Nessun audio viene inviato — AskDJ gestisce solo link, titolo e dedica
