@@ -1269,7 +1269,7 @@ if (redirecting) {
             <input
               value={eventName}
               onChange={(e) => setEventName(e.target.value)}
-              placeholder="Scrivi: Nome Nuovo Evento..."
+              placeholder="Scrivi: Scrivi Nuovo Evento..."
               className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
             />
             <button
@@ -1386,7 +1386,7 @@ if (redirecting) {
 <section className="rounded-3xl border border-yellow-300/50 bg-zinc-950/70 shadow-[0_0_35px_rgba(253,224,71,0.28)] p-2 sm:p-3">
   <div className="mb-2 flex flex-wrap items-center justify-between gap-2 px-4 text-xs">
     <span className="pl-4 min-w-0 truncate font-semibold text-cyan-300">
-      Party Mode: Schiaccia PLAY per Le richieste di YouTube 
+      Party Mode: 
     </span>
     <a
       href={`/party/${code}`}
