@@ -487,7 +487,7 @@ function FakeSpectrumWide() {
   <div className="mt-3 flex items-center justify-center gap-2">
    {code && code !== "TEST123" && (
   <div className="mt-3 flex items-center justify-center gap-3">
-    <span className="text-yellow-300 font-bold tracking-widest text-sm drop-shadow-[0_0_8px_rgba(250,204,21,0.9)]">
+    <span className="text-zinc-300 font-bold tracking-widest text-sm">
      EVENTO:
     </span>
 
@@ -630,7 +630,7 @@ function FakeSpectrumWide() {
         <button
           type="button"
           onClick={() => setShowTitle((v) => !v)}
-          className="text-xs font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)] underline opacity-80 hover:opacity-100"
+          className="text-xs text-zinc-400 underline hover:text-zinc-200 transition"
         >
           {showTitle ? "➖ Chiudi Titolo" : "➕ Scrivi Titolo"}
         </button>
@@ -661,8 +661,8 @@ function FakeSpectrumWide() {
 
 
 {eventMode !== "jukebox" && (
-  <p className="text-xs text-zinc-500">
-    Party autoplay funziona solo con link YouTube. Gli altri link si aprono dal DJ.
+  <p className="text-xs text-zinc-500 text-center mt-2">
+    Autoplay Party solo con link YouTube
   </p>
 )}
 
@@ -812,64 +812,52 @@ function FakeSpectrumWide() {
   )}
 </section>
 
-<div className="mt-4 flex justify-center">
+<div className="mt-4 text-center">
   <button
     onClick={() => {
       localStorage.removeItem("dj_guest_event");
       window.location.href = "/";
     }}
-    className="text-sm font-bold text-yellow-300 underline opacity-80 hover:opacity-100 transition"
+    className="text-sm font-bold text-zinc-300 underline hover:text-white transition"
   >
-    ⬅️ Esci Dall’Evento (Installa APP)
+    ⬅️ Esci Dall’Evento
   </button>
 
+  <div className="mt-1 text-[11px] text-zinc-500">
+    Apri la pagina web e installa l’app
+  </div>
 </div>
 </div>
 
 
       
- {/* Footer */}
-        <footer
-  style={{
-    marginTop: 12,
-    padding: "22px 4px 28px",
-    opacity: 0.82,
-    fontSize: 12.5,
-    textAlign: "center",
-  }}
->
-  <div style={{ marginBottom: 10, color: "#d4d4d8" }}>
-    Nessun audio viene inviato. AskDJ gestisce solo link, titolo brano e dedica.
+{/* Footer */}
+<footer className="mt-5 pb-6 text-center text-[12px] text-zinc-500">
+
+  <div className="mb-2 opacity-80">
+    Nessun audio viene inviato — AskDJ gestisce solo link, titolo e dedica
   </div>
 
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: 12,
-      flexWrap: "wrap",
-      color: "#a1a1aa",
-    }}
-  >
-    <span>© {new Date().getFullYear()} info@askdj.app — M.M.</span>
+  <div className="flex justify-center items-center gap-3 flex-wrap text-zinc-400">
+
+    <span>© {new Date().getFullYear()} askdj.app — M.M.</span>
+
+    <a
+      href="mailto:info@askdj.app"
+      className="text-[11px] underline hover:text-white transition"
+    >
+      info@askdj.app
+    </a>
 
     <a
       href="/privacy"
-      style={{
-        display: "inline-block",
-        padding: "6px 12px",
-        borderRadius: 999,
-        textDecoration: "none",
-        fontWeight: 800,
-        color: "#0b0b14",
-        background: "linear-gradient(90deg, #22d3ee, #f472b6)",
-        boxShadow: "0 0 16px rgba(34,211,238,0.18)",
-      }}
+      className="px-3 py-1 rounded-full text-xs font-bold text-black bg-gradient-to-r from-cyan-400 to-pink-400 shadow-[0_0_10px_rgba(34,211,238,0.25)] hover:brightness-110 transition"
     >
       Privacy
     </a>
+
   </div>
+
 </footer>
 
     </div>
