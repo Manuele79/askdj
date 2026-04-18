@@ -1658,8 +1658,8 @@ if (redirecting) {
                     <div className="text-lg font-extrabold text-yellow-300">
                       INVITA GLI OSPITI (QR):
                     </div>
-                    <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-100 via-cyan-400 to-pink-200">
-                      Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui
+                    <div className="text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-cyan-300 to-emerald-300">
+                       Scansionano QR 👉 inviano link canzone 👉 Il DJ le vede qui
                     </div>
                   </div>
 
