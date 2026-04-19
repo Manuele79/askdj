@@ -401,6 +401,7 @@ useEffect(() => {
 
     const savedDj = localStorage.getItem("dj_console_event");
     const savedJukebox = localStorage.getItem("jukebox_event");
+    const savedGuest = localStorage.getItem("dj_guest_event");
 
     try {
       if (savedDj) {
@@ -428,6 +429,20 @@ useEffect(() => {
         }
 
         localStorage.removeItem("jukebox_event");
+      }
+
+      if (savedGuest) {
+        const resGuest = await fetch(
+          `/api/events?eventCode=${encodeURIComponent(savedGuest)}`,
+          { cache: "no-store" }
+        );
+
+        if (resGuest.ok) {
+          window.location.href = `/event/${savedGuest}`;
+          return;
+        }
+
+        localStorage.removeItem("dj_guest_event");
       }
 
       setRedirecting(false);
