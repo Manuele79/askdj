@@ -940,11 +940,11 @@ if (redirecting) {
 
         <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
           <li>
-            Scegli la modalità evento:
+            SCEGLI LA MODALITA' EVENTO:
             <br />
-            <b>🎧 DJ / Party</b> → richieste live con console DJ
+            <b>🎧 DJ / PARTY</b> → richieste live con console DJ + Playlist TIDAL
             <br />
-            <b>📻 Jukebox</b> → player automatico con durata personalizzata
+            <b>📻 JUKEBOX</b> → player automatico TOUTUBE con durata personalizzata
           </li>
 
           <li>
@@ -960,7 +960,7 @@ if (redirecting) {
           </li>
 
           <li>
-            Per rientrare un un evento valido compilare il campo "rientra in evento" con "nome-codice"
+            Per rientrare in un evento valido compilare il campo "rientra in evento" con "nome - codice"
           </li>
 
         </ol>
