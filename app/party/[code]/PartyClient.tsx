@@ -78,7 +78,6 @@ export default function PartyClient({ code }: { code: string }) {
   const [currentDedication, setCurrentDedication] = useState("");
 
   const [loopEnabled, setLoopEnabled] = useState(true);
-  const [isEmbedded, setIsEmbedded] = useState(false);
   const [userStarted, setUserStarted] = useState(false);
   const [statusMsg, setStatusMsg] = useState<string>("");
   useEffect(() => {
@@ -333,12 +332,6 @@ function startedKey(code: string) {
     const t = setInterval(load, 1500);
     return () => clearInterval(t);
   }, [code]);
-
-
-
-useEffect(() => {
-  setIsEmbedded(window.self !== window.top);
-}, []);
 
   useEffect(() => {
   sendPartyHeight();
@@ -614,11 +607,7 @@ function sendPartyHeight() {
 
 
   return (
-    <div
-  className={`party-scroll relative w-full overflow-x-hidden bg-zinc-950 text-zinc-100 ${
-    isEmbedded ? "min-h-0" : "min-h-screen"
-  }`}
->
+    <div className="party-scroll relative min-h-screen w-full overflow-x-hidden bg-zinc-950 text-zinc-100">
       <div className="pointer-events-none absolute top-[-120px] right-[-100px] h-[420px] w-[420px] rounded-full bg-amber-400/10 blur-[120px]" />
 
       <div className="mx-auto w-full max-w-4xl px-4 py-8">
