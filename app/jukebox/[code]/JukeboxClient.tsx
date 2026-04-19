@@ -1020,7 +1020,7 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
                : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
             ].join(" ")}
            >
-              ➕ Importa Brani
+              ➕ Importa Brani YouTube
           </button>
           )}
 
@@ -1031,7 +1031,7 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
               className={[
                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
                 loopEnabled
-                  ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-zinc-950 hover:brightness-110"
+                  ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950 hover:brightness-110"
                   : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
               ].join(" ")}
             >
@@ -1152,7 +1152,7 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
                    >
 
                       {isCurrentSource && (
-                       <div className="text-xs text-yellow-300 font-bold mb-1">
+                       <div className="text-xs text-yellow-400 font-bold mb-1">
                          ▶ IN RIPRODUZIONE:
                        </div>
                       )}
