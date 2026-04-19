@@ -269,6 +269,27 @@ export default function Home() {
 
               <DemoButton />
 
+              <Link
+  href="/demo"
+  style={{
+    textDecoration: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    background: "rgba(255,255,255,0.06)",
+    color: "rgba(255,215,0,0.95)",
+    padding: "14px 16px",
+    borderRadius: 16,
+    fontWeight: 1000,
+    border: "1px solid rgba(255,215,0,0.28)",
+    minWidth: 180,
+    boxShadow: "0 18px 38px rgba(0,0,0,0.25)",
+  }}
+>
+  👀 Guarda Demo
+</Link>
+
               <InstallButton />
 
               <Chip text="✅ PWA installabile" />
