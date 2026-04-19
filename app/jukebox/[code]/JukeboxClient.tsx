@@ -178,7 +178,7 @@ export default function JukeboxClient({ code }: { code: string }) {
     }, [code]);
 
   useEffect(() => {
-    if (!code) return;
+    if (!code || code === "TEST123") return;
     localStorage.setItem("jukebox_event", code);
   }, [code]);
 
@@ -1227,6 +1227,18 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
             </div>
           </div>
         )}
+
+        <div className="mt-6 flex justify-center">
+  <button
+    onClick={() => {
+      localStorage.removeItem("jukebox_event");
+      window.location.href = "/dj/TEST123";
+    }}
+    className="text-xs text-zinc-400 underline hover:text-white"
+  >
+    ⬅️ Esci dall’evento
+  </button>
+</div>
 
 <footer
   style={{
