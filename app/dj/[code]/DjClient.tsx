@@ -958,6 +958,11 @@ if (redirecting) {
           <li>
             Gli ospiti entrano solo tramite QR o codice evento
           </li>
+
+          <li>
+            Per rientrare un un evento valido compilare il campo "rientra in evento" con "nome-codice"
+          </li>
+
         </ol>
 
         <div className="mt-3 text-xs text-yellow-300 leading-snug">
