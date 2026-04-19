@@ -393,32 +393,50 @@ async function load() {
 }
 
 useEffect(() => {
-  async function restoreDjConsoleEvent() {
-    const saved = localStorage.getItem("dj_console_event");
-
-    if (!saved || code !== "TEST123") {
+  async function restoreLastEvent() {
+    if (code !== "TEST123") {
       setRedirecting(false);
       return;
     }
 
-    try {
-      const res = await fetch(`/api/events?eventCode=${encodeURIComponent(saved)}`, {
-        cache: "no-store",
-      });
+    const savedDj = localStorage.getItem("dj_console_event");
+    const savedJukebox = localStorage.getItem("jukebox_event");
 
-      if (res.ok) {
-        window.location.href = `/dj/${saved}`;
-        return;
+    try {
+      if (savedDj) {
+        const resDj = await fetch(`/api/events?eventCode=${encodeURIComponent(savedDj)}`, {
+          cache: "no-store",
+        });
+
+        if (resDj.ok) {
+          window.location.href = `/dj/${savedDj}`;
+          return;
+        }
+
+        localStorage.removeItem("dj_console_event");
       }
 
-      localStorage.removeItem("dj_console_event");
+      if (savedJukebox) {
+        const resJukebox = await fetch(
+          `/api/events?eventCode=${encodeURIComponent(savedJukebox)}`,
+          { cache: "no-store" }
+        );
+
+        if (resJukebox.ok) {
+          window.location.href = `/jukebox/${savedJukebox}`;
+          return;
+        }
+
+        localStorage.removeItem("jukebox_event");
+      }
+
       setRedirecting(false);
     } catch {
       setRedirecting(false);
     }
   }
 
-  restoreDjConsoleEvent();
+  restoreLastEvent();
 }, [code]);
 
 useEffect(() => {
