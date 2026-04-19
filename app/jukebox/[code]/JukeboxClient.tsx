@@ -1240,46 +1240,31 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
   </button>
 </div>
 
-<footer
-  style={{
-    marginTop: 34,
-    padding: "22px 4px 28px",
-    opacity: 0.82,
-    fontSize: 12.5,
-    textAlign: "center",
-  }}
->
-  <div style={{ marginBottom: 10, color: "#d4d4d8" }}>
-    Nessun audio viene inviato. AskDJ gestisce solo link, titolo brano e dedica.
+{/* Footer */}
+<footer className="mt-2 pb-6 text-center text-[12px] text-zinc-200">
+
+  <div className="mb-2 opacity-80">
+    Nessun audio viene inviato — AskDJ gestisce solo link, titolo e dedica
   </div>
 
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: 12,
-      flexWrap: "wrap",
-      color: "#a1a1aa",
-    }}
-  >
-    <span>© {new Date().getFullYear()} info@askdj.app — M.M.</span>
+  <div className="flex justify-center items-center gap-3 flex-wrap text-zinc-300">
+
+    <span>© {new Date().getFullYear()} askdj.app — M.M.</span>
+
+    <a
+      href="mailto:info@askdj.app"
+      className="text-[11px] underline hover:text-white transition"
+    >
+      info@askdj.app
+    </a>
 
     <a
       href="/privacy"
-      style={{
-        display: "inline-block",
-        padding: "6px 12px",
-        borderRadius: 999,
-        textDecoration: "none",
-        fontWeight: 800,
-        color: "#0b0b14",
-        background: "linear-gradient(90deg, #22d3ee, #f472b6)",
-        boxShadow: "0 0 16px rgba(34,211,238,0.18)",
-      }}
+      className="px-3 py-1 rounded-full text-xs font-bold text-black bg-gradient-to-r from-cyan-400 to-pink-400 shadow-[0_0_10px_rgba(34,211,238,0.25)] hover:brightness-110 transition"
     >
       Privacy
     </a>
+
   </div>
 </footer>
       </div>
