@@ -207,7 +207,7 @@ export default function DjClient({ code }: { code: string }) {
   const [joinCode, setJoinCode] = useState("");
   const [joinMsg, setJoinMsg] = useState("");
   const [showQr, setShowQr] = useState(true);
-  const [partyFrameHeight, setPartyFrameHeight] = useState(1200);
+  const [partyFrameHeight, setPartyFrameHeight] = useState(420);
  
   const [bpmEdit, setBpmEdit] = useState<Record<string, number | "">>({});
   const [openDedications, setOpenDedications] = useState<Record<string, boolean>>({});
