@@ -226,6 +226,7 @@ export default function DjClient({ code }: { code: string }) {
 
   const showDjPartyUi = !isLanding || eventMode === "dj_party";
   const effectiveEventMode = isLanding ? eventMode : currentEventMode;
+  const [expiresAt, setExpiresAt] = useState<string | null>(null);
 
   function resetPartyUnlock() {
     try {
@@ -544,6 +545,17 @@ useEffect(() => {
   };
 }, [code]);
 
+useEffect(() => {
+  if (!expiresAt) return;
+
+  const t = setInterval(() => {
+    // forza re-render
+    setExpiresAt((prev) => (prev ? `${prev}` : prev));
+  }, 60000);
+
+  return () => clearInterval(t);
+}, [expiresAt]);
+
 async function createEvent() { 
   const rawEventCode = makeEventCodeFromName(eventName);
   if (!rawEventCode) return;
@@ -622,11 +634,13 @@ async function loadEventStatus() {
     setCurrentEventMode(data.mode ?? "");
     setTidalConnected(!!data.tidal_connected);
     setTidalChecked(true);
-    } catch {
-      setPaymentStatus(null);
-      setCurrentEventMode("");
-     setTidalChecked(true);
-    }
+    setExpiresAt(data.expiresAt ?? data.expires_at ?? null);
+  } catch {
+    setPaymentStatus(null);
+    setCurrentEventMode("");
+    setTidalChecked(true);
+    setExpiresAt(null);
+  }
 }
 
 async function disconnectTidal() {
@@ -846,6 +860,40 @@ async function exportPlaylist() {
   }
 }
 
+function getDjEventTimer(expiresAt: string | null) {
+  if (!expiresAt) return null;
+
+  const now = Date.now();
+  const expires = new Date(expiresAt).getTime();
+  const diff = expires - now;
+
+  if (diff <= 0) {
+    return {
+      color: "text-red-400",
+      title: "🔴 Evento scaduto",
+      detail: "",
+    };
+  }
+
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+
+  if (minutes < 60) {
+    return {
+      color: "text-orange-400",
+      title: "🟠 Scade presto",
+      detail: `⏳ Mancano ${minutes} min`,
+    };
+  }
+
+  return {
+    color: "text-emerald-400",
+    title: "🟢 Evento attivo",
+    detail: `⏳ Scade tra ${hours}h ${mins}m`,
+  };
+}
+
 
 function toggleSelect(id: string) {
   setSelected((prev) => ({
@@ -857,6 +905,13 @@ function toggleSelect(id: string) {
 if (redirecting) {
   return null;
 }
+
+const timer = getDjEventTimer(expiresAt);
+
+const showEventTimer =
+  code !== "TEST123" &&
+  !!timer &&
+  (!paymentsEnabled || paymentStatus === "paid");
 
 
   return (
@@ -916,30 +971,45 @@ if (redirecting) {
 
    </div>
 {code && code !== "TEST123" && (
-  <div className="mt-2 flex flex-wrap items-center gap-4 lg:ml-52">
-    <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm gap-4">
-     EVENTO:
-    </span>
+  <div className="mt-2 flex flex-col gap-1 lg:ml-52">
 
-    <span
-     className="
-      inline-flex items-center
-      px-4 py-1.5
-      rounded-full
-      text-sm sm:text-base
-      font-bold
-      tracking-widest
-      bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300
-      text-zinc-900
-      shadow-[0_0_12px_rgba(34,211,238,0.35)]
-      "
-    >
-      {code}
-    </span>
+    {/* RIGA EVENTO */}
+    <div className="flex flex-wrap items-center gap-4">
+      <span className="text-yellow-400 font-extrabold tracking-widest text-xl sm:text-sm">
+        EVENTO:
+      </span>
+
+      <span
+        className="
+          inline-flex items-center
+          px-4 py-1.5
+          rounded-full
+          text-sm sm:text-base
+          font-bold
+          tracking-widest
+          bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300
+          text-zinc-900
+          shadow-[0_0_12px_rgba(34,211,238,0.35)]
+        "
+      >
+        {code}
+      </span>
+    </div>
+
+    {/* TIMER */}
+    {showEventTimer && (
+      <div className={`text-sm font-bold ${timer.color}`}>
+        {timer.title}
+        {timer.detail && (
+          <div className="text-xs text-zinc-400 font-semibold">
+            {timer.detail}
+          </div>
+        )}
+      </div>
+    )}
+
   </div>
 )}
-
-
 
  </div>
 
@@ -1112,6 +1182,8 @@ if (redirecting) {
   </div>
 )}
 
+
+{code && code !== "TEST123" && (
 <div className="hidden lg:flex justify-end mt-3">
   <button
   onClick={() => setShowQr((v) => !v)}
@@ -1133,7 +1205,7 @@ if (redirecting) {
   {showQr ? "👁️ Nascondi QR" : "📲 Mostra QR"}
 </button>
 </div>
-
+)}
 
             {paymentsEnabled && !isLanding && !isPaid && (
             <div className="flex flex-col gap-3 sm:items-end">
