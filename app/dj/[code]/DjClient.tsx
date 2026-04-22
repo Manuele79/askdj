@@ -875,15 +875,15 @@ function getDjEventTimer(expiresAt: string | null) {
     };
   }
 
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
+  const totalMinutes = Math.ceil(diff / 60000);
+  const hours = Math.floor(totalMinutes / 60);
+  const mins = totalMinutes % 60;
 
-  if (minutes < 60) {
+  if (totalMinutes < 60) {
     return {
       color: "text-orange-400",
       title: "🟠 Scade presto",
-      detail: `⏳ Mancano ${minutes} min`,
+      detail: `⏳ Mancano ${totalMinutes} min`,
     };
   }
 
