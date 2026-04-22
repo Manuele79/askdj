@@ -165,9 +165,9 @@ function startedKey(code: string) {
   setItems((prev) => prev.filter((x) => x.id !== id));
 };
 
-  const playable = useMemo<PlayableItem[]>(() => {
-    const base = (items || [])
-      .filter((r) => r.platform === "youtube" && (r.youtubeVideoId || isYouTubePlaylistUrl(r.url)))
+   const playable = useMemo<PlayableItem[]>(() => {
+       const base = (items || [])
+       .filter((r) => r.youtubeVideoId || isYouTubePlaylistUrl(r.url))
       .map((r) => {
         const isPl = isYouTubePlaylistUrl(r.url) && !r.youtubeVideoId;
         if (isPl) {
@@ -195,11 +195,11 @@ function startedKey(code: string) {
     return base;
   }, [items]);
 
-  const spotifyList = useMemo(() => {
-    return (items || [])
-      .filter((r) => r.platform === "spotify" && r.url)
-      .sort((a, b) => b.votes - a.votes || b.updatedAt - a.updatedAt);
-  }, [items]);
+const spotifyList = useMemo(() => {
+  return (items || [])
+    .filter((r) => r.platform === "spotify" && r.url && !r.youtubeVideoId)
+    .sort((a, b) => b.votes - a.votes || b.updatedAt - a.updatedAt);
+}, [items]);
 
   const tidalList = useMemo(() => {
     return (items || [])
