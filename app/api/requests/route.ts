@@ -155,6 +155,40 @@ function extractOgTitle(html: string) {
   return m?.[1]?.trim() || "";
 }
 
+async function searchYouTubeVideoId(query: string): Promise<string | null> {
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  if (!apiKey) return null;
+
+  const q = String(query || "").trim();
+  if (!q) return null;
+
+  const qs = new URLSearchParams({
+    part: "snippet",
+    q,
+    type: "video",
+    maxResults: "1",
+    key: apiKey,
+  });
+
+  try {
+    const res = await fetch(`https://www.googleapis.com/youtube/v3/search?${qs.toString()}`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.error("YOUTUBE SEARCH ERROR:", await res.text());
+      return null;
+    }
+
+    const data = await res.json();
+    const videoId = data?.items?.[0]?.id?.videoId;
+    return videoId ? String(videoId) : null;
+  } catch (err) {
+    console.error("YOUTUBE SEARCH FETCH ERROR:", err);
+    return null;
+  }
+}
+
 
 async function resolveTitleServer(title: string, url: string, platform: string) {
   const t = (title || "").trim();
@@ -345,7 +379,7 @@ const cleanUrl = extractFirstUrl(rawUrl) || rawUrl;
 const shareText = cleanUrl ? stripUrlFromText(rawUrl, cleanUrl) : "";
 
 const platform = detectPlatform(cleanUrl);
-const youtubeVideoId = platform === "youtube" ? extractYouTubeVideoId(cleanUrl) : "";
+let youtubeVideoId = platform === "youtube" ? extractYouTubeVideoId(cleanUrl) : "";
 
 let tidalUrl: string | null = null;
 
@@ -368,6 +402,14 @@ const finalTitle =
   safeTitle && safeTitle.trim()
     ? safeTitle.trim()
     : shareText || `Richiesta ${platform === "amazon" ? "Amazon Music" : platform === "apple" ? "Apple Music" : platform === "tidal" ? "TIDAL" : "Music"}`;
+
+   // Spotify -> YouTube automatico (v1)
+if (platform === "spotify" && finalTitle && !youtubeVideoId) {
+  const ytMatch = await searchYouTubeVideoId(finalTitle);
+  if (ytMatch) {
+    youtubeVideoId = ytMatch;
+  }
+} 
 
 let seedBpm: number | null = null;
 
