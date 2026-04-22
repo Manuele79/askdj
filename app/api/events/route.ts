@@ -129,8 +129,12 @@ export async function POST(req: Request) {
     .maybeSingle();
 
   if (exErr) {
-    return NextResponse.json({ ok: false, error: "DB error" }, { status: 500 });
-  }
+  console.error("EVENT EXISTING CHECK ERROR:", exErr);
+  return NextResponse.json(
+    { ok: false, error: exErr.message, details: exErr },
+    { status: 500 }
+  );
+}
 
   const exTs = existing?.expires_at ? Date.parse(existing.expires_at) : 0;
   const isActive = existing && exTs && Date.now() <= exTs;
@@ -179,8 +183,12 @@ export async function POST(req: Request) {
     .single();
 
   if (error) {
-    return NextResponse.json({ ok: false, error: "DB error" }, { status: 500 });
-  }
+  console.error("EVENT CREATE ERROR:", error);
+  return NextResponse.json(
+    { ok: false, error: error.message, details: error },
+    { status: 500 }
+  );
+}
 
   return NextResponse.json({
   ok: true,
