@@ -143,6 +143,59 @@ function FakeSpectrumWide() {
   );
 }
 
+function getEventTimer(expiresAt: string | null, nowMs: number) {
+  if (!expiresAt) return null;
+
+  const expires = new Date(expiresAt).getTime();
+  const diff = expires - nowMs;
+
+  if (diff <= 0) {
+    return {
+      title: "🔴 Evento scaduto",
+      detail: "",
+      color: "text-red-400",
+    };
+  }
+
+  const totalMinutes = Math.ceil(diff / (1000 * 60));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours >= 24) {
+    const d = new Date(expiresAt);
+
+    const date = d.toLocaleDateString("it-IT", {
+      day: "numeric",
+      month: "long",
+    });
+
+    const time = d.toLocaleTimeString("it-IT", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    return {
+      title: "🟢 Evento attivo",
+      detail: `Scade il ${date} alle ${time}`,
+      color: "text-green-400",
+    };
+  }
+
+  if (hours < 1) {
+    return {
+      title: "🟠 Scade presto",
+      detail: `Mancano ${minutes} min`,
+      color: "text-orange-400",
+    };
+  }
+
+  return {
+    title: "🟢 Evento attivo",
+    detail: `Scade tra ${hours}h ${minutes}m`,
+    color: "text-green-400",
+  };
+}
+
 
 export default function JukeboxClient({ code }: { code: string }) {
   const [redirecting, setRedirecting] = useState(true);
@@ -211,6 +264,9 @@ export default function JukeboxClient({ code }: { code: string }) {
 
   const [eventExpired, setEventExpired] = useState(false);
   const [eventChecked, setEventChecked] = useState(false);
+
+  const [expiresAt, setExpiresAt] = useState<string | null>(null);
+  const [nowTick, setNowTick] = useState(Date.now());
 
   const playerRef = useRef<any>(null);
   const playerContainerId = useRef(
@@ -392,43 +448,48 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
   setNowPlayingFromEntry(entry);
 }
 
-  async function checkEventStatus() {
-    if (!code || code === "TEST123") {
-      setEventExpired(false);
+async function checkEventStatus() {
+  if (!code || code === "TEST123") {
+    setEventExpired(false);
+    setEventChecked(true);
+    setExpiresAt(null);
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/events?eventCode=${encodeURIComponent(code)}`, {
+      cache: "no-store",
+    });
+
+    if (res.status === 410 || res.status === 404) {
+      setEventExpired(true);
+      setEventChecked(true);
+      setExpiresAt(null);
+      localStorage.removeItem("jukebox_event");
+
+      try {
+        playerRef.current?.pauseVideo?.();
+      } catch {}
+
+      setIsPlaying(false);
+      setStatusMsg("⛔ Evento scaduto");
+      return;
+    }
+
+    if (!res.ok) {
       setEventChecked(true);
       return;
     }
 
-    try {
-      const res = await fetch(`/api/events?eventCode=${encodeURIComponent(code)}`, {
-        cache: "no-store",
-      });
+    const data = await res.json();
 
-      if (res.status === 410 || res.status === 404) {
-        setEventExpired(true);
-        setEventChecked(true);
-        localStorage.removeItem("jukebox_event");
-
-        try {
-          playerRef.current?.pauseVideo?.();
-        } catch {}
-
-        setIsPlaying(false);
-        setStatusMsg("⛔ Evento scaduto");
-        return;
-      }
-
-      if (!res.ok) {
-        setEventChecked(true);
-        return;
-      }
-
-      setEventExpired(false);
-      setEventChecked(true);
-    } catch {
-      setEventChecked(true);
-    }
+    setEventExpired(false);
+    setEventChecked(true);
+    setExpiresAt(data.expiresAt ?? data.expires_at ?? null);
+  } catch {
+    setEventChecked(true);
   }
+}
 
   async function load() {
     try {
@@ -527,6 +588,14 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
       clearInterval(t2);
     };
   }, [code, playlistEnabled]);
+
+  useEffect(() => {
+  const t = setInterval(() => {
+    setNowTick(Date.now());
+  }, 60000);
+
+  return () => clearInterval(t);
+  }, []);
 
   function advance(reason: string) {
     if (advancingRef.current) return;
@@ -930,6 +999,8 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
 
   if (redirecting) return null;
 
+  const timer = getEventTimer(expiresAt, nowTick);
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100">
       <div className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-yellow-400/10 blur-[120px]" />
@@ -985,6 +1056,18 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
                 </span>
               </div>
             )}
+
+           {timer && (
+             <div className={`mt-2 text-sm font-bold ${timer.color}`}>
+                {timer.title}
+                {timer.detail && (
+                  <div className="text-xs text-zinc-400 font-semibold">
+                    {timer.detail}
+                  </div>
+                )}
+             </div>
+            )}
+
           </div>
 
           {/* SPECTRUM */}
