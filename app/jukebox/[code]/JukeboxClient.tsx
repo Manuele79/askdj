@@ -199,6 +199,11 @@ export default function JukeboxClient({ code }: { code: string }) {
   const [redirecting, setRedirecting] = useState(true);
 
   useEffect(() => {
+  loadYouTubeIframeAPI().catch(() => {});
+  }, []);
+
+
+  useEffect(() => {
     const saved = localStorage.getItem("jukebox_event");
 
     if (saved && code === "TEST123") {
@@ -1136,7 +1141,7 @@ async function checkEventStatus() {
               onClick={playCurrent}
               disabled={eventExpired}
               className={[
-                "rounded-xl px-5 py-3 text-sm font-extrabold transition lg:w-[260px]",
+                "rounded-xl px-5 py-4 text-base font-extrabold transition lg:w-[320px]",
                 isPlaying
                   ? "bg-emerald-400 text-zinc-950 shadow-[0_0_22px_rgba(52,211,153,0.55)]"
                   : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
