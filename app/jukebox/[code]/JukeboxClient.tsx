@@ -429,7 +429,8 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
       setStatusMsg("⚠️ Playlist non riproducibile");
       return;
     }
-    setStatusMsg(reason ? `▶️ Playlist (${reason})` : `▶️ Playlist`);
+
+    setStatusMsg(reason ? `▶️ Playlist (${reason})` : "▶️ Playlist");
     setNowPlayingFromEntry({ ...entry, _listId: listId });
     return;
   }
@@ -437,8 +438,69 @@ function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
   const id = normalizeVideoId(entry.youtubeVideoId);
   if (!id) return;
 
-  setStatusMsg(reason ? `▶️ Play (${reason})` : `▶️ Play`);
+  setStatusMsg(reason ? `▶️ Play (${reason})` : "▶️ Play");
   setNowPlayingFromEntry(entry);
+}
+
+function safeLoadAndPlay(entry: QueueEntry, reason?: string, autoplay = true) {
+  const p = playerRef.current;
+  if (!p || !entry) return;
+
+  clearLoadWatchdog();
+
+  if (autoplay) {
+    armLoadWatchdog(entry._queueKey);
+  }
+
+  pendingAutoplayRef.current = autoplay;
+
+  try {
+    if (entry._kind === "playlist") {
+      const listId = entry._listId || extractYouTubeListId(entry.url);
+      if (!listId) return;
+
+      setStatusMsg(reason ? `▶️ Playlist (${reason})` : "▶️ Playlist");
+
+      if (p.loadPlaylist) {
+        p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
+      }
+
+      if (autoplay) {
+        setTimeout(() => {
+          try {
+            p.unMute?.();
+            p.setVolume?.(100);
+            p.playVideo?.();
+            setIsPlaying(true);
+            setStatusMsg("▶️ Riproduzione");
+          } catch {}
+        }, 700);
+      }
+
+      return;
+    }
+
+    const vid = normalizeVideoId(entry.youtubeVideoId);
+    if (!vid) return;
+
+    setStatusMsg(reason ? `▶️ Carico (${reason})` : "▶️ Carico");
+
+    if (p.loadVideoById) {
+      p.loadVideoById(vid);
+    }
+
+    if (autoplay) {
+      setTimeout(() => {
+        try {
+          p.unMute?.();
+          p.setVolume?.(100);
+          p.playVideo?.();
+          setIsPlaying(true);
+          setStatusMsg("▶️ Riproduzione");
+        } catch {}
+      }, 700);
+    }
+  } catch {}
 }
 
 async function checkEventStatus() {
@@ -484,307 +546,264 @@ async function checkEventStatus() {
   }
 }
 
-  async function load() {
-    try {
-      const res = await fetch(
-        `/api/jukebox/requests?eventCode=${encodeURIComponent(code)}`,
-        { cache: "no-store" }
-      );
+async function load() {
+  try {
+    const res = await fetch(
+      `/api/jukebox/requests?eventCode=${encodeURIComponent(code)}`,
+      { cache: "no-store" }
+    );
 
-      const data = await res.json();
+    const data = await res.json();
 
-      const mapped: RequestItem[] = (data.requests || []).map((r: any) => ({
-        id: String(r.id),
-        eventCode: String(r.eventCode ?? r.event_code ?? ""),
-        title: String(r.title ?? ""),
-        url: String(r.url ?? ""),
-        dedication: String(r.dedication ?? ""),
-        platform: (r.platform ?? "other") as any,
-        youtubeVideoId: normalizeVideoId(
-          r.youtubeVideoId ?? r.youtube_video_id ?? ""
-        ),
-        votes: Number(r.votes ?? 0),
-        createdAt: Number(
-          r.createdAt ?? (r.created_at ? Date.parse(r.created_at) : 0)
-        ),
-        updatedAt: Number(
-          r.updatedAt ?? (r.updated_at ? Date.parse(r.updated_at) : 0)
-        ),
-      }));
+    const mapped: RequestItem[] = (data.requests || []).map((r: any) => ({
+      id: String(r.id),
+      eventCode: String(r.eventCode ?? r.event_code ?? ""),
+      title: String(r.title ?? ""),
+      url: String(r.url ?? ""),
+      dedication: String(r.dedication ?? ""),
+      platform: (r.platform ?? "other") as any,
+      youtubeVideoId: normalizeVideoId(
+        r.youtubeVideoId ?? r.youtube_video_id ?? ""
+      ),
+      votes: Number(r.votes ?? 0),
+      createdAt: Number(
+        r.createdAt ?? (r.created_at ? Date.parse(r.created_at) : 0)
+      ),
+      updatedAt: Number(
+        r.updatedAt ?? (r.updated_at ? Date.parse(r.updated_at) : 0)
+      ),
+    }));
 
-      const prevItems = itemsRef.current;
+    const prevItems = itemsRef.current;
 
-      setItems((prev) =>
-        JSON.stringify(prev) === JSON.stringify(mapped) ? prev : mapped
-      );
+    setItems((prev) =>
+      JSON.stringify(prev) === JSON.stringify(mapped) ? prev : mapped
+    );
 
-      const nextPlayable = buildPlayableList(mapped, playlistEnabled);
+    const nextPlayable = buildPlayableList(mapped, playlistEnabled);
 
-      const seen: Record<string, number> = {};
-      for (const r of mapped) {
-        seen[r.id] = Number(r.updatedAt || r.createdAt || 0);
-      }
-
-      // primo caricamento: inizializza solo la playlist base
-      if (!Object.keys(lastSeenRef.current).length) {
-        if (!queueRef.current.length) {
-          setQueue(nextPlayable.map(makeQueueEntry));
-        }
-        lastSeenRef.current = seen;
-        return;
-      }
-
-      const prevMap = new Map(prevItems.map((r) => [r.id, r]));
-      const queuedTokens = new Set(
-        requestQueueRef.current.map((item) => getRequestToken(item))
-      );
-
-      const freshRequests: QueueEntry[] = [];
-
-      for (const p of nextPlayable) {
-        const prevRow = prevMap.get(p.id);
-        const currentSeen = lastSeenRef.current[p.id] ?? 0;
-        const nextStamp = Number(p.updatedAt || p.createdAt || 0);
-
-        const isBrandNew = !prevRow;
-        const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
-        const token = getRequestToken(p);
-
-        if (
-          (isBrandNew || isUpdatedDuplicate) &&
-          !queuedTokens.has(token) &&
-          !playedRequestTokensRef.current.has(token)
-        ) {
-          freshRequests.push(makeQueueEntry(p));
-        }
-      }
-
-      if (freshRequests.length) {
-        setRequestQueue((prev) => [...prev, ...freshRequests]);
-      }
-
-      lastSeenRef.current = seen;
-    } catch {
-      // niente
+    const seen: Record<string, number> = {};
+    for (const r of mapped) {
+      seen[r.id] = Number(r.updatedAt || r.createdAt || 0);
     }
+
+    if (!Object.keys(lastSeenRef.current).length) {
+      if (!queueRef.current.length) {
+        setQueue(nextPlayable.map(makeQueueEntry));
+      }
+      lastSeenRef.current = seen;
+      return;
+    }
+
+    const prevMap = new Map(prevItems.map((r) => [r.id, r]));
+    const queuedTokens = new Set(
+      requestQueueRef.current.map((item) => getRequestToken(item))
+    );
+
+    const freshRequests: QueueEntry[] = [];
+
+    for (const p of nextPlayable) {
+      const prevRow = prevMap.get(p.id);
+      const currentSeen = lastSeenRef.current[p.id] ?? 0;
+      const nextStamp = Number(p.updatedAt || p.createdAt || 0);
+
+      const isBrandNew = !prevRow;
+      const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
+      const token = getRequestToken(p);
+
+      if (
+        (isBrandNew || isUpdatedDuplicate) &&
+        !queuedTokens.has(token) &&
+        !playedRequestTokensRef.current.has(token)
+      ) {
+        freshRequests.push(makeQueueEntry(p));
+      }
+    }
+
+    if (freshRequests.length) {
+      setRequestQueue((prev) => [...prev, ...freshRequests]);
+    }
+
+    lastSeenRef.current = seen;
+  } catch {
+    // niente
   }
+}
 
-  useEffect(() => {
-    checkEventStatus();
-    load();
+useEffect(() => {
+  checkEventStatus();
+  load();
 
-    const t1 = setInterval(load, 1500);
-    const t2 = setInterval(checkEventStatus, 5000);
+  const t1 = setInterval(load, 1500);
+  const t2 = setInterval(checkEventStatus, 5000);
 
-    return () => {
-      clearInterval(t1);
-      clearInterval(t2);
-    };
-  }, [code, playlistEnabled]);
+  return () => {
+    clearInterval(t1);
+    clearInterval(t2);
+  };
+}, [code, playlistEnabled]);
 
-  useEffect(() => {
+useEffect(() => {
   const t = setInterval(() => {
     setNowTick(Date.now());
   }, 60000);
 
   return () => clearInterval(t);
-  }, []);
+}, []);
 
-  function advance(reason: string) {
-    if (advancingRef.current) return;
-    advancingRef.current = true;
+function advance(reason: string) {
+  if (advancingRef.current) return;
+  advancingRef.current = true;
 
-    const base = queueRef.current;
-    const requests = requestQueueRef.current;
-    const curKey = currentKeyRef.current;
+  const base = queueRef.current;
+  const requests = requestQueueRef.current;
+  const curKey = currentKeyRef.current;
 
-    const currentBaseEntry = base.find((p) => p._queueKey === curKey);
-    const currentRequestIdx = requests.findIndex((p) => p._queueKey === curKey);
+  const currentBaseEntry = base.find((p) => p._queueKey === curKey);
+  const currentRequestIdx = requests.findIndex((p) => p._queueKey === curKey);
 
-    let remainingRequests = requests;
+  let remainingRequests = requests;
 
-    if (currentRequestIdx === 0) {
-      playedRequestTokensRef.current.add(getRequestToken(requests[0]));
-      remainingRequests = requests.slice(1);
-      setRequestQueue(remainingRequests);
+  if (currentRequestIdx === 0) {
+    playedRequestTokensRef.current.add(getRequestToken(requests[0]));
+    remainingRequests = requests.slice(1);
+    setRequestQueue(remainingRequests);
+  }
+
+  if (remainingRequests.length > 0) {
+    if (currentBaseEntry && !resumeBaseKeyRef.current) {
+      resumeBaseKeyRef.current = currentBaseEntry._key;
     }
 
-    if (remainingRequests.length > 0) {
-      if (currentBaseEntry && !resumeBaseKeyRef.current) {
-        resumeBaseKeyRef.current = currentBaseEntry._key;
-      }
-
-      playQueueEntry(remainingRequests[0], `request (${reason})`, true);
-
-      setTimeout(() => {
-        advancingRef.current = false;
-      }, 350);
-      return;
-    }
-
-    if (currentRequestIdx === 0 && base.length > 0) {
-      const resumeIdx = base.findIndex((p) => p._key === resumeBaseKeyRef.current);
-      resumeBaseKeyRef.current = "";
-
-      if (resumeIdx >= 0) {
-        const next = base[resumeIdx + 1];
-
-        if (next) {
-          playQueueEntry(next, `resume (${reason})`, true);
-        } else if (loopRef.current) {
-          playQueueEntry(base[0], `loop (${reason})`, true);
-        } else {
-          setStatusMsg("⏹ Fine playlist");
-          setIsPlaying(false);
-        }
-
-        setTimeout(() => {
-          advancingRef.current = false;
-        }, 350);
-        return;
-      }
-
-      playQueueEntry(base[0], `resume-start (${reason})`, true);
-      setTimeout(() => {
-        advancingRef.current = false;
-      }, 350);
-      return;
-    }
-
-    if (!base.length) {
-      advancingRef.current = false;
-      return;
-    }
-
-    const idx = base.findIndex((p) => p._queueKey === curKey);
-
-    if (idx < 0) {
-      playQueueEntry(base[0], `start (${reason})`, true);
-      setTimeout(() => {
-        advancingRef.current = false;
-      }, 350);
-      return;
-    }
-
-    const next = base[idx + 1];
-    if (next) {
-      playQueueEntry(next, `next (${reason})`, true);
-      setTimeout(() => {
-        advancingRef.current = false;
-      }, 350);
-      return;
-    }
-
-    if (loopRef.current) {
-      playQueueEntry(base[0], `loop (${reason})`, true);
-      setTimeout(() => {
-        advancingRef.current = false;
-      }, 350);
-      return;
-    }
-
-    setStatusMsg("⏹ Fine coda");
-    setIsPlaying(false);
+    playQueueEntry(remainingRequests[0], `request (${reason})`, true);
 
     setTimeout(() => {
       advancingRef.current = false;
     }, 350);
+    return;
   }
+
+  if (currentRequestIdx === 0 && base.length > 0) {
+    const resumeIdx = base.findIndex((p) => p._key === resumeBaseKeyRef.current);
+    resumeBaseKeyRef.current = "";
+
+    if (resumeIdx >= 0) {
+      const next = base[resumeIdx + 1];
+
+      if (next) {
+        playQueueEntry(next, `resume (${reason})`, true);
+      } else if (loopRef.current) {
+        playQueueEntry(base[0], `loop (${reason})`, true);
+      } else {
+        setStatusMsg("⏹ Fine playlist");
+        setIsPlaying(false);
+      }
+
+      setTimeout(() => {
+        advancingRef.current = false;
+      }, 350);
+      return;
+    }
+
+    playQueueEntry(base[0], `resume-start (${reason})`, true);
+    setTimeout(() => {
+      advancingRef.current = false;
+    }, 350);
+    return;
+  }
+
+  if (!base.length) {
+    advancingRef.current = false;
+    return;
+  }
+
+  const idx = base.findIndex((p) => p._queueKey === curKey);
+
+  if (idx < 0) {
+    playQueueEntry(base[0], `start (${reason})`, true);
+    setTimeout(() => {
+      advancingRef.current = false;
+    }, 350);
+    return;
+  }
+
+  const next = base[idx + 1];
+  if (next) {
+    playQueueEntry(next, `next (${reason})`, true);
+    setTimeout(() => {
+      advancingRef.current = false;
+    }, 350);
+    return;
+  }
+
+  if (loopRef.current) {
+    playQueueEntry(base[0], `loop (${reason})`, true);
+    setTimeout(() => {
+      advancingRef.current = false;
+    }, 350);
+    return;
+  }
+
+  setStatusMsg("⏹ Fine coda");
+  setIsPlaying(false);
+
+  setTimeout(() => {
+    advancingRef.current = false;
+  }, 350);
+}
 
 function handleUserStart() {
   startedRef.current = true;
   setUserStarted(true);
-  pendingAutoplayRef.current = true;
 
-  const p = playerRef.current;
+  const current = getCurrentQueueEntry();
 
-  try {
-    p?.unMute?.();
-    p?.setVolume?.(100);
-    p?.playVideo?.();
+  if (current) {
+    safeLoadAndPlay(current, "manual start", true);
+    return;
+  }
 
-    setStatusMsg("✅ Jukebox avviato");
-    setIsPlaying(true);
-  } catch {}
+  if (queueRef.current.length) {
+    playQueueEntry(queueRef.current[0], "manual start", true);
+  }
 }
 
 function playCurrent() {
   if (!startedRef.current) {
-    startedRef.current = true;
-    setUserStarted(true);
-  }
-
-  const p = playerRef.current;
-
-  if (!currentKey && queueRef.current.length) {
-    playQueueEntry(queueRef.current[0], "manual start", true);
+    handleUserStart();
     return;
   }
 
   const current = getCurrentQueueEntry();
 
-  if (!p || !current) return;
+  if (!current && queueRef.current.length) {
+    playQueueEntry(queueRef.current[0], "manual start", true);
+    return;
+  }
+
+  if (!current) return;
+
+  safeLoadAndPlay(current, "manual play", true);
+}
+
+function pauseCurrent() {
+  const p = playerRef.current;
+  if (!p) return;
 
   try {
-    pendingAutoplayRef.current = true;
-
-    const state = p.getPlayerState?.();
-
-    // 2 = pausa: riprendi senza ricaricare
-    if (state === 2) {
-      p.unMute?.();
-      p.setVolume?.(100);
-      p.playVideo?.();
-
-      setIsPlaying(true);
-      setStatusMsg("▶️ Riproduzione");
-      return;
-    }
-
-    // se il player è in stato strano/freddo, ricarica il brano corrente
-    if (current._kind === "video" && current.youtubeVideoId && p.loadVideoById) {
-      p.loadVideoById(current.youtubeVideoId);
-
-      setTimeout(() => {
-        try {
-          p.unMute?.();
-          p.setVolume?.(100);
-          p.playVideo?.();
-
-          setIsPlaying(true);
-          setStatusMsg("▶️ Riproduzione");
-        } catch {}
-      }, 600);
-
-      return;
-    }
-
-    p.unMute?.();
-    p.setVolume?.(100);
-    p.playVideo?.();
-
-    setIsPlaying(true);
-    setStatusMsg("▶️ Riproduzione");
+    p.pauseVideo?.();
+    clearLoadWatchdog();
+    setIsPlaying(false);
+    pendingAutoplayRef.current = false;
+    setStatusMsg("⏸ Pausa");
   } catch {}
 }
 
-  function pauseCurrent() {
-    const p = playerRef.current;
-    if (!p) return;
-
-    try {
-      p.pauseVideo?.();
-      clearLoadWatchdog();
-      setIsPlaying(false);
-      pendingAutoplayRef.current = false;
-      setStatusMsg("⏸ Pausa");
-    } catch {}
-  }
-
-  function playNext() {
-    advancingRef.current = false;
-    advance("manual");
-  }
+function playNext() {
+  advancingRef.current = false;
+  pendingAutoplayRef.current = true;
+  advance("manual");
+}
 
 async function deleteRequest(id: string) {
   if (!confirm("Eliminare questo brano dalla libreria evento?")) return;
@@ -819,215 +838,178 @@ async function deleteRequest(id: string) {
   }
 }
 
-  useEffect(() => {
-    if (!queue.length) {
-      setCurrentKey("");
-      setCurrentTitle("");
-      setCurrentDedication("");
-      return;
-    }
+useEffect(() => {
+  if (!queue.length) {
+    setCurrentKey("");
+    setCurrentTitle("");
+    setCurrentDedication("");
+    return;
+  }
 
-    if (!currentKey) {
-      setNowPlayingFromEntry(queue[0]);
-      return;
-    }
+  if (!currentKey) {
+    setNowPlayingFromEntry(queue[0]);
+    return;
+  }
 
-    const stillThere =
-      queue.some((p) => p._queueKey === currentKey) ||
-      requestQueue.some((p) => p._queueKey === currentKey);
+  const stillThere =
+    queue.some((p) => p._queueKey === currentKey) ||
+    requestQueue.some((p) => p._queueKey === currentKey);
 
-    if (!stillThere) {
-      setNowPlayingFromEntry(queue[0]);
-    }
-  }, [queue, requestQueue, currentKey]);
+  if (!stillThere) {
+    setNowPlayingFromEntry(queue[0]);
+  }
+}, [queue, requestQueue, currentKey]);
 
-  useEffect(() => {
-    let cancelled = false;
+useEffect(() => {
+  let cancelled = false;
 
- async function initOrLoadCurrent() {
-      if (eventExpired) return;
-      if (!currentKey) return;
+  async function initOrLoadCurrent() {
+    if (eventExpired) return;
+    if (!currentKey) return;
 
-      await loadYouTubeIframeAPI();
-      if (cancelled) return;
+    await loadYouTubeIframeAPI();
+    if (cancelled) return;
 
-      const origin = window.location.origin;
-      const current = findQueueEntryByKey(currentKey);
+    const origin = window.location.origin;
+    const current = findQueueEntryByKey(currentKey);
 
-      if (!current) return;
+    if (!current) return;
 
-      const shouldAutoplay = pendingAutoplayRef.current;
+    if (!playerRef.current) {
+      const isPl = current._kind === "playlist";
+      const listId = isPl
+        ? current._listId || extractYouTubeListId(current.url)
+        : "";
 
-      if (!playerRef.current) {
-        const isPl = current._kind === "playlist";
-        const listId = isPl
-          ? current._listId || extractYouTubeListId(current.url)
-          : "";
+      playerRef.current = new window.YT.Player(playerContainerId.current, {
+        videoId: !isPl ? current.youtubeVideoId || "" : "",
+        playerVars: {
+          autoplay: 0,
+          playsinline: 1,
+          rel: 0,
+          modestbranding: 1,
+          controls: 1,
+          origin,
+          ...(isPl && listId ? { listType: "playlist", list: listId } : {}),
+        },
+        events: {
+          onReady: () => {
+            setPlayerReady(true);
+            setStatusMsg("✅ Player pronto");
 
-        playerRef.current = new window.YT.Player(playerContainerId.current, {
-          videoId: !isPl ? current.youtubeVideoId || "" : "",
-          playerVars: {
-            autoplay: 0,
-            playsinline: 1,
-            rel: 0,
-            modestbranding: 1,
-            controls: 1,
-            origin,
-            ...(isPl && listId ? { listType: "playlist", list: listId } : {}),
+            if (pendingAutoplayRef.current) {
+              const cur = getCurrentQueueEntry();
+              if (cur) safeLoadAndPlay(cur, "ready", true);
+            }
           },
-          events: {
-            onReady: (e: any) => {
-              setPlayerReady(true);
-              setStatusMsg("✅ Player pronto");
 
-              if (pendingAutoplayRef.current) {
-                try {
-                  e.target?.unMute?.();
-                  e.target?.setVolume?.(100);
-                  e.target?.playVideo?.();
-                  setIsPlaying(true);
-                } catch {}
-              }
-            },
-
-            onStateChange: (e: any) => {
-              if (e.data === 1) {
-                setIsPlaying(true);
-                clearLoadWatchdog();
-              }
-
-              if (e.data === 2) {
-                setIsPlaying(false);
-                clearLoadWatchdog();
-              }
-
-              if (e.data === 0) {
-                const cur = getCurrentQueueEntry();
-                const p = playerRef.current;
-
-                if (cur?._kind === "playlist" && p?.getPlaylist && p?.getPlaylistIndex) {
-                  try {
-                    const pl = p.getPlaylist?.() || [];
-                    const idx = p.getPlaylistIndex?.() ?? -1;
-                    const hasMoreInside =
-                      Array.isArray(pl) && idx >= 0 && idx < pl.length - 1;
-
-                    if (hasMoreInside) return;
-                  } catch {
-                    return;
-                  }
-                }
-
-                pendingAutoplayRef.current = true;
-                advancingRef.current = false;
-                advance("ended");
-              }
-            },
-
-            onError: (e: any) => {
-              const code = e?.data;
+          onStateChange: (e: any) => {
+            if (e.data === 1) {
+              setIsPlaying(true);
               clearLoadWatchdog();
+            }
 
-              console.log("YT ERROR:", code);
+            if (e.data === 2) {
+              setIsPlaying(false);
+              clearLoadWatchdog();
+              pendingAutoplayRef.current = false;
+            }
 
-              if (code === 150 || code === 101) {
-                setStatusMsg("⏭ Video bloccato, salto...");
-              } else {
-                setStatusMsg(`⚠️ YouTube error ${code}`);
-              }
-
+            if (e.data === 0) {
               const cur = getCurrentQueueEntry();
               const p = playerRef.current;
 
-              if (cur?._kind === "playlist" && p?.nextVideo) {
+              if (cur?._kind === "playlist" && p?.getPlaylist && p?.getPlaylistIndex) {
                 try {
-                  p.nextVideo();
+                  const pl = p.getPlaylist?.() || [];
+                  const idx = p.getPlaylistIndex?.() ?? -1;
+                  const hasMoreInside =
+                    Array.isArray(pl) && idx >= 0 && idx < pl.length - 1;
+
+                  if (hasMoreInside) return;
+                } catch {
                   return;
-                } catch {}
+                }
               }
 
               pendingAutoplayRef.current = true;
               advancingRef.current = false;
-              advance(`error-${code}`);
-            },
-          },
-        });
-
-        return;
-      }
-
-      const p = playerRef.current;
-
-          try {
-            if (current._kind === "playlist") {
-              const listId = current._listId || extractYouTubeListId(current.url);
-
-              if (listId && p.loadPlaylist) {
-                p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
-
-                setTimeout(() => {
-                  try {
-
-                    if (shouldAutoplay) {
-                      p.playVideo?.();
-                    }
-                  } catch {}
-                }, 150);
-              }
-            } else {
-              const vid = current.youtubeVideoId || "";
-
-              if (vid && p.loadVideoById) {
-                p.loadVideoById(vid);
-
-                setTimeout(() => {
-                  try {
-
-                    if (shouldAutoplay) {
-                      p.playVideo?.();
-                    }
-                  } catch {}
-                }, 150);
-              }
+              advance("ended");
             }
-          } catch {}
+          },
+
+          onError: (e: any) => {
+            const code = e?.data;
+            clearLoadWatchdog();
+
+            console.log("YT ERROR:", code);
+
+            if (code === 150 || code === 101) {
+              setStatusMsg("⏭ Video bloccato, salto...");
+            } else {
+              setStatusMsg(`⚠️ YouTube error ${code}`);
+            }
+
+            const cur = getCurrentQueueEntry();
+            const p = playerRef.current;
+
+            if (cur?._kind === "playlist" && p?.nextVideo) {
+              try {
+                p.nextVideo();
+                return;
+              } catch {}
+            }
+
+            pendingAutoplayRef.current = true;
+            advancingRef.current = false;
+            advance(`error-${code}`);
+          },
+        },
+      });
+
+      return;
     }
 
-    initOrLoadCurrent();
+    if (pendingAutoplayRef.current) {
+      safeLoadAndPlay(current, "current change", true);
+    }
+  }
 
-    return () => {
-      cancelled = true;
-      clearLoadWatchdog();
-    };
-  }, [currentKey, eventExpired]);
+  initOrLoadCurrent();
 
-  useEffect(() => {
-    const t = setInterval(() => {
-      if (eventExpired) return;
+  return () => {
+    cancelled = true;
+    clearLoadWatchdog();
+  };
+}, [currentKey, eventExpired]);
 
-      const cur = getCurrentQueueEntry();
-      if (cur?._kind === "playlist") return;
+useEffect(() => {
+  const t = setInterval(() => {
+    if (eventExpired) return;
 
-      const p = playerRef.current;
-      if (!p || !p.getDuration || !p.getCurrentTime || !p.getPlayerState) return;
+    const cur = getCurrentQueueEntry();
+    if (cur?._kind === "playlist") return;
 
-      try {
-        const state = p.getPlayerState();
-        if (state !== 1) return;
+    const p = playerRef.current;
+    if (!p || !p.getDuration || !p.getCurrentTime || !p.getPlayerState) return;
 
-        const dur = p.getDuration();
-        const curT = p.getCurrentTime();
+    try {
+      const state = p.getPlayerState();
+      if (state !== 1) return;
 
-        if (dur > 0 && curT > 0 && dur - curT < 0.7) {
-          pendingAutoplayRef.current = true;
-          advancingRef.current = false;
-          advance("timer");
-        }
-      } catch {}
-    }, 500);
+      const dur = p.getDuration();
+      const curT = p.getCurrentTime();
 
-    return () => clearInterval(t);
-  }, [eventExpired]);
+      if (dur > 0 && curT > 2 && dur - curT < 0.7) {
+        pendingAutoplayRef.current = true;
+        advancingRef.current = false;
+        advance("timer");
+      }
+    } catch {}
+  }, 700);
+
+  return () => clearInterval(t);
+}, [eventExpired]);
 
   const currentSourceKey =
     queue.find((q) => q._queueKey === currentKey)?._key ||
