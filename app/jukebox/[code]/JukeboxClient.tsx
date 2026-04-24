@@ -83,16 +83,14 @@ function buildPlayableList(
 ): PlayableItem[] {
   return (items || [])
     .filter((r) => {
-      if (r.platform !== "youtube") return false;
+  const isVideo = !!r.youtubeVideoId;
+  const isPlaylist = r.platform === "youtube" && isYouTubePlaylistUrl(r.url);
 
-      const isVideo = !!r.youtubeVideoId;
-      const isPlaylist = isYouTubePlaylistUrl(r.url);
+  if (isVideo) return true;
+  if (playlistEnabled && isPlaylist) return true;
 
-      if (isVideo) return true;
-      if (playlistEnabled && isPlaylist) return true;
-
-      return false;
-    })
+  return false;
+})
     .map((r) => {
       const isPl = isYouTubePlaylistUrl(r.url) && !r.youtubeVideoId;
 
