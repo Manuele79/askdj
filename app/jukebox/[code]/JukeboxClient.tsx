@@ -767,30 +767,38 @@ async function checkEventStatus() {
     advance("manual");
   }
 
-  async function deleteRequest(id: string) {
-    if (!confirm("Eliminare questo brano dalla libreria evento?")) return;
+async function deleteRequest(id: string) {
+  if (!confirm("Eliminare questo brano dalla libreria evento?")) return;
 
-    const res = await fetch("/api/requests", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
+  const deletingCurrent =
+    queueRef.current.some((x) => x.id === id && x._queueKey === currentKeyRef.current) ||
+    requestQueueRef.current.some((x) => x.id === id && x._queueKey === currentKeyRef.current);
 
-    if (!res.ok) {
-      alert("Errore eliminazione");
-      return;
-    }
+  const res = await fetch("/api/requests", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
 
-    setItems((prev) => prev.filter((x) => x.id !== id));
-
-    setQueue((prev) =>
-      prev.filter((x) => !(x.id === id && x._queueKey !== currentKeyRef.current))
-    );
-
-    setRequestQueue((prev) =>
-      prev.filter((x) => !(x.id === id && x._queueKey !== currentKeyRef.current))
-    );
+  if (!res.ok) {
+    alert("Errore eliminazione");
+    return;
   }
+
+  setItems((prev) => prev.filter((x) => x.id !== id));
+  setQueue((prev) => prev.filter((x) => x.id !== id));
+  setRequestQueue((prev) => prev.filter((x) => x.id !== id));
+
+  if (deletingCurrent) {
+    clearLoadWatchdog();
+    advancingRef.current = false;
+    pendingAutoplayRef.current = true;
+
+    setTimeout(() => {
+      advance("deleted-current");
+    }, 100);
+  }
+}
 
   useEffect(() => {
     if (!queue.length) {
@@ -817,7 +825,7 @@ async function checkEventStatus() {
   useEffect(() => {
     let cancelled = false;
 
-    async function initOrLoadCurrent() {
+ async function initOrLoadCurrent() {
       if (eventExpired) return;
       if (!currentKey) return;
 
@@ -852,14 +860,6 @@ async function checkEventStatus() {
             onReady: (e: any) => {
               setPlayerReady(true);
               setStatusMsg("✅ Player pronto");
-
-              try {
-                if (!startedRef.current) {
-                  e.target?.mute?.();
-                } else {
-                  e.target?.unMute?.();
-                }
-              } catch {}
 
               if (pendingAutoplayRef.current) {
                 try {
@@ -946,11 +946,6 @@ async function checkEventStatus() {
 
                 setTimeout(() => {
                   try {
-                    if (!startedRef.current) {
-                      p?.mute?.();
-                    } else {
-                      p?.unMute?.();
-                    }
 
                     if (shouldAutoplay) {
                       p.playVideo?.();
@@ -966,11 +961,6 @@ async function checkEventStatus() {
 
                 setTimeout(() => {
                   try {
-                    if (!startedRef.current) {
-                      p?.mute?.();
-                    } else {
-                      p?.unMute?.();
-                    }
 
                     if (shouldAutoplay) {
                       p.playVideo?.();
