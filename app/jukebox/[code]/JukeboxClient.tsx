@@ -1112,8 +1112,8 @@ async function checkEventStatus() {
               className={[
                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
                 loopEnabled
-                  ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950 hover:brightness-110"
-                  : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+                  ? "bg-emerald-400 text-zinc-950 shadow-[0_0_20px_rgba(52,211,153,0.55)]"
+                  : "bg-zinc-900/60 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-800",
               ].join(" ")}
             >
               🔁 Loop {loopEnabled ? "ON" : "OFF"}
@@ -1136,23 +1136,23 @@ async function checkEventStatus() {
               onClick={playCurrent}
               disabled={eventExpired}
               className={[
-                "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+                "rounded-xl px-5 py-3 text-sm font-extrabold transition lg:w-[260px]",
                 isPlaying
-                  ? "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
-                  : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+                  ? "bg-emerald-400 text-zinc-950 shadow-[0_0_22px_rgba(52,211,153,0.55)]"
+                  : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
               ].join(" ")}
             >
-             {userStarted ? "▶ Play" : "▶ Avvia"}
+              {isPlaying ? "▶ In riproduzione" : userStarted ? "▶ Play" : "▶ Avvia"}
             </button>
 
             <button
               onClick={pauseCurrent}
-              disabled={eventExpired}
+              disabled={eventExpired || !isPlaying}
               className={[
-                "rounded-xl px-5 py-3 text-sm font-extrabold transition",
-                !isPlaying
-                  ? "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
-                  : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+                "rounded-xl px-5 py-3 text-sm font-extrabold transition lg:w-[180px]",
+                isPlaying
+                  ? "bg-red-500 text-white shadow-[0_0_18px_rgba(239,68,68,0.55)] hover:brightness-110"
+                  : "bg-zinc-900/60 text-zinc-500 ring-1 ring-zinc-800",
               ].join(" ")}
             >
               ⏸ Pausa
@@ -1161,7 +1161,10 @@ async function checkEventStatus() {
             <button
               onClick={playNext}
               disabled={eventExpired}
-              className="rounded-xl bg-zinc-900/60 px-5 py-3 text-sm font-extrabold text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 transition"
+              className={[
+                "rounded-xl px-5 py-3 text-sm font-extrabold transition lg:w-[180px]",
+                "bg-blue-500 text-white shadow-[0_0_18px_rgba(59,130,246,0.55)] hover:brightness-110",
+              ].join(" ")}
             >
               ⏭ Avanti
             </button>
