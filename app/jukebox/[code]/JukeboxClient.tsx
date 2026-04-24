@@ -704,6 +704,7 @@ async function checkEventStatus() {
   function handleUserStart() {
     startedRef.current = true;
     setUserStarted(true);
+    pendingAutoplayRef.current = true;
 
     try {
       localStorage.setItem(startedKey(code), "1");
@@ -713,10 +714,14 @@ async function checkEventStatus() {
 
     try {
       p?.unMute?.();
-      p?.playVideo?.();
-      pendingAutoplayRef.current = true;
-      setStatusMsg("✅ Jukebox avviato");
-      setIsPlaying(true);
+
+      setTimeout(() => {
+        try {
+          p?.playVideo?.();
+          setStatusMsg("✅ Jukebox avviato");
+          setIsPlaying(true);
+        } catch {}
+      }, 120);
     } catch {}
   }
 
@@ -932,31 +937,49 @@ async function checkEventStatus() {
 
       const p = playerRef.current;
 
-      try {
-        if (!startedRef.current) {
-          p?.mute?.();
-        } else {
-          p?.unMute?.();
-        }
+          try {
+            if (current._kind === "playlist") {
+              const listId = current._listId || extractYouTubeListId(current.url);
 
-        if (current._kind === "playlist") {
-          const listId = current._listId || extractYouTubeListId(current.url);
-          if (listId && p.loadPlaylist) {
-            p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
-            if (shouldAutoplay) {
-              p.playVideo?.();
+              if (listId && p.loadPlaylist) {
+                p.loadPlaylist({ listType: "playlist", list: listId, index: 0 });
+
+                setTimeout(() => {
+                  try {
+                    if (!startedRef.current) {
+                      p?.mute?.();
+                    } else {
+                      p?.unMute?.();
+                    }
+
+                    if (shouldAutoplay) {
+                      p.playVideo?.();
+                    }
+                  } catch {}
+                }, 150);
+              }
+            } else {
+              const vid = current.youtubeVideoId || "";
+
+              if (vid && p.loadVideoById) {
+                p.loadVideoById(vid);
+
+                setTimeout(() => {
+                  try {
+                    if (!startedRef.current) {
+                      p?.mute?.();
+                    } else {
+                      p?.unMute?.();
+                    }
+
+                    if (shouldAutoplay) {
+                      p.playVideo?.();
+                    }
+                  } catch {}
+                }, 150);
+              }
             }
-          }
-        } else {
-          const vid = current.youtubeVideoId || "";
-          if (vid && p.loadVideoById) {
-            p.loadVideoById(vid);
-            if (shouldAutoplay) {
-              p.playVideo?.();
-            }
-          }
-        }
-      } catch {}
+          } catch {}
     }
 
     initOrLoadCurrent();
