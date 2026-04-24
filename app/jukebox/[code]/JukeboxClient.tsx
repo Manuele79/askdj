@@ -710,8 +710,8 @@ function handleUserStart() {
 
 function playCurrent() {
   if (!startedRef.current) {
-    handleUserStart();
-    return;
+    startedRef.current = true;
+    setUserStarted(true);
   }
 
   const p = playerRef.current;
@@ -721,10 +721,44 @@ function playCurrent() {
     return;
   }
 
-  if (!p) return;
+  const current = getCurrentQueueEntry();
+
+  if (!p || !current) return;
 
   try {
     pendingAutoplayRef.current = true;
+
+    const state = p.getPlayerState?.();
+
+    // 2 = pausa: riprendi senza ricaricare
+    if (state === 2) {
+      p.unMute?.();
+      p.setVolume?.(100);
+      p.playVideo?.();
+
+      setIsPlaying(true);
+      setStatusMsg("▶️ Riproduzione");
+      return;
+    }
+
+    // se il player è in stato strano/freddo, ricarica il brano corrente
+    if (current._kind === "video" && current.youtubeVideoId && p.loadVideoById) {
+      p.loadVideoById(current.youtubeVideoId);
+
+      setTimeout(() => {
+        try {
+          p.unMute?.();
+          p.setVolume?.(100);
+          p.playVideo?.();
+
+          setIsPlaying(true);
+          setStatusMsg("▶️ Riproduzione");
+        } catch {}
+      }, 250);
+
+      return;
+    }
+
     p.unMute?.();
     p.setVolume?.(100);
     p.playVideo?.();
