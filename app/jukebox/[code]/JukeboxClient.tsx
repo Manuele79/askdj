@@ -701,53 +701,46 @@ async function checkEventStatus() {
     }, 350);
   }
 
-  function handleUserStart() {
-    startedRef.current = true;
-    setUserStarted(true);
+function handleUserStart() {
+  startedRef.current = true;
+  setUserStarted(true);
+  pendingAutoplayRef.current = true;
+
+  try {
+    localStorage.setItem(startedKey(code), "1");
+  } catch {}
+
+  const p = playerRef.current;
+
+  try {
+    p?.playVideo?.();
+    setStatusMsg("✅ Jukebox avviato");
+    setIsPlaying(true);
+  } catch {}
+}
+
+function playCurrent() {
+  if (!startedRef.current) {
+    handleUserStart();
+    return;
+  }
+
+  const p = playerRef.current;
+
+  if (!currentKey && queueRef.current.length) {
+    playQueueEntry(queueRef.current[0], "manual start", true);
+    return;
+  }
+
+  if (!p) return;
+
+  try {
     pendingAutoplayRef.current = true;
-
-    try {
-      localStorage.setItem(startedKey(code), "1");
-    } catch {}
-
-    const p = playerRef.current;
-
-    try {
-      p?.unMute?.();
-
-      setTimeout(() => {
-        try {
-          p?.playVideo?.();
-          setStatusMsg("✅ Jukebox avviato");
-          setIsPlaying(true);
-        } catch {}
-      }, 120);
-    } catch {}
-  }
-
-  function playCurrent() {
-    if (!startedRef.current) {
-      handleUserStart();
-      return;
-    }
-
-    const p = playerRef.current;
-
-    if (!currentKey && queueRef.current.length) {
-      playQueueEntry(queueRef.current[0], "manual start", true);
-      return;
-    }
-
-    if (!p) return;
-
-    try {
-      p.unMute?.();
-      pendingAutoplayRef.current = true;
-      p.playVideo?.();
-      setIsPlaying(true);
-      setStatusMsg("▶️ Riproduzione");
-    } catch {}
-  }
+    p.playVideo?.();
+    setIsPlaying(true);
+    setStatusMsg("▶️ Riproduzione");
+  } catch {}
+}
 
   function pauseCurrent() {
     const p = playerRef.current;
