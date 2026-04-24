@@ -754,7 +754,7 @@ function playCurrent() {
           setIsPlaying(true);
           setStatusMsg("▶️ Riproduzione");
         } catch {}
-      }, 350);
+      }, 600);
 
       return;
     }
