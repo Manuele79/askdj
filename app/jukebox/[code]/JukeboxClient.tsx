@@ -238,15 +238,7 @@ export default function JukeboxClient({ code }: { code: string }) {
     localStorage.setItem("jukebox_event", code);
   }, [code]);
 
-  useEffect(() => {
-    if (!code) return;
 
-    try {
-      const saved = localStorage.getItem(startedKey(code)) === "1";
-      startedRef.current = saved;
-      setUserStarted(saved);
-    } catch {}
-  }, [code]);
 
   const [items, setItems] = useState<RequestItem[]>([]);
   const [queue, setQueue] = useState<QueueEntry[]>([]);
@@ -291,9 +283,7 @@ export default function JukeboxClient({ code }: { code: string }) {
   const playedRequestTokensRef = useRef<Set<string>>(new Set());
   const resumeBaseKeyRef = useRef<string>("");
 
-  function startedKey(eventCode: string) {
-    return `jukebox_started_${eventCode}`;
-  }
+
 
   useEffect(() => {
     queueRef.current = queue;
@@ -706,14 +696,13 @@ function handleUserStart() {
   setUserStarted(true);
   pendingAutoplayRef.current = true;
 
-  try {
-    localStorage.setItem(startedKey(code), "1");
-  } catch {}
-
   const p = playerRef.current;
 
   try {
+    p?.unMute?.();
+    p?.setVolume?.(100);
     p?.playVideo?.();
+
     setStatusMsg("✅ Jukebox avviato");
     setIsPlaying(true);
   } catch {}
@@ -736,7 +725,10 @@ function playCurrent() {
 
   try {
     pendingAutoplayRef.current = true;
+    p.unMute?.();
+    p.setVolume?.(100);
     p.playVideo?.();
+
     setIsPlaying(true);
     setStatusMsg("▶️ Riproduzione");
   } catch {}
@@ -856,6 +848,8 @@ async function deleteRequest(id: string) {
 
               if (pendingAutoplayRef.current) {
                 try {
+                  e.target?.unMute?.();
+                  e.target?.setVolume?.(100);
                   e.target?.playVideo?.();
                   setIsPlaying(true);
                 } catch {}
