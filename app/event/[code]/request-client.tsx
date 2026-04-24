@@ -156,9 +156,9 @@ export default function RequestClient({ code }: { code: string }) {
   }, [sent, code]);
 
   const visiblePlatforms =
-  eventMode === "jukebox"
-    ? PLATFORM_LINKS.filter((p) => p.key === "youtube")
-    : PLATFORM_LINKS;
+   eventMode === "jukebox"
+     ? PLATFORM_LINKS.filter((p) => p.key === "youtube" || p.key === "spotify")
+     : PLATFORM_LINKS;
 
   const canSend = useMemo(() => {
     return title.trim().length > 0 || link.trim().length > 0;
@@ -527,13 +527,13 @@ function FakeSpectrumWide() {
               rel="noreferrer"
               onClick={() => setOpenedPlatform(true)}
               className={`rounded-full font-extrabold transition flex items-center justify-center ${
-              eventMode === "jukebox" && p.key === "youtube"
-               ? "w-full max-w-[260px] py-3 text-sm mx-auto"
-               : "px-3 py-2 text-xs"
+              eventMode === "jukebox" && (p.key === "youtube" || p.key === "spotify")
+                ? "w-[48%] max-w-[220px] py-3 text-sm"
+                : "px-3 py-2 text-xs"
             } ${color} ${
-              eventMode === "jukebox" && p.key === "youtube" && !openedPlatform && !link.trim()
-               ? "animate-pulse shadow-[0_0_25px_rgba(239,68,68,0.7)]"
-               : ""
+              eventMode === "jukebox" && (p.key === "youtube" || p.key === "spotify") && !openedPlatform && !link.trim()
+                ? "animate-pulse"
+                : ""
              }`}
             >
              {p.label}
@@ -544,7 +544,7 @@ function FakeSpectrumWide() {
 
       <div className="text-center text-xs text-yellow-300">
         {eventMode === "jukebox"
-         ? "Apri YouTube e condividi il link"
+         ? "Apri YouTube o Spotify e condividi il link"
          : "Apri una piattaforma e condividi il link"}
       </div>
 
