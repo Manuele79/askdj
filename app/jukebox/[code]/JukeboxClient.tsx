@@ -673,6 +673,18 @@ function advance(reason: string) {
     setRequestQueue(remainingRequests);
   }
 
+  const played = requests[0];
+
+  if (played?.id) {
+    fetch("/api/jukebox/mark-played", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: played.id,
+      }),
+    }).catch(() => {});
+  }
+
   if (remainingRequests.length > 0) {
     if (currentBaseEntry && !resumeBaseKeyRef.current) {
       resumeBaseKeyRef.current = currentBaseEntry._key;
