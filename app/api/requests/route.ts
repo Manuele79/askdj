@@ -314,6 +314,54 @@ function appendDedication(existing: string, incoming: string) {
   return `${oldText}\n${formattedNew}`;
 }
 
+function makeQueueEstimateMessage(estimatedSongsBefore: number) {
+  if (estimatedSongsBefore <= 0) {
+    return "La tua richiesta è la prossima";
+  }
+
+  if (estimatedSongsBefore === 1) {
+    return "La tua richiesta dovrebbe partire dopo 1 brano";
+  }
+
+  return `La tua richiesta dovrebbe partire dopo ${estimatedSongsBefore} brani`;
+}
+
+async function getJukeboxQueueEstimate(eventCode: string, requestId: string) {
+  const { data, error } = await supabase
+    .from("requests")
+    .select("id, priority, jukebox_queued_at, created_at")
+    .eq("event_code", eventCode)
+    .eq("jukebox_status", "pending")
+    .order("priority", { ascending: false })
+    .order("jukebox_queued_at", { ascending: true })
+    .order("created_at", { ascending: true })
+    .limit(500);
+
+  if (error) {
+    console.error("JUKEBOX QUEUE ESTIMATE ERROR:", error);
+
+    return {
+      estimatedSongsBefore: 0,
+      queuePosition: 1,
+      canBoost: false,
+      message: "Richiesta ricevuta",
+    };
+  }
+
+  const rows = data || [];
+  const index = rows.findIndex((r: any) => String(r.id) === String(requestId));
+
+  const estimatedSongsBefore = index >= 0 ? index : 0;
+  const queuePosition = estimatedSongsBefore + 1;
+
+  return {
+    estimatedSongsBefore,
+    queuePosition,
+    canBoost: estimatedSongsBefore > 0,
+    message: makeQueueEstimateMessage(estimatedSongsBefore),
+  };
+}
+
 // POST /api/requests  body: { eventCode, title, url }
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({} as any));
@@ -342,13 +390,15 @@ const PAYMENT_REQUIRED = paymentSetting?.value === "true";
   // evento deve esistere ed essere non scaduto
   const { data: ev, error: evErr } = await supabase
     .from("events")
-    .select("event_code, expires_at, payment_status, payment_expires_at")
+    .select("event_code, expires_at, payment_status, payment_expires_at, mode")
     .eq("event_code", eventCode)
     .single();  
 
   if (evErr || !ev) {
     return NextResponse.json({ ok: false, error: "Evento non valido" }, { status: 404 });
   }
+
+  const isJukebox = ev.mode === "jukebox";
 
   const exp = ev.expires_at ? Date.parse(ev.expires_at) : 0;
   if (exp && Date.now() > exp) {
@@ -515,6 +565,14 @@ const { data: upd, error: e2 } = await supabase
     updated_at: nowMs,
     title: finalTitle,
     dedication: mergedDedication,
+
+    ...(isJukebox
+      ? {
+          jukebox_status: "pending",
+          jukebox_queued_at: new Date().toISOString(),
+          jukebox_played_at: null,
+        }
+      : {}),
   })
   .eq("id", row.id)
   .select("*")
@@ -523,6 +581,18 @@ const { data: upd, error: e2 } = await supabase
       if (e2) {
         console.error("SUPABASE MERGE UPDATE ERROR:", e2);
         return NextResponse.json({ ok: false }, { status: 500 });
+      }
+
+      if (isJukebox) {
+        const estimate = await getJukeboxQueueEstimate(eventCode, String(upd.id));
+
+        return NextResponse.json({
+          ok: true,
+          merged: true,
+          requestId: String(upd.id),
+          request: mapRow(upd),
+          ...estimate,
+        });
       }
 
       return NextResponse.json({ ok: true, merged: true, request: mapRow(upd) });
@@ -557,6 +627,14 @@ const { data: upd, error: e2 } = await supabase
     updated_at: nowMs,
     title: finalTitle || row.title,
     dedication: mergedDedication,
+
+    ...(isJukebox
+      ? {
+          jukebox_status: "pending",
+          jukebox_queued_at: new Date().toISOString(),
+          jukebox_played_at: null,
+        }
+      : {}),
   })
   .eq("id", row.id)
   .select("*")
@@ -565,6 +643,18 @@ const { data: upd, error: e2 } = await supabase
     if (e2) {
       console.error("SUPABASE MERGE UPDATE ERROR:", e2);
       return NextResponse.json({ ok: false }, { status: 500 });
+    }
+
+    if (isJukebox) {
+      const estimate = await getJukeboxQueueEstimate(eventCode, String(upd.id));
+
+      return NextResponse.json({
+        ok: true,
+        merged: true,
+        requestId: String(upd.id),
+        request: mapRow(upd),
+        ...estimate,
+      });
     }
 
     return NextResponse.json({ ok: true, merged: true, request: mapRow(upd) });
@@ -633,6 +723,11 @@ if (isDemo) {
       votes: 1,
       bpm: seedBpm,
       updated_at: nowMs,
+
+      priority: 0,
+      jukebox_status: isJukebox ? "pending" : null,
+      jukebox_queued_at: isJukebox ? new Date().toISOString() : null,
+      jukebox_played_at: null,
       // created_at: default now() in DB
     })
     .select("*")
@@ -670,7 +765,19 @@ if (platform === "tidal" && tidalUrl) {
   }
 }
 
-  return NextResponse.json({ ok: true, merged: false, request: mapRow(data) });
+  if (isJukebox) {
+  const estimate = await getJukeboxQueueEstimate(eventCode, String(data.id));
+
+  return NextResponse.json({
+    ok: true,
+    merged: false,
+    requestId: String(data.id),
+    request: mapRow(data),
+    ...estimate,
+  });
+}
+
+return NextResponse.json({ ok: true, merged: false, request: mapRow(data) });
 }
 
 
