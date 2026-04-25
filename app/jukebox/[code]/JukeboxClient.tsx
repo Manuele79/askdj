@@ -621,7 +621,10 @@ async function load() {
     }
 
     if (freshRequests.length) {
-      setRequestQueue((prev) => [...prev, ...freshRequests]);
+      const nextRequestQueue = [...requestQueueRef.current, ...freshRequests];
+
+      requestQueueRef.current = nextRequestQueue;
+      setRequestQueue(nextRequestQueue);
     }
 
     lastSeenRef.current = seen;
