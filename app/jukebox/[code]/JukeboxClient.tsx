@@ -667,13 +667,12 @@ function advance(reason: string) {
 
   let remainingRequests = requests;
 
-  if (currentRequestIdx === 0) {
-    playedRequestTokensRef.current.add(getRequestToken(requests[0]));
-    remainingRequests = requests.slice(1);
-    setRequestQueue(remainingRequests);
-  }
-
+if (currentRequestIdx === 0) {
   const played = requests[0];
+
+  playedRequestTokensRef.current.add(getRequestToken(played));
+  remainingRequests = requests.slice(1);
+  setRequestQueue(remainingRequests);
 
   if (played?.id) {
     fetch("/api/jukebox/mark-played", {
@@ -684,6 +683,7 @@ function advance(reason: string) {
       }),
     }).catch(() => {});
   }
+}
 
   if (remainingRequests.length > 0) {
     if (currentBaseEntry && !resumeBaseKeyRef.current) {
