@@ -329,7 +329,7 @@ const spotifyList = useMemo(() => {
   // refresh lista
   useEffect(() => {
     load();
-    const t = setInterval(load, 1500);
+    const t = setInterval(load, 5000);
     return () => clearInterval(t);
   }, [code]);
 
