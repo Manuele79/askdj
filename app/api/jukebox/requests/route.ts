@@ -48,6 +48,10 @@ function mapRow(r: any) {
     votes: Number(r.votes ?? 0),
     createdAt: toMs(r.created_at),
     updatedAt: toMs(r.updated_at),
+    priority: Number(r.priority ?? 0),
+    jukeboxStatus: String(r.jukebox_status ?? ""),
+    jukeboxQueuedAt: toMs(r.jukebox_queued_at),
+    jukeboxPlayedAt: toMs(r.jukebox_played_at),
   };
 }
 
@@ -92,6 +96,8 @@ export async function GET(req: Request) {
     .from("requests")
     .select("*")
     .eq("event_code", eventCode)
+    .order("priority", { ascending: false })
+    .order("jukebox_queued_at", { ascending: true })
     .order("created_at", { ascending: true })
     .limit(500);
 
