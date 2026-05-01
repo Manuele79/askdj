@@ -612,6 +612,18 @@ async function load() {
       JSON.stringify(prev) === JSON.stringify(mapped) ? prev : mapped
     );
 
+    // 🔥 RIORDINA SEMPRE la requestQueue con i dati aggiornati
+    const updatedRequestQueue = requestQueueRef.current
+      .map((q) => {
+        const fresh = mapped.find((r) => r.id === q.id);
+        return fresh ? { ...q, ...fresh } : q;
+      });
+
+    const sortedQueue = sortRequestQueueEntries(updatedRequestQueue);
+
+    requestQueueRef.current = sortedQueue;
+    setRequestQueue(sortedQueue);
+
     const nextPlayable = buildPlayableList(mapped, playlistEnabled);
 
     const seen: Record<string, number> = {};
@@ -699,6 +711,7 @@ function advance(reason: string) {
 
   const currentBaseEntry = base.find((p) => p._queueKey === curKey);
   const currentRequestIdx = requests.findIndex((p) => p._queueKey === curKey);
+  const currentEntry = findQueueEntryByKey(curKey);
 
   let remainingRequests = requests;
 
@@ -715,6 +728,18 @@ if (currentRequestIdx === 0) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         id: played.id,
+      }),
+    }).catch(() => {});
+  }
+}
+
+if (currentRequestIdx !== 0 && currentEntry?.id) {
+  if (currentEntry.jukeboxStatus === "pending") {
+    fetch("/api/jukebox/mark-played", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: currentEntry.id,
       }),
     }).catch(() => {});
   }
