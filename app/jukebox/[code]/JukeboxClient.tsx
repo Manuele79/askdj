@@ -429,7 +429,7 @@ export default function JukeboxClient({ code }: { code: string }) {
       pendingAutoplayRef.current = true;
       advancingRef.current = false;
       advance("watchdog");
-    }, 4500);
+    }, 3000);
   }
 
 function playQueueEntry(entry: QueueEntry, reason?: string, autoplay = true) {
@@ -494,7 +494,7 @@ function safeLoadAndPlay(entry: QueueEntry, reason?: string, autoplay = true) {
             setIsPlaying(true);
             setStatusMsg("▶️ Riproduzione");
           } catch {}
-        }, 700);
+        }, 250);
       }
 
       return;
@@ -518,7 +518,7 @@ function safeLoadAndPlay(entry: QueueEntry, reason?: string, autoplay = true) {
           setIsPlaying(true);
           setStatusMsg("▶️ Riproduzione");
         } catch {}
-      }, 700);
+      }, 250);
     }
   } catch {}
 }
@@ -976,6 +976,10 @@ useEffect(() => {
           onReady: () => {
             setPlayerReady(true);
             setStatusMsg("✅ Player pronto");
+
+            try {
+              playerRef.current?.setPlaybackQuality?.("small");
+            } catch {}
 
             if (pendingAutoplayRef.current) {
               const cur = getCurrentQueueEntry();
