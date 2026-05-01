@@ -715,12 +715,17 @@ function advance(reason: string) {
 
   let remainingRequests = requests;
 
-if (currentRequestIdx === 0) {
-  const played = requests[0];
+if (currentRequestIdx >= 0) {
+  const played = requests[currentRequestIdx];
 
   playedRequestTokensRef.current.add(getRequestToken(played));
-  remainingRequests = requests.slice(1);
-  setRequestQueue(remainingRequests);
+
+  const nextRequests = requests.filter(
+    (r) => r._queueKey !== played._queueKey
+  );
+
+  remainingRequests = nextRequests;
+  setRequestQueue(nextRequests);
 
   if (played?.id) {
     fetch("/api/jukebox/mark-played", {
