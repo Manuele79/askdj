@@ -1351,7 +1351,12 @@ useEffect(() => {
                             advancingRef.current = false;
                             pendingAutoplayRef.current = true;
                             resumeBaseKeyRef.current = "";
-                            playQueueEntry(makeQueueEntry(r), "manual pick", true);
+
+                            const picked = queueRef.current.find((q) => q._key === r._key);
+
+                            if (picked) {
+                              playQueueEntry(picked, "manual pick", true);
+                            }
                           }}
                           className="block w-full text-left text-base font-extrabold leading-tight text-zinc-100 hover:underline break-words"
                         >
