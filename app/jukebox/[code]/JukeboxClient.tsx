@@ -1349,7 +1349,9 @@ useEffect(() => {
                         <button
                           onClick={() => {
                             advancingRef.current = false;
-                            queueAndPlayNow(r, "manual pick");
+                            pendingAutoplayRef.current = true;
+                            resumeBaseKeyRef.current = "";
+                            playQueueEntry(makeQueueEntry(r), "manual pick", true);
                           }}
                           className="block w-full text-left text-base font-extrabold leading-tight text-zinc-100 hover:underline break-words"
                         >
