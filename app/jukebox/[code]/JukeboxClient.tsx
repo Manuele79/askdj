@@ -14,6 +14,10 @@ type RequestItem = {
   votes: number;
   createdAt: number;
   updatedAt: number;
+  priority: number;
+  jukeboxStatus?: string;
+  jukeboxQueuedAt?: number;
+  jukeboxPlayedAt?: number;
 };
 
 declare global {
@@ -341,6 +345,22 @@ export default function JukeboxClient({ code }: { code: string }) {
     return `${item.id}:${item.updatedAt || item.createdAt}`;
   }
 
+  function sortRequestQueueEntries(items: QueueEntry[]) {
+  return [...items].sort((a, b) => {
+    const pa = Number(a.priority ?? 0);
+    const pb = Number(b.priority ?? 0);
+
+    // PRIORITY prima
+    if (pb !== pa) return pb - pa;
+
+    // poi ordine di arrivo in coda (jukeboxQueuedAt)
+    const qa = Number(a.jukeboxQueuedAt || a.createdAt || 0);
+    const qb = Number(b.jukeboxQueuedAt || b.createdAt || 0);
+
+    return qa - qb;
+  });
+}
+
   function findQueueEntryByKey(key: string) {
     return (
       queueRef.current.find((p) => p._queueKey === key) ||
@@ -572,6 +592,18 @@ async function load() {
       updatedAt: Number(
         r.updatedAt ?? (r.updated_at ? Date.parse(r.updated_at) : 0)
       ),
+
+      priority: Number(r.priority ?? 0),
+      jukeboxStatus: String(r.jukeboxStatus ?? r.jukebox_status ?? ""),
+      jukeboxQueuedAt: Number(
+        r.jukeboxQueuedAt ??
+          (r.jukebox_queued_at ? Date.parse(r.jukebox_queued_at) : 0)
+      ),
+      jukeboxPlayedAt: Number(
+        r.jukeboxPlayedAt ??
+          (r.jukebox_played_at ? Date.parse(r.jukebox_played_at) : 0)
+      ),
+
     }));
 
     const prevItems = itemsRef.current;
@@ -621,7 +653,10 @@ async function load() {
     }
 
     if (freshRequests.length) {
-      const nextRequestQueue = [...requestQueueRef.current, ...freshRequests];
+      const nextRequestQueue = sortRequestQueueEntries([
+        ...requestQueueRef.current,
+        ...freshRequests,
+      ]);
 
       requestQueueRef.current = nextRequestQueue;
       setRequestQueue(nextRequestQueue);
