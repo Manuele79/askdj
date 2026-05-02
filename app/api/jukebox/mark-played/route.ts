@@ -18,9 +18,10 @@ export async function POST(req: Request) {
   const { error } = await supabase
     .from("requests")
     .update({
-      jukebox_status: "played",
-      jukebox_played_at: new Date().toISOString(),
-    })
+    jukebox_status: "played",
+    jukebox_played_at: new Date().toISOString(),
+    priority: 0, // 🔥 QUESTO È IL FIX
+  })
     .eq("id", id);
 
   if (error) {
