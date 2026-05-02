@@ -65,8 +65,7 @@ export async function POST(req: Request) {
   const { error: updErr } = await supabase
     .from("requests")
     .update({
-      priority: 1,
-      jukebox_queued_at: new Date().toISOString(), // 🔥 sale sopra
+     priority: 1,
     })
     .eq("id", id);
 
