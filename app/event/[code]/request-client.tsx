@@ -271,10 +271,6 @@ async function loadPartyRequests() {
     if (!resp.ok) return;
 
     const data = await resp.json().catch(() => null);
-    if (eventMode === "jukebox" && data?.message) {
-      setQueueMessage(String(data.message));
-    }
-
     const arr = Array.isArray(data?.requests) ? data.requests : [];
 
     const normalized: PublicRequestItem[] = arr.map((r: any) => ({
@@ -357,6 +353,10 @@ async function loadPartyRequests() {
 
       // usa la risposta del server (titolo/platform/url “puliti”)
         const data = await resp.json().catch(() => null);
+
+         if (eventMode === "jukebox" && data?.message) {
+            setQueueMessage(String(data.message));
+          }
 
         const serverTitle =
          data?.request?.title ? String(data.request.title) : finalTitle;
