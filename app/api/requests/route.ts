@@ -591,6 +591,7 @@ const { data: upd, error: e2 } = await supabase
           merged: true,
           requestId: String(upd.id),
           request: mapRow(upd),
+          boostEnabled: PAYMENT_REQUIRED,
           ...estimate,
         });
       }
@@ -653,6 +654,7 @@ const { data: upd, error: e2 } = await supabase
         merged: true,
         requestId: String(upd.id),
         request: mapRow(upd),
+        boostEnabled: PAYMENT_REQUIRED,
         ...estimate,
       });
     }
@@ -773,6 +775,7 @@ if (platform === "tidal" && tidalUrl) {
     merged: false,
     requestId: String(data.id),
     request: mapRow(data),
+    boostEnabled: PAYMENT_REQUIRED,
     ...estimate,
   });
 }
