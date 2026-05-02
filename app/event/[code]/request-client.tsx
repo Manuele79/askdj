@@ -76,6 +76,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [sent, setSent] = useState<SentItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hint, setHint] = useState("");
+  const [queueMessage, setQueueMessage] = useState("");
   const [partyRequests, setPartyRequests] = useState<PublicRequestItem[]>([]);
   const [votedMap, setVotedMap] = useState<Record<string, true>>({});
   const [showPartyRequests, setShowPartyRequests] = useState(false);
@@ -83,6 +84,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [openedPlatform, setOpenedPlatform] = useState(false);
   const [showMyRequests, setShowMyRequests] = useState(false);
   const [showGuestVotes, setShowGuestVotes] = useState(false);
+ 
 
 
   // carica storico da localStorage (solo questo telefono)
@@ -269,6 +271,10 @@ async function loadPartyRequests() {
     if (!resp.ok) return;
 
     const data = await resp.json().catch(() => null);
+    if (eventMode === "jukebox" && data?.message) {
+      setQueueMessage(String(data.message));
+    }
+
     const arr = Array.isArray(data?.requests) ? data.requests : [];
 
     const normalized: PublicRequestItem[] = arr.map((r: any) => ({
@@ -303,6 +309,7 @@ async function loadPartyRequests() {
 
     setLoading(true);
     setHint("");
+    setQueueMessage("");
 
     try {
       let finalTitle = t || "Richiesta";
@@ -553,6 +560,13 @@ function FakeSpectrumWide() {
           {hint}
         </div>
       )}
+      {!!queueMessage && (
+      <div className="rounded-xl border border-emerald-400 bg-emerald-950/40 px-3 py-3 text-sm font-bold text-emerald-200 shadow-[0_0_18px_rgba(52,211,153,0.25)]">
+        🎵 {queueMessage}
+      </div>
+    )}
+
+
     </div>
   )}
     {/* Campo link */}
