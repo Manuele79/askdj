@@ -84,6 +84,7 @@ export default function RequestClient({ code }: { code: string }) {
   const [openedPlatform, setOpenedPlatform] = useState(false);
   const [showMyRequests, setShowMyRequests] = useState(false);
   const [showGuestVotes, setShowGuestVotes] = useState(false);
+  const [lastRequestData, setLastRequestData] = useState<any>(null);
  
 
 
@@ -306,6 +307,7 @@ async function loadPartyRequests() {
     setLoading(true);
     setHint("");
     setQueueMessage("");
+    setLastRequestData(null);
 
     try {
       let finalTitle = t || "Richiesta";
@@ -353,6 +355,7 @@ async function loadPartyRequests() {
 
       // usa la risposta del server (titolo/platform/url “puliti”)
         const data = await resp.json().catch(() => null);
+        setLastRequestData(data);
 
          if (eventMode === "jukebox" && data?.message) {
           setQueueMessage(String(data.message));
@@ -566,7 +569,32 @@ function FakeSpectrumWide() {
         🎵 {queueMessage}
       </div>
     )}
+    
+  {eventMode === "jukebox" &&
+  lastRequestData?.canBoost &&
+  lastRequestData?.boostEnabled && (
+    <button
+      onClick={async () => {
+        try {
+          await fetch("/api/jukebox/boost-request", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              requestId: lastRequestData.requestId,
+            }),
+          });
 
+          setQueueMessage("🚀 Richiesta portata in alto!");
+          setLastRequestData((prev: any) =>
+            prev ? { ...prev, canBoost: false } : prev
+          );
+        } catch {}
+      }}
+      className="mt-2 w-full rounded-xl bg-gradient-to-r from-pink-400 to-red-500 px-4 py-3 text-sm font-extrabold text-white shadow-[0_0_20px_rgba(244,63,94,0.5)]"
+    >
+      🚀 SALTA LA CODA
+    </button>
+)}
 
     </div>
   )}
