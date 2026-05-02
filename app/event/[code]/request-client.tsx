@@ -355,8 +355,9 @@ async function loadPartyRequests() {
         const data = await resp.json().catch(() => null);
 
          if (eventMode === "jukebox" && data?.message) {
-            setQueueMessage(String(data.message));
-          }
+          setQueueMessage(String(data.message));
+          setTimeout(() => setQueueMessage(""), 10000);
+        }
 
         const serverTitle =
          data?.request?.title ? String(data.request.title) : finalTitle;
