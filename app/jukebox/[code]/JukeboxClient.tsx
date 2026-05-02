@@ -736,6 +736,7 @@ if (currentRequestIdx >= 0) {
   );
 
   remainingRequests = nextRequests;
+  requestQueueRef.current = nextRequests;
   setRequestQueue(nextRequests);
 
   if (played?.id) {
@@ -784,7 +785,7 @@ if (currentRequestIdx < 0 && currentEntry?.id) {
     return;
   }
 
-  if (currentRequestIdx === 0 && base.length > 0) {
+  if (currentRequestIdx >= 0 && base.length > 0) {
     const resumeIdx = base.findIndex((p) => p._key === resumeBaseKeyRef.current);
     resumeBaseKeyRef.current = "";
 
