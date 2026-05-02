@@ -613,11 +613,22 @@ async function load() {
     );
 
     // 🔥 RIORDINA SEMPRE la requestQueue con i dati aggiornati
-    const updatedRequestQueue = requestQueueRef.current
-      .map((q) => {
-        const fresh = mapped.find((r) => r.id === q.id);
-        return fresh ? { ...q, ...fresh } : q;
-      });
+    const validIds = new Set(mapped.map((r) => r.id));
+
+      queueRef.current = queueRef.current.filter((q) => validIds.has(q.id));
+      requestQueueRef.current = requestQueueRef.current.filter((q) =>
+        validIds.has(q.id)
+      );
+
+      setQueue((prev) => prev.filter((q) => validIds.has(q.id)));
+      setRequestQueue((prev) => prev.filter((q) => validIds.has(q.id)));
+
+      const updatedRequestQueue = requestQueueRef.current
+        .map((q) => {
+          const fresh = mapped.find((r) => r.id === q.id);
+          return fresh ? { ...q, ...fresh } : q;
+        })
+        .filter((q) => validIds.has(q.id));
 
     const sortedQueue = sortRequestQueueEntries(updatedRequestQueue);
 
