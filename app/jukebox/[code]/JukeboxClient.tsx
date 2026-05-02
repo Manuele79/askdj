@@ -738,8 +738,18 @@ if (currentRequestIdx >= 0) {
   }
 }
 
-if (currentRequestIdx !== 0 && currentEntry?.id) {
+if (currentRequestIdx < 0 && currentEntry?.id) {
   if (currentEntry.jukeboxStatus === "pending") {
+    playedRequestTokensRef.current.add(getRequestToken(currentEntry));
+
+    setQueue((prev) =>
+      prev.filter((q) => q._queueKey !== currentEntry._queueKey)
+    );
+
+    setRequestQueue((prev) =>
+      prev.filter((q) => q._queueKey !== currentEntry._queueKey)
+    );
+
     fetch("/api/jukebox/mark-played", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
