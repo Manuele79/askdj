@@ -724,6 +724,10 @@ function advance(reason: string) {
   const currentRequestIdx = requests.findIndex((p) => p._queueKey === curKey);
   const currentEntry = findQueueEntryByKey(curKey);
 
+  if (currentBaseEntry && !resumeBaseKeyRef.current) {
+  resumeBaseKeyRef.current = currentBaseEntry._key;
+}
+
   let remainingRequests = requests;
 
 if (currentRequestIdx >= 0) {
