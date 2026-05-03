@@ -1204,20 +1204,24 @@ useEffect(() => {
             )}
           </div>
 
-          {/* CODA RICHIESTE */}
-          <div className="flex justify-center mb-3">
-            <div className="rounded-full border border-yellow-400/40 bg-zinc-900/70 px-4 py-2 text-sm font-extrabold text-yellow-200 shadow-[0_0_20px_rgba(250,204,21,0.22)]">
-              {pendingQueueCount > 0
-                ? `🎧 Coda richieste: ${pendingQueueCount}`
-                : "🎧 Nessuna richiesta in coda"}
+          {/* SPECTRUM + QUEUE */}
+          <div className="hidden lg:flex flex-col gap-3 items-end w-full max-w-md">
+            <div
+              key={pendingQueueCount}
+              className="rounded-2xl border border-yellow-400/40 bg-zinc-950/70 px-6 py-3 text-sm font-extrabold text-yellow-200 shadow-[0_0_24px_rgba(250,204,21,0.22)] animate-[pop_0.35s_ease]"
+            >
+              {pendingQueueCount > 0 ? (
+                <>🎧 Coda richieste: {pendingQueueCount}</>
+              ) : (
+                <>🎧 Nessuna richiesta in coda</>
+              )}
+            </div>
+
+            <div className="w-full">
+              <FakeSpectrumWide />
             </div>
           </div>
-
-          {/* SPECTRUM */}
-          <div className="flex flex-col gap-3 lg:items-end">
-            <div className="hidden lg:flex">
-            <FakeSpectrumWide />
-          </div>
+        </div>
 
            <div className="flex flex-col gap-3 w-full sm:flex-row sm:flex-wrap lg:w-auto lg:justify-end">
             {code && code !== "TEST123" && !eventExpired && (
