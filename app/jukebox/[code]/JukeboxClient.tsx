@@ -124,10 +124,10 @@ function buildPlayableList(
 function FakeSpectrumWide() {
   return (
     <div className="flex items-end justify-center gap-1.5 h-8">
-      {Array.from({ length: 28 }).map((_, i) => (
+      {Array.from({ length: 44 }).map((_, i) => (
         <span
           key={i}
-          className="w-1.5 rounded-full bg-gradient-to-t from-yellow-300 via-emerald-400 to-pink-400 opacity-80 animate-[eqwide_1.4s_ease-in-out_infinite]"
+          className="w-2 rounded-full bg-gradient-to-t from-yellow-300 via-emerald-400 to-pink-400 opacity-80 animate-[eqwide_1.4s_ease-in-out_infinite]"
           style={{ animationDelay: `${i * 60}ms` }}
         />
       ))}
@@ -1169,7 +1169,7 @@ useEffect(() => {
       </div>
     </div>
 
-    <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white">
+    <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-black whitespace-nowrap tracking-tight text-white">
       Jukebox <span className="text-yellow-300">Music</span>
     </h1>
 
@@ -1199,9 +1199,9 @@ useEffect(() => {
 
     <div
       key={pendingQueueCount}
-      className="rounded-full border border-yellow-400/40 bg-zinc-950/70 px-4 py-1.5 text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
+      className="rounded-full border border-yellow-400/40 bg-zinc-950/70 px-4 py-1.5 text-xs font-extrabold text-yellow-300 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
     >
-      {pendingQueueCount > 0 ? <>🎧 Coda Richieste Brani: {pendingQueueCount}</> : <>🎧 Nessuna richiesta in coda</>}
+      {pendingQueueCount > 0 ? <>🎧 Coda Richieste : {pendingQueueCount}</> : <>🎧 Nessuna richiesta</>}
     </div>
 
    
@@ -1236,7 +1236,7 @@ useEffect(() => {
             "rounded-xl px-4 py-2.5 text-sm font-extrabold whitespace-nowrap transition",
             isPlaying
               ? "bg-zinc-900/60 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-900"
-              : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_18px_rgba(250,204,21,0.55)] hover:brightness-110",
+              : "bg-gradient-to-r from-cyan-400 to-sky-500 text-zinc-950 shadow-[0_0_18px_rgba(56,189,248,0.45)] hover:brightness-110",
           ].join(" ")}
         >
           ➕ Importa Brani🎵
