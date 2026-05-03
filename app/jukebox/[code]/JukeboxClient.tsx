@@ -1188,7 +1188,7 @@ useEffect(() => {
   </div>
 
   {/* DESTRA */}
-  <div className="flex w-full flex-col items-stretch gap-2.5 lg:items-end lg:pt-24">
+  <div className="flex w-full flex-col items-center gap-3 lg:items-center lg:pt-28 lg:-ml-20">
     <div
       key={pendingQueueCount}
       className="w-full max-w-[340px] rounded-xl border border-yellow-400/40 bg-zinc-950/70 px-3 py-1.5 text-center text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
@@ -1203,11 +1203,11 @@ useEffect(() => {
       </div>
     )}
 
-    <div className="hidden lg:block w-full max-w-[680px] mt-4">
+    <div className="hidden lg:block w-full max-w-[760px] mt-5">
       <FakeSpectrumWide />
     </div>
 
-    <div className="grid w-full max-w-[680px] grid-cols-2 gap-2 lg:grid-cols-4">
+    <div className="grid w-full max-w-[760px] grid-cols-2 gap-2 lg:grid-cols-4">
       {code && code !== "TEST123" && !eventExpired && (
         <button
           onClick={() => setShowQr(true)}
