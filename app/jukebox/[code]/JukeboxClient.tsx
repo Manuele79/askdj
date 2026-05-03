@@ -1180,7 +1180,7 @@ useEffect(() => {
     {code && code !== "TEST123" && (
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <span className="text-yellow-300 font-extrabold tracking-widest text-sm">EVENTO:</span>
-        <span className="rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300 px-4 py-1.5 text-sm font-bold text-zinc-900 shadow-[0_0_12px_rgba(34,211,238,0.35)]">
+        <span className="rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300 px-4 py-1 text-sm font-bold text-zinc-900 shadow-[0_0_12px_rgba(34,211,238,0.35)]">
           {code}
         </span>
       </div>
@@ -1188,26 +1188,26 @@ useEffect(() => {
   </div>
 
   {/* DESTRA */}
-  <div className="flex w-full flex-col items-stretch gap-2.5 lg:items-end lg:pt-16">
+  <div className="flex w-full flex-col items-stretch gap-2.5 lg:items-end lg:pt-24">
     <div
       key={pendingQueueCount}
-      className="w-full max-w-[460px] rounded-xl border border-yellow-400/40 bg-zinc-950/70 px-3 py-1.5 text-center text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
+      className="w-full max-w-[340px] rounded-xl border border-yellow-400/40 bg-zinc-950/70 px-3 py-1.5 text-center text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
     >
       {pendingQueueCount > 0 ? <>🎧 Coda richieste: {pendingQueueCount}</> : <>🎧 Nessuna richiesta in coda</>}
     </div>
 
     {timer && (
-      <div className={`w-full max-w-[460px] rounded-xl border border-zinc-700/60 bg-zinc-950/45 px-3 py-1.5 text-center text-xs font-bold ${timer.color}`}>
+      <div className={`w-full max-w-[340px] rounded-xl border border-zinc-700/60 bg-zinc-950/45 px-3 py-1 text-center text-xs font-bold ${timer.color}`}>
         {timer.title}
         {timer.detail && <div className="mt-0.5 text-[11px] text-zinc-400 font-semibold">{timer.detail}</div>}
       </div>
     )}
 
-    <div className="hidden lg:block w-full max-w-[560px]">
+    <div className="hidden lg:block w-full max-w-[680px] mt-4">
       <FakeSpectrumWide />
     </div>
 
-    <div className="grid w-full max-w-[560px] grid-cols-2 gap-2 lg:grid-cols-4">
+    <div className="grid w-full max-w-[680px] grid-cols-2 gap-2 lg:grid-cols-4">
       {code && code !== "TEST123" && !eventExpired && (
         <button
           onClick={() => setShowQr(true)}
