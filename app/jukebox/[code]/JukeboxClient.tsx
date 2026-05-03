@@ -1178,7 +1178,7 @@ useEffect(() => {
     </p>
 
     {code && code !== "TEST123" && (
-      <div className="mt-6 flex flex-wrap items-center gap-3">
+      <div className="mt-7 flex flex-wrap items-center gap-3">
         <span className="text-yellow-300 font-extrabold tracking-widest text-sm">EVENTO:</span>
         <span className="rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300 px-4 py-1 text-sm font-bold text-zinc-900 shadow-[0_0_12px_rgba(34,211,238,0.35)]">
           {code}
