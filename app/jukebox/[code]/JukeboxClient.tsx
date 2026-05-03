@@ -1152,7 +1152,7 @@ useEffect(() => {
           </div>
         )}
 
-<header className="mb-6 grid gap-6 lg:gap-x-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
+<header className="mb-6 grid gap-6 lg:gap-x-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
   {/* SINISTRA */}
   <div>
     <div className="flex items-center gap-4">
@@ -1189,19 +1189,22 @@ useEffect(() => {
 
   {/* DESTRA */}
   <div className="flex w-full flex-col items-end gap-3 lg:pt-8">
-    <div
-      key={pendingQueueCount}
-      className="rounded-full border border-yellow-400/40 bg-zinc-950/70 px-4 py-1.5 text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
-    >
-      {pendingQueueCount > 0 ? <>🎧 Coda richieste: {pendingQueueCount}</> : <>🎧 Nessuna richiesta in coda</>}
-    </div>
 
-    {timer && (
+     {timer && (
       <div className={`rounded-full border border-zinc-700/60 bg-zinc-950/45 px-4 py-1.5 text-center text-xs font-bold ${timer.color}`}>
         {timer.title}
         {timer.detail && <div className="mt-0.5 text-[11px] text-zinc-400 font-semibold">{timer.detail}</div>}
       </div>
     )}
+
+    <div
+      key={pendingQueueCount}
+      className="rounded-full border border-yellow-400/40 bg-zinc-950/70 px-4 py-1.5 text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
+    >
+      {pendingQueueCount > 0 ? <>🎧 Coda Richieste Brani: {pendingQueueCount}</> : <>🎧 Nessuna richiesta in coda</>}
+    </div>
+
+   
 
     <div className="hidden lg:block w-full mt-10">
       <FakeSpectrumWide />
