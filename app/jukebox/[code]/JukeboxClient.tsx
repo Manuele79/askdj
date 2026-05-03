@@ -1152,7 +1152,7 @@ useEffect(() => {
           </div>
         )}
 
-<header className="mb-6 grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+<header className="mb-6 grid gap-6 lg:gap-x-16 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
   {/* SINISTRA */}
   <div>
     <div className="flex items-center gap-4">
@@ -1188,26 +1188,26 @@ useEffect(() => {
   </div>
 
   {/* DESTRA */}
-  <div className="flex w-full flex-col items-center gap-3 lg:items-center lg:pt-28 lg:-ml-20">
+  <div className="flex w-full flex-col items-end gap-3 lg:pt-8">
     <div
       key={pendingQueueCount}
-      className="w-full max-w-[340px] rounded-xl border border-yellow-400/40 bg-zinc-950/70 px-3 py-1.5 text-center text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
+      className="rounded-full border border-yellow-400/40 bg-zinc-950/70 px-4 py-1.5 text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
     >
       {pendingQueueCount > 0 ? <>🎧 Coda richieste: {pendingQueueCount}</> : <>🎧 Nessuna richiesta in coda</>}
     </div>
 
     {timer && (
-      <div className={`w-full max-w-[340px] rounded-xl border border-zinc-700/60 bg-zinc-950/45 px-3 py-1 text-center text-xs font-bold ${timer.color}`}>
+      <div className={`rounded-full border border-zinc-700/60 bg-zinc-950/45 px-4 py-1.5 text-center text-xs font-bold ${timer.color}`}>
         {timer.title}
         {timer.detail && <div className="mt-0.5 text-[11px] text-zinc-400 font-semibold">{timer.detail}</div>}
       </div>
     )}
 
-    <div className="hidden lg:block w-full max-w-[760px] mt-5">
+    <div className="hidden lg:block w-full max-w-[720px] mt-10">
       <FakeSpectrumWide />
     </div>
 
-    <div className="grid w-full max-w-[760px] grid-cols-2 gap-2 lg:grid-cols-4">
+    <div className="grid w-full max-w-[720px] grid-cols-4 gap-2">
       {code && code !== "TEST123" && !eventExpired && (
         <button
           onClick={() => setShowQr(true)}
