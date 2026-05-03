@@ -666,11 +666,13 @@ async function load() {
       const isBrandNew = !prevRow;
       const isUpdatedDuplicate = !!prevRow && nextStamp > currentSeen;
       const token = getRequestToken(p);
+      const isPlayed = p.jukeboxStatus === "played";
 
       if (
         (isBrandNew || isUpdatedDuplicate) &&
         !queuedTokens.has(token) &&
-        !playedRequestTokensRef.current.has(token)
+        !playedRequestTokensRef.current.has(token) &&
+        !isPlayed
       ) {
         freshRequests.push(makeQueueEntry(p));
       }
