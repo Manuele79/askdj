@@ -397,6 +397,7 @@ export default function JukeboxClient({ code }: { code: string }) {
     pendingAutoplayRef.current = true;
     setStatusMsg(reason ? `▶️ Play (${reason})` : "▶️ Play");
     setNowPlayingFromEntry(entry);
+    resumeBaseKeyRef.current = "";
   }
 
   function clearLoadWatchdog() {
@@ -724,9 +725,7 @@ function advance(reason: string) {
   const currentRequestIdx = requests.findIndex((p) => p._queueKey === curKey);
   const currentEntry = findQueueEntryByKey(curKey);
 
-  if (currentBaseEntry && !resumeBaseKeyRef.current) {
-  resumeBaseKeyRef.current = currentBaseEntry._key;
-}
+
 
   let remainingRequests = requests;
 
@@ -793,7 +792,7 @@ if (currentRequestIdx < 0 && currentEntry?.id) {
     return;
   }
 
-  if (currentRequestIdx >= 0 && base.length > 0) {
+  if (currentRequestIdx === 0 && base.length > 0) {
     const resumeIdx = base.findIndex((p) => p._key === resumeBaseKeyRef.current);
     resumeBaseKeyRef.current = "";
 
@@ -1383,11 +1382,11 @@ useEffect(() => {
                           onClick={() => {
                             advancingRef.current = false;
                             pendingAutoplayRef.current = true;
-                            resumeBaseKeyRef.current = "";
 
                             const picked = queueRef.current.find((q) => q._key === r._key);
 
                             if (picked) {
+                              resumeBaseKeyRef.current = picked._key;
                               playQueueEntry(picked, "manual pick", true);
                             }
                           }}
