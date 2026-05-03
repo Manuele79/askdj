@@ -202,9 +202,48 @@ function getEventTimer(expiresAt: string | null, nowMs: number) {
 export default function JukeboxClient({ code }: { code: string }) {
   const [redirecting, setRedirecting] = useState(true);
 
-  useEffect(() => {
-  loadYouTubeIframeAPI().catch(() => {});
-  }, []);
+useEffect(() => {
+  loadYouTubeIframeAPI().then(() => {
+    if (playerRef.current) return;
+
+    playerRef.current = new window.YT.Player(playerContainerId.current, {
+      videoId: "",
+      playerVars: {
+        autoplay: 0,
+        playsinline: 1,
+        rel: 0,
+        modestbranding: 1,
+        controls: 1,
+        origin: window.location.origin,
+      },
+      events: {
+        onReady: () => {
+          setPlayerReady(true);
+          setStatusMsg("✅ Player pronto");
+          try {
+            playerRef.current?.mute?.();
+            playerRef.current?.setPlaybackQuality?.("small");
+          } catch {}
+        },
+        onStateChange: (e: any) => {
+          if (e.data === 1) { setIsPlaying(true); clearLoadWatchdog(); }
+          if (e.data === 2) { setIsPlaying(false); pendingAutoplayRef.current = false; }
+          if (e.data === 0) {
+            pendingAutoplayRef.current = true;
+            advancingRef.current = false;
+            advance("ended");
+          }
+        },
+        onError: (e: any) => {
+          clearLoadWatchdog();
+          pendingAutoplayRef.current = true;
+          advancingRef.current = false;
+          advance(`error-${e?.data}`);
+        },
+      },
+    });
+  }).catch(() => {});
+}, []);
 
 
   useEffect(() => {
