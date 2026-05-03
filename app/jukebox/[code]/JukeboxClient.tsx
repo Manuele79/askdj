@@ -1178,7 +1178,7 @@ useEffect(() => {
     </p>
 
     {code && code !== "TEST123" && (
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+      <div className="mt-6 flex flex-wrap items-center gap-3">
         <span className="text-yellow-300 font-extrabold tracking-widest text-sm">EVENTO:</span>
         <span className="rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300 px-4 py-1 text-sm font-bold text-zinc-900 shadow-[0_0_12px_rgba(34,211,238,0.35)]">
           {code}
@@ -1201,7 +1201,7 @@ useEffect(() => {
       key={pendingQueueCount}
       className="rounded-full border border-yellow-400/40 bg-zinc-950/70 px-4 py-1.5 text-xs font-extrabold text-yellow-300 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
     >
-      {pendingQueueCount > 0 ? <>🎧 Coda Richieste : {pendingQueueCount}</> : <>🎧 Nessuna richiesta</>}
+      {pendingQueueCount > 0 ? <>🎧 Coda Richieste : {pendingQueueCount}</> : <>🎧 Nessuna Richiesta</>}
     </div>
 
    
@@ -1310,7 +1310,7 @@ useEffect(() => {
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                PLAYLIST: 
+                BOX PLAYLIST: 
               </div>
               <div className="mt-1 text-xs text-zinc-400">
                 Le richieste vengono riprodotte automaticamente
