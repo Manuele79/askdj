@@ -743,6 +743,10 @@ if (currentRequestIdx >= 0) {
   requestQueueRef.current = nextRequests;
   setRequestQueue(nextRequests);
 
+  queueRef.current = queueRef.current.filter((q) => q.id !== played.id);
+
+  setQueue((prev) => prev.filter((q) => q.id !== played.id));
+
   if (played?.id) {
     fetch("/api/jukebox/mark-played", {
       method: "POST",
