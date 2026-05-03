@@ -1130,6 +1130,8 @@ useEffect(() => {
     requestQueue.find((q) => q._queueKey === currentKey)?._key ||
     "";
 
+  const pendingQueueCount = requestQueue.length;
+
   if (redirecting) return null;
 
   const timer = getEventTimer(expiresAt, nowTick);
@@ -1200,7 +1202,15 @@ useEffect(() => {
                 )}
              </div>
             )}
+          </div>
 
+          {/* CODA RICHIESTE */}
+          <div className="flex justify-center mb-3">
+            <div className="rounded-full border border-yellow-400/40 bg-zinc-900/70 px-4 py-2 text-sm font-extrabold text-yellow-200 shadow-[0_0_20px_rgba(250,204,21,0.22)]">
+              {pendingQueueCount > 0
+                ? `🎧 Coda richieste: ${pendingQueueCount}`
+                : "🎧 Nessuna richiesta in coda"}
+            </div>
           </div>
 
           {/* SPECTRUM */}
@@ -1236,7 +1246,7 @@ useEffect(() => {
                : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
             ].join(" ")}
            >
-              ➕ Importa Brani
+              ➕ Importa Brani 🎵
           </button>
           )}
 
