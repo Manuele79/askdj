@@ -1152,25 +1152,20 @@ useEffect(() => {
           </div>
         )}
 
-<header className="mb-6 grid gap-6 lg:grid-cols-[1fr_1.45fr] lg:items-end">
+<header className="mb-6 grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
   {/* SINISTRA */}
   <div>
     <div className="flex items-center gap-4">
       <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
         <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/50 blur-xl animate-pulse" />
-        <span className="relative text-2xl drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]">
-          📻
-        </span>
+        <span className="relative text-2xl drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]">📻</span>
       </div>
 
       <div className="leading-tight">
         <div className="text-4xl font-black tracking-tight">
-          <span className="text-yellow-300">Ask</span>
-          <span className="text-white">DJ</span>
+          <span className="text-yellow-300">Ask</span><span className="text-white">DJ</span>
         </div>
-        <div className="text-xs text-zinc-300 tracking-wide">
-          Jukebox Mode
-        </div>
+        <div className="text-xs text-zinc-300 tracking-wide">Jukebox Mode</div>
       </div>
     </div>
 
@@ -1178,15 +1173,13 @@ useEffect(() => {
       Jukebox <span className="text-yellow-300">Music</span>
     </h1>
 
-    <p className="mt-3 max-w-2xl text-sm sm:text-base text-zinc-300">
+    <p className="mt-3 max-w-xl text-sm sm:text-base text-zinc-300">
       Gli ospiti scelgono la musica... Il Jukebox la riproduce automaticamente...
     </p>
 
     {code && code !== "TEST123" && (
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <span className="text-yellow-300 font-extrabold tracking-widest text-sm">
-          EVENTO:
-        </span>
+        <span className="text-yellow-300 font-extrabold tracking-widest text-sm">EVENTO:</span>
         <span className="rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300 px-4 py-1.5 text-sm font-bold text-zinc-900 shadow-[0_0_12px_rgba(34,211,238,0.35)]">
           {code}
         </span>
@@ -1195,45 +1188,33 @@ useEffect(() => {
   </div>
 
   {/* DESTRA */}
-  <div className="flex flex-col items-stretch gap-3 lg:items-end">
-    {/* CODA */}
+  <div className="flex w-full flex-col items-stretch gap-2.5 lg:items-end lg:pt-2">
     <div
       key={pendingQueueCount}
-      className="w-full max-w-[680px] rounded-2xl border border-yellow-400/40 bg-zinc-950/70 px-6 py-3 text-center text-sm font-extrabold text-yellow-200 shadow-[0_0_24px_rgba(250,204,21,0.22)] animate-[pop_0.35s_ease]"
+      className="w-full max-w-[560px] rounded-xl border border-yellow-400/40 bg-zinc-950/70 px-4 py-2 text-center text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
     >
-      {pendingQueueCount > 0 ? (
-        <>🎧 Coda richieste: {pendingQueueCount}</>
-      ) : (
-        <>🎧 Nessuna richiesta in coda</>
-      )}
+      {pendingQueueCount > 0 ? <>🎧 Coda richieste: {pendingQueueCount}</> : <>🎧 Nessuna richiesta in coda</>}
     </div>
 
-    {/* STATO EVENTO */}
     {timer && (
-      <div className={`w-full max-w-[680px] rounded-2xl border border-zinc-700/60 bg-zinc-950/50 px-5 py-3 text-center text-sm font-bold ${timer.color}`}>
+      <div className={`w-full max-w-[560px] rounded-xl border border-zinc-700/60 bg-zinc-950/45 px-4 py-2 text-center text-xs font-bold ${timer.color}`}>
         {timer.title}
-        {timer.detail && (
-          <div className="mt-1 text-xs text-zinc-400 font-semibold">
-            {timer.detail}
-          </div>
-        )}
+        {timer.detail && <div className="mt-0.5 text-[11px] text-zinc-400 font-semibold">{timer.detail}</div>}
       </div>
     )}
 
-    {/* SPECTRUM */}
-    <div className="hidden lg:block w-full max-w-[680px]">
+    <div className="hidden lg:block w-full max-w-[560px]">
       <FakeSpectrumWide />
     </div>
 
-    {/* BOTTONI */}
-    <div className="grid w-full max-w-[680px] grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid w-full max-w-[560px] grid-cols-2 gap-2 lg:grid-cols-4">
       {code && code !== "TEST123" && !eventExpired && (
         <button
           onClick={() => setShowQr(true)}
           className={[
-          "rounded-xl px-5 py-3 text-sm font-extrabold transition bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
-          pendingQueueCount === 0 ? "animate-pulse" : ""
-        ].join(" ")}
+            "rounded-xl px-4 py-2.5 text-sm font-extrabold transition bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_18px_rgba(250,204,21,0.55)] hover:brightness-110",
+            pendingQueueCount === 0 ? "animate-pulse" : "",
+          ].join(" ")}
         >
           📲 QR Ospiti
         </button>
@@ -1246,17 +1227,16 @@ useEffect(() => {
               setStatusMsg("⏸ Metti in pausa per importare brani");
               return;
             }
-
             window.open(`/event/${code}?from=jukebox-import`, "_blank");
           }}
           className={[
-            "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+            "rounded-xl px-4 py-2.5 text-sm font-extrabold transition",
             isPlaying
               ? "bg-zinc-900/60 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-900"
-              : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
+              : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_18px_rgba(250,204,21,0.55)] hover:brightness-110",
           ].join(" ")}
         >
-          ➕ Importa Brani 🎵
+          ➕ Importa Brani🎵
         </button>
       )}
 
@@ -1264,9 +1244,9 @@ useEffect(() => {
         onClick={() => setLoopEnabled((v) => !v)}
         disabled={eventExpired}
         className={[
-          "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+          "rounded-xl px-4 py-2.5 text-sm font-extrabold transition",
           loopEnabled
-            ? "bg-emerald-400 text-zinc-950 shadow-[0_0_20px_rgba(52,211,153,0.55)]"
+            ? "bg-emerald-400 text-zinc-950 shadow-[0_0_18px_rgba(52,211,153,0.5)]"
             : "bg-zinc-900/60 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-800",
         ].join(" ")}
       >
@@ -1277,35 +1257,35 @@ useEffect(() => {
         onClick={() => setPlaylistEnabled((v) => !v)}
         disabled={eventExpired}
         className={[
-          "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+          "rounded-xl px-4 py-2.5 text-sm font-extrabold transition",
           playlistEnabled
             ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950 hover:brightness-110"
             : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
         ].join(" ")}
       >
-        📃 Playlist YouTube {playlistEnabled ? "ON" : "OFF"}
+        📃 Playlist {playlistEnabled ? "ON" : "OFF"}
       </button>
 
       <button
         onClick={playCurrent}
         disabled={eventExpired}
         className={[
-          "col-span-2 rounded-xl px-5 py-4 text-base font-extrabold transition",
+          "col-span-2 rounded-xl px-4 py-3 text-base font-extrabold transition",
           isPlaying
-            ? "bg-emerald-400 text-zinc-950 shadow-[0_0_22px_rgba(52,211,153,0.55)]"
-            : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
+            ? "bg-emerald-400 text-zinc-950 shadow-[0_0_20px_rgba(52,211,153,0.5)]"
+            : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_18px_rgba(250,204,21,0.55)] hover:brightness-110",
         ].join(" ")}
       >
-        {isPlaying ? "▶ In riproduzione" : userStarted ? "▶ Play" : "▶ Avvia"}
+        {isPlaying ? "▶ In Riproduzione" : userStarted ? "▶ Play" : "▶ Avvia"}
       </button>
 
       <button
         onClick={pauseCurrent}
         disabled={eventExpired || !isPlaying}
         className={[
-          "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+          "rounded-xl px-4 py-2.5 text-sm font-extrabold transition",
           isPlaying
-            ? "bg-red-500 text-white shadow-[0_0_18px_rgba(239,68,68,0.55)] hover:brightness-110"
+            ? "bg-red-500 text-white shadow-[0_0_16px_rgba(239,68,68,0.5)] hover:brightness-110"
             : "bg-zinc-900/60 text-zinc-500 ring-1 ring-zinc-800",
         ].join(" ")}
       >
@@ -1315,7 +1295,7 @@ useEffect(() => {
       <button
         onClick={playNext}
         disabled={eventExpired}
-        className="rounded-xl px-5 py-3 text-sm font-extrabold transition bg-blue-500 text-white shadow-[0_0_18px_rgba(59,130,246,0.55)] hover:brightness-110"
+        className="rounded-xl px-4 py-2.5 text-sm font-extrabold transition bg-blue-500 text-white shadow-[0_0_16px_rgba(59,130,246,0.5)] hover:brightness-110"
       >
         ⏭ Avanti
       </button>
@@ -1327,7 +1307,7 @@ useEffect(() => {
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400">
-                Libreria Evento: 
+                PLAYLIST: 
               </div>
               <div className="mt-1 text-xs text-zinc-400">
                 Le richieste vengono riprodotte automaticamente
@@ -1368,7 +1348,7 @@ useEffect(() => {
 
           {playable.length === 0 ? (
             <div className="rounded-2xl border border-zinc-800 bg-zinc-950/50 p-4 text-sm text-zinc-400">
-              Nessuna richiesta YouTube disponibile per questo evento.
+              Nessuna richiesta disponibile per questo evento.
             </div>
           ) : (
             <ul className="space-y-3">
