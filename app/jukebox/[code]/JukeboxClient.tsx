@@ -1405,6 +1405,8 @@ useEffect(() => {
                     className={`rounded-2xl border px-4 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${
                       isCurrentSource
                         ? "border-yellow-300 bg-zinc-900/80 ring-2 ring-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.6)]"
+                        : requestQueue.some((q) => q._key === r._key)
+                        ? "border-cyan-400/60 bg-cyan-500/10 ring-1 ring-cyan-400/40 shadow-[0_0_12px_rgba(34,211,238,0.2)]"
                         : "border-zinc-700/40 bg-zinc-950/50"
                     }`}
                    >
