@@ -1188,16 +1188,16 @@ useEffect(() => {
   </div>
 
   {/* DESTRA */}
-  <div className="flex w-full flex-col items-stretch gap-2.5 lg:items-end lg:pt-2">
+  <div className="flex w-full flex-col items-stretch gap-2.5 lg:items-end lg:pt-16">
     <div
       key={pendingQueueCount}
-      className="w-full max-w-[560px] rounded-xl border border-yellow-400/40 bg-zinc-950/70 px-4 py-2 text-center text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
+      className="w-full max-w-[460px] rounded-xl border border-yellow-400/40 bg-zinc-950/70 px-3 py-1.5 text-center text-xs font-extrabold text-yellow-200 shadow-[0_0_18px_rgba(250,204,21,0.18)] animate-[pop_0.35s_ease]"
     >
       {pendingQueueCount > 0 ? <>🎧 Coda richieste: {pendingQueueCount}</> : <>🎧 Nessuna richiesta in coda</>}
     </div>
 
     {timer && (
-      <div className={`w-full max-w-[560px] rounded-xl border border-zinc-700/60 bg-zinc-950/45 px-4 py-2 text-center text-xs font-bold ${timer.color}`}>
+      <div className={`w-full max-w-[460px] rounded-xl border border-zinc-700/60 bg-zinc-950/45 px-3 py-1.5 text-center text-xs font-bold ${timer.color}`}>
         {timer.title}
         {timer.detail && <div className="mt-0.5 text-[11px] text-zinc-400 font-semibold">{timer.detail}</div>}
       </div>
