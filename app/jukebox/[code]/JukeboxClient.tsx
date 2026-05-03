@@ -254,7 +254,7 @@ export default function JukeboxClient({ code }: { code: string }) {
 
   const [loopEnabled, setLoopEnabled] = useState(true);
   const [showQr, setShowQr] = useState(false);
-  const [playlistEnabled, setPlaylistEnabled] = useState(true);
+  const [playlistEnabled, setPlaylistEnabled] = useState(false);
   const [statusMsg, setStatusMsg] = useState<string>("");
 
   const [playerReady, setPlayerReady] = useState(false);
@@ -1232,7 +1232,7 @@ useEffect(() => {
                : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
             ].join(" ")}
            >
-              ➕ Importa Brani YouTube
+              ➕ Importa Brani
           </button>
           )}
 
@@ -1310,7 +1310,7 @@ useEffect(() => {
                 Libreria Evento: 
               </div>
               <div className="mt-1 text-xs text-zinc-400">
-                Le richieste YouTube vengono riprodotte automaticamente in sequenza.
+                Le richieste vengono riprodotte automaticamente
               </div>
             </div>
 
