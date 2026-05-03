@@ -1203,11 +1203,11 @@ useEffect(() => {
       </div>
     )}
 
-    <div className="hidden lg:block w-full max-w-[720px] mt-10">
+    <div className="hidden lg:block w-full max-w-[860px] mt-10 self-end">
       <FakeSpectrumWide />
     </div>
 
-    <div className="grid w-full max-w-[720px] grid-cols-4 gap-2">
+    <div className="grid w-full max-w-[860px] grid-cols-4 gap-2 self-end">
       {code && code !== "TEST123" && !eventExpired && (
         <button
           onClick={() => setShowQr(true)}
