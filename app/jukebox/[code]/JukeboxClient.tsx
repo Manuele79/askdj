@@ -1152,173 +1152,176 @@ useEffect(() => {
           </div>
         )}
 
-        <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="flex items-center gap-4">
-              <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
-                <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/50 blur-xl animate-pulse" />
-                <span className="relative text-2xl drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]">
-                  📻
-                </span>
-              </div>
+<header className="mb-6 grid gap-6 lg:grid-cols-[1fr_1.45fr] lg:items-end">
+  {/* SINISTRA */}
+  <div>
+    <div className="flex items-center gap-4">
+      <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400">
+        <div className="pointer-events-none absolute inset-0 rounded-2xl bg-yellow-400/50 blur-xl animate-pulse" />
+        <span className="relative text-2xl drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]">
+          📻
+        </span>
+      </div>
 
-              <div className="leading-tight">
-                <div className="text-4xl font-black tracking-tight">
-                  <span className="text-yellow-300">Ask</span>
-                  <span className="text-white">DJ</span>
-                </div>
-                <div className="text-xs text-zinc-300 tracking-wide">
-                  Jukebox Mode
-                </div>
-              </div>
-            </div>
-
-            <h1 className="mt-6 text-3xl sm:text-4xl lg:text-6xl font-black tracking-tight text-white">
-              Jukebox <span className="text-yellow-300">Music</span>
-            </h1>
-
-            <p className="mt-3 max-w-2xl text-sm sm:text-base text-zinc-300">
-              Gli ospiti scelgono la musica... Il Jukebox la riproduce automaticamente...
-            </p>
-
-            {code && code !== "TEST123" && (
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <span className="text-yellow-300 font-extrabold tracking-widest text-sm">
-                  EVENTO:
-                </span>
-                <span className="rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300 px-4 py-1.5 text-sm font-bold text-zinc-900 shadow-[0_0_12px_rgba(34,211,238,0.35)]">
-                  {code}
-                </span>
-              </div>
-            )}
-
-           {timer && (
-             <div className={`mt-2 text-sm font-bold ${timer.color}`}>
-                {timer.title}
-                {timer.detail && (
-                  <div className="text-xs text-zinc-400 font-semibold">
-                    {timer.detail}
-                  </div>
-                )}
-             </div>
-            )}
-          
-
-         {/* SPECTRUM + QUEUE */}
-        <div className="hidden lg:flex flex-col gap-3 items-end w-full max-w-md">
-          <div
-            key={pendingQueueCount}
-            className="rounded-2xl border border-yellow-400/40 bg-zinc-950/70 px-6 py-3 text-sm font-extrabold text-yellow-200 shadow-[0_0_24px_rgba(250,204,21,0.22)] animate-[pop_0.35s_ease]"
-          >
-            {pendingQueueCount > 0 ? (
-              <>🎧 Coda richieste: {pendingQueueCount}</>
-            ) : (
-              <>🎧 Nessuna richiesta in coda</>
-            )}
-          </div>
-
-          <div className="w-full">
-            <FakeSpectrumWide />
-          </div>
+      <div className="leading-tight">
+        <div className="text-4xl font-black tracking-tight">
+          <span className="text-yellow-300">Ask</span>
+          <span className="text-white">DJ</span>
         </div>
+        <div className="text-xs text-zinc-300 tracking-wide">
+          Jukebox Mode
+        </div>
+      </div>
+    </div>
 
-           <div className="flex flex-col gap-3 w-full sm:flex-row sm:flex-wrap lg:w-auto lg:justify-end">
-            {code && code !== "TEST123" && !eventExpired && (
-              <button
-                onClick={() => setShowQr(true)}
-                className="rounded-xl px-5 py-3 text-sm font-extrabold transition bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110"
-              >
-                🔳 QR Ospiti
-              </button>
-            )}
+    <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white">
+      Jukebox <span className="text-yellow-300">Music</span>
+    </h1>
 
-            {code && code !== "TEST123" && !eventExpired && (
-              <button
-               onClick={() => {
-               if (isPlaying) {
-               setStatusMsg("⏸ Metti in pausa per importare brani");
-               return;
-               }
+    <p className="mt-3 max-w-2xl text-sm sm:text-base text-zinc-300">
+      Gli ospiti scelgono la musica... Il Jukebox la riproduce automaticamente...
+    </p>
 
-               window.open(`/event/${code}?from=jukebox-import`, "_blank");
-            }}
-              className={[
-                 "rounded-xl px-5 py-3 text-sm font-extrabold transition",
-             isPlaying
-               ? "bg-zinc-900/60 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-900"
-               : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
-            ].join(" ")}
-           >
-              ➕ Importa Brani 🎵
-          </button>
-          )}
+    {code && code !== "TEST123" && (
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <span className="text-yellow-300 font-extrabold tracking-widest text-sm">
+          EVENTO:
+        </span>
+        <span className="rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300 px-4 py-1.5 text-sm font-bold text-zinc-900 shadow-[0_0_12px_rgba(34,211,238,0.35)]">
+          {code}
+        </span>
+      </div>
+    )}
+  </div>
 
+  {/* DESTRA */}
+  <div className="flex flex-col items-stretch gap-3 lg:items-end">
+    {/* CODA */}
+    <div
+      key={pendingQueueCount}
+      className="w-full max-w-[680px] rounded-2xl border border-yellow-400/40 bg-zinc-950/70 px-6 py-3 text-center text-sm font-extrabold text-yellow-200 shadow-[0_0_24px_rgba(250,204,21,0.22)] animate-[pop_0.35s_ease]"
+    >
+      {pendingQueueCount > 0 ? (
+        <>🎧 Coda richieste: {pendingQueueCount}</>
+      ) : (
+        <>🎧 Nessuna richiesta in coda</>
+      )}
+    </div>
 
-            <button
-              onClick={() => setLoopEnabled((v) => !v)}
-              disabled={eventExpired}
-              className={[
-                "rounded-xl px-5 py-3 text-sm font-extrabold transition",
-                loopEnabled
-                  ? "bg-emerald-400 text-zinc-950 shadow-[0_0_20px_rgba(52,211,153,0.55)]"
-                  : "bg-zinc-900/60 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-800",
-              ].join(" ")}
-            >
-              🔁 Loop {loopEnabled ? "ON" : "OFF"}
-            </button>
-
-            <button
-              onClick={() => setPlaylistEnabled((v) => !v)}
-              disabled={eventExpired}
-              className={[
-                "rounded-xl px-5 py-3 text-sm font-extrabold transition",
-                playlistEnabled
-                  ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950 hover:brightness-110"
-                  : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
-              ].join(" ")}
-            >
-              📃 Playlist YouTube {playlistEnabled ? "ON" : "OFF"}
-            </button>
-
-            <button
-              onClick={playCurrent}
-              disabled={eventExpired}
-              className={[
-                "rounded-xl px-5 py-4 text-base font-extrabold transition lg:w-[320px]",
-                isPlaying
-                  ? "bg-emerald-400 text-zinc-950 shadow-[0_0_22px_rgba(52,211,153,0.55)]"
-                  : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
-              ].join(" ")}
-            >
-              {isPlaying ? "▶ In riproduzione" : userStarted ? "▶ Play" : "▶ Avvia"}
-            </button>
-
-            <button
-              onClick={pauseCurrent}
-              disabled={eventExpired || !isPlaying}
-              className={[
-                "rounded-xl px-5 py-3 text-sm font-extrabold transition lg:w-[180px]",
-                isPlaying
-                  ? "bg-red-500 text-white shadow-[0_0_18px_rgba(239,68,68,0.55)] hover:brightness-110"
-                  : "bg-zinc-900/60 text-zinc-500 ring-1 ring-zinc-800",
-              ].join(" ")}
-            >
-              ⏸ Pausa
-            </button>
-
-            <button
-              onClick={playNext}
-              disabled={eventExpired}
-              className={[
-                "rounded-xl px-5 py-3 text-sm font-extrabold transition lg:w-[180px]",
-                "bg-blue-500 text-white shadow-[0_0_18px_rgba(59,130,246,0.55)] hover:brightness-110",
-              ].join(" ")}
-            >
-              ⏭ Avanti
-            </button>
+    {/* STATO EVENTO */}
+    {timer && (
+      <div className={`w-full max-w-[680px] rounded-2xl border border-zinc-700/60 bg-zinc-950/50 px-5 py-3 text-center text-sm font-bold ${timer.color}`}>
+        {timer.title}
+        {timer.detail && (
+          <div className="mt-1 text-xs text-zinc-400 font-semibold">
+            {timer.detail}
           </div>
-         </div>
-        </header>
+        )}
+      </div>
+    )}
+
+    {/* SPECTRUM */}
+    <div className="hidden lg:block w-full max-w-[680px]">
+      <FakeSpectrumWide />
+    </div>
+
+    {/* BOTTONI */}
+    <div className="grid w-full max-w-[680px] grid-cols-2 gap-3 lg:grid-cols-4">
+      {code && code !== "TEST123" && !eventExpired && (
+        <button
+          onClick={() => setShowQr(true)}
+          className={[
+          "rounded-xl px-5 py-3 text-sm font-extrabold transition bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
+          pendingQueueCount === 0 ? "animate-pulse" : ""
+        ].join(" ")}
+        >
+          📲 QR Ospiti
+        </button>
+      )}
+
+      {code && code !== "TEST123" && !eventExpired && (
+        <button
+          onClick={() => {
+            if (isPlaying) {
+              setStatusMsg("⏸ Metti in pausa per importare brani");
+              return;
+            }
+
+            window.open(`/event/${code}?from=jukebox-import`, "_blank");
+          }}
+          className={[
+            "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+            isPlaying
+              ? "bg-zinc-900/60 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-900"
+              : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
+          ].join(" ")}
+        >
+          ➕ Importa Brani 🎵
+        </button>
+      )}
+
+      <button
+        onClick={() => setLoopEnabled((v) => !v)}
+        disabled={eventExpired}
+        className={[
+          "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+          loopEnabled
+            ? "bg-emerald-400 text-zinc-950 shadow-[0_0_20px_rgba(52,211,153,0.55)]"
+            : "bg-zinc-900/60 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-800",
+        ].join(" ")}
+      >
+        🔁 Loop {loopEnabled ? "ON" : "OFF"}
+      </button>
+
+      <button
+        onClick={() => setPlaylistEnabled((v) => !v)}
+        disabled={eventExpired}
+        className={[
+          "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+          playlistEnabled
+            ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950 hover:brightness-110"
+            : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
+        ].join(" ")}
+      >
+        📃 Playlist YouTube {playlistEnabled ? "ON" : "OFF"}
+      </button>
+
+      <button
+        onClick={playCurrent}
+        disabled={eventExpired}
+        className={[
+          "col-span-2 rounded-xl px-5 py-4 text-base font-extrabold transition",
+          isPlaying
+            ? "bg-emerald-400 text-zinc-950 shadow-[0_0_22px_rgba(52,211,153,0.55)]"
+            : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.6)] hover:brightness-110",
+        ].join(" ")}
+      >
+        {isPlaying ? "▶ In riproduzione" : userStarted ? "▶ Play" : "▶ Avvia"}
+      </button>
+
+      <button
+        onClick={pauseCurrent}
+        disabled={eventExpired || !isPlaying}
+        className={[
+          "rounded-xl px-5 py-3 text-sm font-extrabold transition",
+          isPlaying
+            ? "bg-red-500 text-white shadow-[0_0_18px_rgba(239,68,68,0.55)] hover:brightness-110"
+            : "bg-zinc-900/60 text-zinc-500 ring-1 ring-zinc-800",
+        ].join(" ")}
+      >
+        ⏸ Pausa
+      </button>
+
+      <button
+        onClick={playNext}
+        disabled={eventExpired}
+        className="rounded-xl px-5 py-3 text-sm font-extrabold transition bg-blue-500 text-white shadow-[0_0_18px_rgba(59,130,246,0.55)] hover:brightness-110"
+      >
+        ⏭ Avanti
+      </button>
+    </div>
+  </div>
+</header>
 
         <section className="rounded-3xl border border-yellow-400/40 bg-zinc-950/70 p-4 shadow-[0_0_30px_rgba(250,204,21,0.12)]">
           <div className="mb-3 flex items-center justify-between gap-3">
