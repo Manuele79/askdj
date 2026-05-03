@@ -1152,7 +1152,7 @@ useEffect(() => {
           </div>
         )}
 
-<header className="mb-6 grid gap-6 lg:gap-x-16 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+<header className="mb-6 grid gap-6 lg:gap-x-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
   {/* SINISTRA */}
   <div>
     <div className="flex items-center gap-4">
@@ -1203,11 +1203,11 @@ useEffect(() => {
       </div>
     )}
 
-    <div className="hidden lg:block w-full max-w-[860px] mt-10 self-end">
+    <div className="hidden lg:block w-full mt-10">
       <FakeSpectrumWide />
     </div>
 
-    <div className="grid w-full max-w-[860px] grid-cols-4 gap-2 self-end">
+    <div className="grid w-full grid-cols-4 gap-2">
       {code && code !== "TEST123" && !eventExpired && (
         <button
           onClick={() => setShowQr(true)}
@@ -1230,7 +1230,7 @@ useEffect(() => {
             window.open(`/event/${code}?from=jukebox-import`, "_blank");
           }}
           className={[
-            "rounded-xl px-4 py-2.5 text-sm font-extrabold transition",
+            "rounded-xl px-4 py-2.5 text-sm font-extrabold whitespace-nowrap transition",
             isPlaying
               ? "bg-zinc-900/60 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-900"
               : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_18px_rgba(250,204,21,0.55)] hover:brightness-110",
@@ -1257,7 +1257,7 @@ useEffect(() => {
         onClick={() => setPlaylistEnabled((v) => !v)}
         disabled={eventExpired}
         className={[
-          "rounded-xl px-4 py-2.5 text-sm font-extrabold transition",
+          "rounded-xl px-4 py-2.5 text-sm font-extrabold whitespace-nowrap transition",
           playlistEnabled
             ? "bg-gradient-to-r from-cyan-400 to-emerald-400 text-zinc-950 hover:brightness-110"
             : "bg-zinc-900/60 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800",
