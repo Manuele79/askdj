@@ -28,6 +28,10 @@ function buildTidalSearchUrl(title: string) {
   return `https://listen.tidal.com/search?q=${encodeURIComponent(title)}`;
 }
 
+function buildAppleMusicSearchUrl(title: string) {
+  return `https://music.apple.com/search?term=${encodeURIComponent(title)}`;
+}
+
 function PlatformButton({ r }: { r: RequestItem }) {
   if (!r.url) return null;
 
@@ -227,6 +231,7 @@ export default function DjClient({ code }: { code: string }) {
   const showDjPartyUi = !isLanding || eventMode === "dj_party";
   const effectiveEventMode = isLanding ? eventMode : currentEventMode;
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
+  const [appleSearchEnabled, setAppleSearchEnabled] = useState(false);
 
   function resetPartyUnlock() {
     try {
@@ -555,6 +560,25 @@ useEffect(() => {
 
   return () => clearInterval(t);
 }, [expiresAt]);
+
+useEffect(() => {
+  try {
+    const saved = localStorage.getItem("dj_apple_search");
+
+    if (saved === "1") {
+      setAppleSearchEnabled(true);
+    }
+  } catch {}
+}, []);
+
+useEffect(() => {
+  try {
+    localStorage.setItem(
+      "dj_apple_search",
+      appleSearchEnabled ? "1" : "0"
+    );
+  } catch {}
+}, [appleSearchEnabled]);
 
 async function createEvent() { 
   const rawEventCode = makeEventCodeFromName(eventName);
@@ -1182,6 +1206,19 @@ const showEventTimer =
   </div>
 )}
 
+<div className="mb-4 flex items-center gap-2">
+  <button
+    onClick={() => setAppleSearchEnabled((v) => !v)}
+    className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
+      appleSearchEnabled
+        ? "bg-pink-500 text-white"
+        : "bg-zinc-800 text-zinc-300"
+    }`}
+  >
+    🍎 Apple Search {appleSearchEnabled ? "ON" : "OFF"}
+  </button>
+</div>
+
 
 {code && code !== "TEST123" && (
 <div className="hidden lg:flex justify-end mt-3">
@@ -1710,6 +1747,18 @@ const showEventTimer =
 
             <PlatformButton r={r} />
             <TidalSearchButton r={r} />
+
+            {appleSearchEnabled && (
+              <a
+                href={buildAppleMusicSearchUrl(r.title)}
+                target="_blank"
+                rel="noreferrer"
+                title="Cerca su Apple Music"
+                className="hidden lg:inline-flex rounded-xl bg-pink-500 px-2.5 py-2 text-xs font-semibold text-white transition hover:bg-pink-400 shadow-[0_6px_18px_rgba(0,0,0,0.25)]"
+              >
+                🍎
+              </a>
+            )}
 
             <div className="ml-2 flex items-center gap-2">
               {/* BPM UX: badge se salvato, input solo quando serve */}
