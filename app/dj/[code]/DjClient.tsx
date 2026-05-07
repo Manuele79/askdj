@@ -1206,6 +1206,7 @@ const showEventTimer =
   </div>
 )}
 
+{code && code !== "TEST123" && (
 <div className="mb-4 flex items-center gap-2">
   <button
     onClick={() => setAppleSearchEnabled((v) => !v)}
@@ -1218,7 +1219,7 @@ const showEventTimer =
     🍎 Apple Search {appleSearchEnabled ? "ON" : "OFF"}
   </button>
 </div>
-
+)}
 
 {code && code !== "TEST123" && (
 <div className="hidden lg:flex justify-end mt-3">
