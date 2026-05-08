@@ -1112,13 +1112,13 @@ const showEventTimer =
 
 <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6">
   <div className="lg:ml-32">
-    <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+    <h1 className="text-4xl md:text-5xl font-black tracking-tight lg:max-w-4xl">
       Gestisci le richieste <span className="text-yellow-400">senza caos</span>
     </h1>
 
     <FakeSpectrumWide />
 
-    <p className="mt-4 text-lg text-zinc-300 max-w-2xl">
+    <p className="mt-4 text-lg text-zinc-300 max-w-3xl">
       Crea un EVENTO... Condividi il QR... Ricevi i brani e dediche in una lista ordinata...
       Tu decidi cosa suonare...
     </p>
