@@ -544,8 +544,8 @@ useEffect(() => {
   load();
   loadEventStatus();
 
-  const t = setInterval(load, 1500);
-  const t2 = setInterval(loadEventStatus, 2000);
+  const t = setInterval(load, 5000);
+  const t2 = setInterval(loadEventStatus, 30000);
 
   return () => {
     clearInterval(t);
