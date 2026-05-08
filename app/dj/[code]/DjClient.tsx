@@ -1275,7 +1275,7 @@ const showEventTimer =
 )}
 
 {code && code !== "TEST123" && (
-<div className="mb-4 flex items-center gap-2">
+<div className="hidden lg:flex mb-4 items-center gap-2">
   <button
     onClick={() => setAppleSearchEnabled((v) => !v)}
     className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
@@ -1551,6 +1551,22 @@ const showEventTimer =
 
               if (!res.ok) {
                 alert(data?.error || "Errore rinnovo");
+                return;
+              }
+
+              const checkRes = await fetch(`/api/events?eventCode=${encodeURIComponent(expiredCode)}`, {
+                cache: "no-store",
+              });
+
+              if (checkRes.ok) {
+                const renewedData = await checkRes.json();
+
+                if (renewedData.mode === "jukebox") {
+                  router.push(`/jukebox/${expiredCode}`);
+                } else {
+                  router.push(`/dj/${expiredCode}`);
+                }
+
                 return;
               }
 
