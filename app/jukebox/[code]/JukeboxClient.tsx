@@ -302,6 +302,7 @@ useEffect(() => {
 
   const [eventExpired, setEventExpired] = useState(false);
   const [eventChecked, setEventChecked] = useState(false);
+  const [paymentsEnabled, setPaymentsEnabled] = useState(false);
 
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [nowTick, setNowTick] = useState(Date.now());
@@ -326,7 +327,16 @@ useEffect(() => {
   const playedRequestTokensRef = useRef<Set<string>>(new Set());
   const resumeBaseKeyRef = useRef<string>("");
 
-
+  useEffect(() => {
+  fetch("/api/settings", { cache: "no-store" })
+    .then((res) => res.json())
+    .then((data) => {
+      setPaymentsEnabled(!!data.payments_enabled);
+    })
+    .catch(() => {
+      setPaymentsEnabled(false);
+    });
+}, []);
 
   useEffect(() => {
     queueRef.current = queue;
@@ -903,6 +913,32 @@ if (currentRequestIdx < 0 && currentEntry?.id) {
 }
 
 async function handleRenewEvent() {
+  // RINNOVO GRATIS se pagamenti disattivati
+  if (!paymentsEnabled) {
+    const res = await fetch("/api/paypal/confirm", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        eventCode: code,
+        type: "renew",
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data?.error || "Errore rinnovo");
+      return;
+    }
+
+    alert("Evento rinnovato ✅");
+    window.location.reload();
+    return;
+  }
+
+  // PAYPAL se pagamenti attivi
   const res = await fetch("/api/paypal/create-order", {
     method: "POST",
     headers: {
