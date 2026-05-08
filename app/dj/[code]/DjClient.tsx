@@ -1083,7 +1083,7 @@ const showEventTimer =
       </div>
     )}
 
-    {paymentsEnabled && (
+  {!isLanding && code !== "TEST123" && (
   <div className="flex">
     <button
       onClick={handleRenewEvent}
