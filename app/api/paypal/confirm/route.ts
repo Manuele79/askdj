@@ -177,7 +177,7 @@ if (paymentsEnabled) {
 
     return NextResponse.json({
       ok: true,
-      captured: true,
+      captured: paymentsEnabled,
       renewed: isRenew,
       expiresAt: updatePayload.expires_at || ev.expires_at,
       paypal: captureData,
