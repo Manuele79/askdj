@@ -1425,7 +1425,7 @@ const showEventTimer =
         jukeboxDuration === "1d" ? "text-zinc-950" : "text-cyan-300"
       }`}
     >
-      2€
+      1€
     </span>
   )}
 </div>
