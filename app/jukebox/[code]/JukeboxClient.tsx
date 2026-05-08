@@ -902,6 +902,28 @@ if (currentRequestIdx < 0 && currentEntry?.id) {
   }, 350);
 }
 
+async function handleRenewEvent() {
+  const res = await fetch("/api/paypal/create-order", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      eventCode: code,
+      type: "renew",
+    }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data?.approveUrl) {
+    alert(data?.error || "Errore creazione rinnovo");
+    return;
+  }
+
+  window.location.href = data.approveUrl;
+}
+
 function handleUserStart() {
   startedRef.current = true;
   setUserStarted(true);
@@ -1236,6 +1258,21 @@ useEffect(() => {
         {timer.detail && <div className="mt-0.5 text-[11px] text-zinc-400 font-semibold">{timer.detail}</div>}
       </div>
     )}
+
+    {code && code !== "TEST123" && (
+  <button
+    onClick={handleRenewEvent}
+    className="
+      w-full sm:w-auto rounded-full
+      bg-gradient-to-r from-yellow-300 to-pink-400
+      px-5 py-2.5 text-sm font-black text-zinc-950
+      shadow-[0_0_20px_rgba(250,204,21,0.35)]
+      hover:scale-[1.02] transition
+    "
+  >
+    🔁 Rinnova evento
+  </button>
+)}
 
     <div
       key={pendingQueueCount}
