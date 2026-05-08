@@ -41,10 +41,38 @@ async function getPaypalAccessToken() {
   return data.access_token as string;
 }
 
+function addDuration(base: Date, mode: string, duration: string | null) {
+  const d = new Date(base);
+
+  if (mode === "dj_party") {
+    d.setHours(d.getHours() + 12);
+    return d;
+  }
+
+  if (mode === "jukebox") {
+    if (duration === "1m") {
+      d.setMonth(d.getMonth() + 1);
+      return d;
+    }
+
+    if (duration === "1y") {
+      d.setFullYear(d.getFullYear() + 1);
+      return d;
+    }
+
+    d.setDate(d.getDate() + 1);
+    return d;
+  }
+
+  throw new Error("Modalità evento non valida");
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({} as any));
     const eventCode = String(body.eventCode || "").trim().toUpperCase();
+    const orderType = String(body.type || "create").trim().toLowerCase();
+    const isRenew = orderType === "renew";
 
     if (!eventCode) {
       return NextResponse.json({ ok: false, error: "Bad Request" }, { status: 400 });
@@ -52,7 +80,7 @@ export async function POST(req: Request) {
 
     const { data: ev, error: evErr } = await supabase
       .from("events")
-      .select("event_code, payment_status, paypal_order_id")
+      .select("event_code, mode, duration, expires_at, payment_status, paypal_order_id")
       .eq("event_code", eventCode)
       .single();
 
@@ -60,7 +88,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "Evento non trovato" }, { status: 404 });
     }
 
-    if (String(ev.payment_status || "").toLowerCase() === "paid") {
+    if (!isRenew && String(ev.payment_status || "").toLowerCase() === "paid") {
       return NextResponse.json({ ok: true, alreadyPaid: true });
     }
 
@@ -99,14 +127,31 @@ export async function POST(req: Request) {
       );
     }
 
-    const now = new Date().toISOString();
+    const now = new Date();
+
+    const updatePayload: any = {
+      payment_status: "paid",
+      paid_at: now.toISOString(),
+    };
+
+    if (isRenew) {
+      const currentExpires = ev.expires_at ? new Date(ev.expires_at) : null;
+
+      const base =
+        currentExpires && currentExpires.getTime() > now.getTime()
+          ? currentExpires
+          : now;
+
+      updatePayload.expires_at = addDuration(
+        base,
+        ev.mode,
+        ev.mode === "jukebox" ? ev.duration || "1d" : null
+      ).toISOString();
+    }
 
     const { error: upErr } = await supabase
       .from("events")
-      .update({
-        payment_status: "paid",
-        paid_at: now,
-      })
+      .update(updatePayload)
       .eq("event_code", eventCode);
 
     if (upErr) {
@@ -119,6 +164,8 @@ export async function POST(req: Request) {
     return NextResponse.json({
       ok: true,
       captured: true,
+      renewed: isRenew,
+      expiresAt: updatePayload.expires_at || ev.expires_at,
       paypal: captureData,
     });
   } catch (error: any) {
