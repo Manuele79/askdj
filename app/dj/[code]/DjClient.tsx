@@ -119,7 +119,7 @@ function TidalSearchButton({ r }: { r: RequestItem }) {
 
 function FakeSpectrumWide() {
   return (
-    <div className="mt-4 flex items-end justify-center gap-2 h-10">
+    <div className="mt-3 flex w-full max-w-4xl items-end justify-center gap-2 h-10">
       {Array.from({ length: 28 }).map((_, i) => (
         <span
           key={i}
@@ -1050,7 +1050,7 @@ const showEventTimer =
    Console <span className="text-yellow-400">DJ</span>
   </div>
 
-    <div className="mt-0 md:mt-1 lg:ml-3 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
+    <div className="mt-0 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
       ...Richieste e dediche in tempo reale...
     </div>
   </div>
@@ -1110,15 +1110,15 @@ const showEventTimer =
 
  </div>
 
-<div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6">
-  <div className="mx-auto flex max-w-4xl flex-col items-center text-center lg:translate-x-24">
+<div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between md:mt-3">
+  <div className="mx-auto flex max-w-5xl flex-col items-center text-center lg:translate-x-32">
     <h1 className="text-4xl md:text-5xl font-black tracking-tight lg:max-w-4xl">
       Gestisci le richieste <span className="text-yellow-400">senza caos</span>
     </h1>
 
     <FakeSpectrumWide />
 
-    <p className="mt-3 max-w-3xl text-sm sm:text-base leading-relaxed text-zinc-300/90">
+    <p className="mt-2 max-w-4xl text-sm sm:text-base leading-relaxed text-zinc-300/90">
       Crea un EVENTO... Condividi il QR... Ricevi i brani e dediche in una lista ordinata...
       Tu decidi cosa suonare...
     </p>
