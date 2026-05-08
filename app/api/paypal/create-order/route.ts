@@ -58,6 +58,9 @@ export async function POST(req: Request) {
     const body = await req.json().catch(() => ({} as any));
     const eventCode = String(body.eventCode || "").trim().toUpperCase();
 
+    const orderType = String(body.type || "create").trim().toLowerCase();
+    const isRenew = orderType === "renew";
+
     if (!eventCode) {
       return NextResponse.json({ ok: false, error: "Bad Request" }, { status: 400 });
     }
@@ -72,7 +75,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "Evento non trovato" }, { status: 404 });
     }
 
-    if (String(ev.payment_status || "").toLowerCase() === "paid") {
+    if (!isRenew && String(ev.payment_status || "").toLowerCase() === "paid") {
       return NextResponse.json({ ok: false, error: "Evento già pagato" }, { status: 409 });
     }
 
@@ -93,7 +96,9 @@ export async function POST(req: Request) {
         purchase_units: [
           {
             reference_id: ev.event_code,
-            description: `AskDJ ${ev.mode} ${ev.duration || "default"} - ${ev.event_code}`,
+            description: isRenew
+            ? `AskDJ RINNOVO ${ev.mode} ${ev.duration || "default"} - ${ev.event_code}`
+            : `AskDJ ${ev.mode} ${ev.duration || "default"} - ${ev.event_code}`,
             amount: {
               currency_code: "EUR",
               value: amount,
@@ -103,8 +108,8 @@ export async function POST(req: Request) {
         application_context: {
           brand_name: "AskDJ",
           user_action: "PAY_NOW",
-          return_url: `${baseAppUrl}/${modePath}/${ev.event_code}?paypal=success`,
-          cancel_url: `${baseAppUrl}/${modePath}/${ev.event_code}?paypal=cancel`,
+          return_url: `${baseAppUrl}/${modePath}/${ev.event_code}?paypal=${isRenew ? "renew_success" : "success"}`,
+          cancel_url: `${baseAppUrl}/${modePath}/${ev.event_code}?paypal=${isRenew ? "renew_cancel" : "cancel"}`,
         },
       }),
     });
@@ -143,6 +148,7 @@ export async function POST(req: Request) {
       orderId,
       approveUrl: approveLink,
       amount,
+      type: orderType,
     });
   } catch (error: any) {
     return NextResponse.json(
