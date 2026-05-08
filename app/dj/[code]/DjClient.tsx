@@ -1050,9 +1050,9 @@ const showEventTimer =
    Console <span className="text-yellow-400">DJ</span>
   </div>
 
-  <div className="mt-1 md:mt-3 lg:ml-3 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
-    ...Richieste e dediche in tempo reale...
-  </div>
+    <div className="mt-0 md:mt-1 lg:ml-3 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
+      ...Richieste e dediche in tempo reale...
+    </div>
   </div>
 
    </div>
@@ -1111,14 +1111,14 @@ const showEventTimer =
  </div>
 
 <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6">
-  <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+  <div className="mx-auto flex max-w-4xl flex-col items-center text-center lg:translate-x-24">
     <h1 className="text-4xl md:text-5xl font-black tracking-tight lg:max-w-4xl">
       Gestisci le richieste <span className="text-yellow-400">senza caos</span>
     </h1>
 
     <FakeSpectrumWide />
 
-    <p className="mt-4 max-w-3xl text-lg leading-relaxed text-zinc-300">
+    <p className="mt-3 max-w-3xl text-sm sm:text-base leading-relaxed text-zinc-300/90">
       Crea un EVENTO... Condividi il QR... Ricevi i brani e dediche in una lista ordinata...
       Tu decidi cosa suonare...
     </p>
