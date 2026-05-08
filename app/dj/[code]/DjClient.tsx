@@ -988,6 +988,12 @@ const showEventTimer =
   !!timer &&
   (!paymentsEnabled || paymentStatus === "paid");
 
+ const showRenewButton =
+  code &&
+  code !== "TEST123" &&
+  expiresAt &&
+  new Date(expiresAt).getTime() - Date.now() <= 2 * 60 * 60 * 1000; 
+
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900 text-zinc-100 overflow-hidden">
