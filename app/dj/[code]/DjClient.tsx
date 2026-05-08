@@ -119,8 +119,8 @@ function TidalSearchButton({ r }: { r: RequestItem }) {
 
 function FakeSpectrumWide() {
   return (
-    <div className="mt-3 flex w-full max-w-4xl items-end justify-center gap-2 h-10">
-      {Array.from({ length: 28 }).map((_, i) => (
+    <div className="mt-3 flex w-full max-w-4xl items-end justify-center gap-1.5 h-10">
+      {Array.from({ length: 44 }).map((_, i) => (
         <span
           key={i}
           className="w-2 rounded-full bg-gradient-to-t from-yellow-300 via-emerald-400 to-pink-400 opacity-85 animate-[eqwide_1.4s_ease-in-out_infinite]"
@@ -1129,7 +1129,7 @@ const showEventTimer =
     {/* INIZIA QUI */}
 {/* BOX DINAMICO SPIEGAZIONE */}
 {isLanding && (
-  <div className="mt-6 rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
+  <div className="mt-6 text-left rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
 
     {/* ===== GENERALE ===== */}
     {!eventMode && (
