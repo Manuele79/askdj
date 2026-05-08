@@ -100,14 +100,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, alreadyPaid: true });
     }
 
-    const orderId = String(ev.paypal_order_id || "").trim();
 
-    if (!orderId) {
-      return NextResponse.json(
-        { ok: false, error: "Ordine PayPal mancante" },
-        { status: 400 }
-      );
-    }
 
 let captureData: any = null;
 
