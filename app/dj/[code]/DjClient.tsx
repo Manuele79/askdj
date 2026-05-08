@@ -765,7 +765,7 @@ async function joinExistingEvent() {
     }
 
     if (res.status === 410) {
-      setJoinMsg("⏳ Evento scaduto (creane uno nuovo).");
+      setJoinMsg(`EXPIRED:${safe}`);
       return;
     }
 
@@ -1522,11 +1522,75 @@ const showEventTimer =
       </button>
     </div>
 
-    {joinMsg && (
-      <div className="mt-2 text-sm text-zinc-400">
+{joinMsg && (
+  <div className="mt-2 flex flex-col items-start gap-3">
+    {joinMsg.startsWith("EXPIRED:") ? (
+      <>
+        <div className="text-sm text-yellow-300">
+          ⏳ Evento scaduto. Puoi rinnovarlo.
+        </div>
+
+        <button
+          onClick={async () => {
+            const expiredCode = joinMsg.replace("EXPIRED:", "");
+
+            // GRATIS se pagamenti OFF
+            if (!paymentsEnabled) {
+              const res = await fetch("/api/paypal/confirm", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  eventCode: expiredCode,
+                  type: "renew",
+                }),
+              });
+
+              const data = await res.json();
+
+              if (!res.ok) {
+                alert(data?.error || "Errore rinnovo");
+                return;
+              }
+
+              router.push(`/dj/${expiredCode}`);
+              return;
+            }
+
+            // PAYPAL
+            const res = await fetch("/api/paypal/create-order", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                eventCode: expiredCode,
+                type: "renew",
+              }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data?.approveUrl) {
+              alert(data?.error || "Errore rinnovo");
+              return;
+            }
+
+            window.location.href = data.approveUrl;
+          }}
+          className="rounded-2xl bg-gradient-to-r from-yellow-300 to-pink-400 px-5 py-3 text-sm font-black text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.35)] hover:brightness-110 transition"
+        >
+          🔁 Rinnova evento
+        </button>
+      </>
+    ) : (
+      <div className="text-sm text-zinc-400">
         {joinMsg}
       </div>
     )}
+  </div>
+)}
   </>
 )}
 
