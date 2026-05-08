@@ -74,6 +74,14 @@ export async function POST(req: Request) {
     const orderType = String(body.type || "create").trim().toLowerCase();
     const isRenew = orderType === "renew";
 
+    const { data: settings } = await supabase
+    .from("settings")
+    .select("value")
+    .eq("key", "payments_enabled")
+    .single();
+
+  const paymentsEnabled = settings?.value === "true";
+
     if (!eventCode) {
       return NextResponse.json({ ok: false, error: "Bad Request" }, { status: 400 });
     }
@@ -101,31 +109,44 @@ export async function POST(req: Request) {
       );
     }
 
-    const accessToken = await getPaypalAccessToken();
+let captureData: any = null;
 
-    const captureRes = await fetch(
-      `${getPaypalBaseUrl()}/v2/checkout/orders/${orderId}/capture`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
+if (paymentsEnabled) {
+  const orderId = String(ev.paypal_order_id || "").trim();
+
+  if (!orderId) {
+    return NextResponse.json(
+      { ok: false, error: "Ordine PayPal mancante" },
+      { status: 400 }
     );
+  }
 
-    const captureData = await captureRes.json().catch(() => null);
+  const accessToken = await getPaypalAccessToken();
 
-    if (!captureRes.ok) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: captureData?.message || "Errore capture PayPal",
-          details: captureData,
-        },
-        { status: 500 }
-      );
+  const captureRes = await fetch(
+    `${getPaypalBaseUrl()}/v2/checkout/orders/${orderId}/capture`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
     }
+  );
+
+  captureData = await captureRes.json().catch(() => null);
+
+  if (!captureRes.ok) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: captureData?.message || "Errore capture PayPal",
+        details: captureData,
+      },
+      { status: 500 }
+    );
+  }
+}
 
     const now = new Date();
 
