@@ -61,6 +61,10 @@ export async function POST(req: Request) {
     const orderType = String(body.type || "create").trim().toLowerCase();
     const isRenew = orderType === "renew";
 
+    const renewDuration = body.duration
+    ? String(body.duration).trim()
+    : null;
+
     if (!eventCode) {
       return NextResponse.json({ ok: false, error: "Bad Request" }, { status: 400 });
     }
@@ -79,7 +83,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "Evento già pagato" }, { status: 409 });
     }
 
-    const amount = getPrice(ev.mode, ev.duration || null);
+    const finalDuration =
+      isRenew && ev.mode === "jukebox"
+        ? renewDuration || ev.duration || "1d"
+        : ev.duration || null;
+
+    const amount = getPrice(ev.mode, finalDuration);
     const accessToken = await getPaypalAccessToken();
 
     const baseAppUrl = "https://www.askdj.app";
@@ -97,8 +106,8 @@ export async function POST(req: Request) {
           {
             reference_id: ev.event_code,
             description: isRenew
-            ? `AskDJ RINNOVO ${ev.mode} ${ev.duration || "default"} - ${ev.event_code}`
-            : `AskDJ ${ev.mode} ${ev.duration || "default"} - ${ev.event_code}`,
+              ? `AskDJ RINNOVO ${ev.mode} ${finalDuration || "default"} - ${ev.event_code}`
+              : `AskDJ ${ev.mode} ${finalDuration || "default"} - ${ev.event_code}`,
             amount: {
               currency_code: "EUR",
               value: amount,
@@ -136,7 +145,10 @@ export async function POST(req: Request) {
 
     const { error: upErr } = await supabase
       .from("events")
-      .update({ paypal_order_id: orderId })
+      .update({
+        paypal_order_id: orderId,
+        ...(isRenew && ev.mode === "jukebox" ? { duration: finalDuration } : {}),
+      })
       .eq("event_code", ev.event_code);
 
     if (upErr) {
