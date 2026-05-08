@@ -303,6 +303,7 @@ useEffect(() => {
   const [eventExpired, setEventExpired] = useState(false);
   const [eventChecked, setEventChecked] = useState(false);
   const [paymentsEnabled, setPaymentsEnabled] = useState(false);
+  const [showRenewOptions, setShowRenewOptions] = useState(false);
 
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [nowTick, setNowTick] = useState(Date.now());
@@ -912,7 +913,7 @@ if (currentRequestIdx < 0 && currentEntry?.id) {
   }, 350);
 }
 
-async function handleRenewEvent() {
+async function handleRenewEvent(duration: "1d" | "1m" | "1y") {
   // RINNOVO GRATIS se pagamenti disattivati
   if (!paymentsEnabled) {
     const res = await fetch("/api/paypal/confirm", {
@@ -923,6 +924,7 @@ async function handleRenewEvent() {
       body: JSON.stringify({
         eventCode: code,
         type: "renew",
+        duration,
       }),
     });
 
@@ -947,6 +949,7 @@ async function handleRenewEvent() {
     body: JSON.stringify({
       eventCode: code,
       type: "renew",
+      duration,
     }),
   });
 
@@ -1300,7 +1303,7 @@ useEffect(() => {
  expiresAt &&
  new Date(expiresAt).getTime() - Date.now() <= 2 * 60 * 60 * 1000 && (
   <button
-    onClick={handleRenewEvent}
+    onClick={() => setShowRenewOptions((v) => !v)}
     className="
       w-full sm:w-auto rounded-full
       bg-gradient-to-r from-yellow-300 to-pink-400
@@ -1311,6 +1314,32 @@ useEffect(() => {
   >
     🔁 Rinnova evento
   </button>
+)}
+
+{showRenewOptions && (
+  <div className="flex w-full flex-col gap-2 rounded-2xl border border-yellow-400/30 bg-zinc-950/80 p-3 shadow-[0_0_20px_rgba(250,204,21,0.18)]">
+
+    <button
+      onClick={() => handleRenewEvent("1d")}
+      className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-yellow-300 hover:bg-zinc-800"
+    >
+      📅 1 Giorno {paymentsEnabled ? "— 1€" : ""}
+    </button>
+
+    <button
+      onClick={() => handleRenewEvent("1m")}
+      className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-cyan-300 hover:bg-zinc-800"
+    >
+      📆 1 Mese {paymentsEnabled ? "— 8.99€" : ""}
+    </button>
+
+    <button
+      onClick={() => handleRenewEvent("1y")}
+      className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-pink-300 hover:bg-zinc-800"
+    >
+      🪩 1 Anno {paymentsEnabled ? "— 69€" : ""}
+    </button>
+  </div>
 )}
 
     <div
