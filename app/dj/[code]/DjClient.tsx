@@ -1050,7 +1050,7 @@ const showEventTimer =
    Console <span className="text-yellow-400">DJ</span>
   </div>
 
-  <div className="mt-1 md:mt-3 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
+  <div className="mt-1 md:mt-3 lg:ml-3 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
     ...Richieste e dediche in tempo reale...
   </div>
   </div>
@@ -1111,7 +1111,7 @@ const showEventTimer =
  </div>
 
 <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:mt-6">
-  <div>
+  <div className="lg:ml-32">
     <h1 className="text-4xl md:text-5xl font-black tracking-tight">
       Gestisci le richieste <span className="text-yellow-400">senza caos</span>
     </h1>
@@ -1285,7 +1285,7 @@ const showEventTimer =
     onClick={() => setAppleSearchEnabled((v) => !v)}
     className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
       appleSearchEnabled
-        ? "bg-pink-500 text-white"
+        ? "bg-pink-400 text-white"
         : "bg-zinc-800 text-zinc-300"
     }`}
   >
