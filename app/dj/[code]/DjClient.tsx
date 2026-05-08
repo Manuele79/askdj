@@ -584,6 +584,11 @@ useEffect(() => {
 }, [appleSearchEnabled]);
 
 async function createEvent() { 
+  if (!eventName.trim()) {
+    alert("Inserisci un nome evento");
+    return;
+  }
+
   const rawEventCode = makeEventCodeFromName(eventName);
   if (!rawEventCode) return;
 
