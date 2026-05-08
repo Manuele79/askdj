@@ -1248,7 +1248,7 @@ useEffect(() => {
           <div className="mb-6 rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-4 text-sm text-red-200 shadow-[0_0_20px_rgba(239,68,68,0.18)]">
             <div className="font-extrabold text-red-300">⛔ Evento scaduto</div>
             <div className="mt-1 text-red-200/90">
-              Questo Jukebox non è più attivo. Crea o apri un nuovo evento.
+              Questo Jukebox non è più attivo!!! Esci dall'Evento (👇FINE PAGINA) e Crei un Nuovo Evento... o RINNOVA Evento...
             </div>
           </div>
         )}
@@ -1322,25 +1322,25 @@ useEffect(() => {
 )}
 
 {showRenewOptions && (
-  <div className="flex w-full flex-col gap-2 rounded-2xl border border-yellow-400/30 bg-zinc-950/80 p-3 shadow-[0_0_20px_rgba(250,204,21,0.18)]">
+  <div className="flex w-auto flex-col gap-2 rounded-2xl border border-yellow-400/30 bg-zinc-950/80 p-3 shadow-[0_0_20px_rgba(250,204,21,0.18)]">
 
     <button
       onClick={() => handleRenewEvent("1d")}
-      className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-yellow-300 hover:bg-zinc-800"
+      className="min-w-[180px] rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-yellow-300 hover:bg-zinc-800"
     >
       📅 1 Giorno {paymentsEnabled ? "— 1€" : ""}
     </button>
 
     <button
       onClick={() => handleRenewEvent("1m")}
-      className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-cyan-300 hover:bg-zinc-800"
+      className="min-w-[180px] rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-cyan-300 hover:bg-zinc-800"
     >
       📆 1 Mese {paymentsEnabled ? "— 8.99€" : ""}
     </button>
 
     <button
       onClick={() => handleRenewEvent("1y")}
-      className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-pink-300 hover:bg-zinc-800"
+      className="min-w-[180px] rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-pink-300 hover:bg-zinc-800"
     >
       🪩 1 Anno {paymentsEnabled ? "— 69€" : ""}
     </button>
@@ -1360,7 +1360,7 @@ useEffect(() => {
       <FakeSpectrumWide />
     </div>
 
-    <div className="grid w-full grid-cols-4 gap-2">
+    <div className="grid w-full grid-cols-1 gap-3 lg:grid-cols-4 lg:gap-2">
       {code && code !== "TEST123" && !eventExpired && (
         <button
           onClick={() => setShowQr(true)}
@@ -1389,7 +1389,7 @@ useEffect(() => {
               : "bg-gradient-to-r from-cyan-400 to-sky-500 text-zinc-950 shadow-[0_0_18px_rgba(56,189,248,0.45)] hover:brightness-110",
           ].join(" ")}
         >
-          ➕ Importa Brani🎵
+          ➕ Importa Brani 🎵
         </button>
       )}
 
@@ -1423,7 +1423,7 @@ useEffect(() => {
         onClick={playCurrent}
         disabled={eventExpired}
         className={[
-          "col-span-2 rounded-xl px-4 py-3 text-base font-extrabold transition",
+          "rounded-xl px-4 py-3 text-base font-extrabold transition lg:col-span-2",
           isPlaying
             ? "bg-emerald-400 text-zinc-950 shadow-[0_0_20px_rgba(52,211,153,0.5)]"
             : "bg-gradient-to-r from-yellow-300 to-amber-500 text-zinc-950 shadow-[0_0_18px_rgba(250,204,21,0.55)] hover:brightness-110",
