@@ -1298,10 +1298,15 @@ useEffect(() => {
       </div>
     )}
 
-    {code &&
- code !== "TEST123" &&
- expiresAt &&
- new Date(expiresAt).getTime() - Date.now() <= 2 * 60 * 60 * 1000 && (
+{code &&
+  code !== "TEST123" &&
+  (
+    eventExpired ||
+    (
+      expiresAt &&
+      new Date(expiresAt).getTime() - Date.now() <= 2 * 60 * 60 * 1000
+    )
+  ) && (
   <button
     onClick={() => setShowRenewOptions((v) => !v)}
     className="
