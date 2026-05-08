@@ -505,9 +505,12 @@ useEffect(() => {
 
 useEffect(() => {
   const url = new URL(window.location.href);
-  const isSuccess = url.searchParams.get("paypal") === "success";
+  const paypalStatus = url.searchParams.get("paypal");
 
-  if (!isSuccess || !code) return;
+  const isSuccess = paypalStatus === "success";
+  const isRenewSuccess = paypalStatus === "renew_success";
+
+  if ((!isSuccess && !isRenewSuccess) || !code) return;
 
   fetch("/api/paypal/confirm", {
     method: "POST",
@@ -516,19 +519,19 @@ useEffect(() => {
     },
     body: JSON.stringify({
       eventCode: code,
+      type: isRenewSuccess ? "renew" : "create",
     }),
-  })
-.then(() => {
-  console.log("Evento attivato 💸");
+  }).then(() => {
+    console.log(isRenewSuccess ? "Evento rinnovato 💸" : "Evento attivato 💸");
 
-  if (currentEventMode === "jukebox") {
-    window.location.href = `/jukebox/${code}`;
-    return;
-  }
+    if (currentEventMode === "jukebox") {
+      window.location.href = `/jukebox/${code}`;
+      return;
+    }
 
-  window.history.replaceState({}, "", `/dj/${code}`);
-});
-}, [code]);
+    window.history.replaceState({}, "", `/dj/${code}`);
+  });
+}, [code, currentEventMode]);
 
 useEffect(() => {
   if (!code) return;
@@ -637,6 +640,54 @@ async function handlePayEvent() {
 
   if (!res.ok || !data?.approveUrl) {
     alert(data?.error || "Errore creazione pagamento");
+    return;
+  }
+
+  window.location.href = data.approveUrl;
+}
+
+async function handleRenewEvent() {
+  // RINNOVO GRATIS se pagamenti disattivati
+  if (!paymentsEnabled) {
+    const res = await fetch("/api/paypal/confirm", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        eventCode: code,
+        type: "renew",
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data?.error || "Errore rinnovo");
+      return;
+    }
+
+    alert("Evento rinnovato ✅");
+    window.location.reload();
+    return;
+  }
+
+  // FLOW PAYPAL
+  const res = await fetch("/api/paypal/create-order", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      eventCode: code,
+      type: "renew",
+    }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data?.approveUrl) {
+    alert(data?.error || "Errore creazione rinnovo");
     return;
   }
 
@@ -1031,6 +1082,17 @@ const showEventTimer =
         )}
       </div>
     )}
+
+    {paymentsEnabled && (
+  <div className="flex">
+    <button
+      onClick={handleRenewEvent}
+      className="rounded-full bg-gradient-to-r from-yellow-300 to-pink-400 px-5 py-2 text-sm font-black text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.35)] hover:scale-[1.02]"
+    >
+      🔁 Rinnova evento
+    </button>
+  </div>
+)}
 
   </div>
 )}
