@@ -1046,15 +1046,15 @@ const showEventTimer =
 
 
 {/* Titolo */}
-<div className="min-w-0 sm:ml-4 lg:ml-56">
-  <div className="text-3xl sm:text-4xl lg:text-8xl font-black tracking-tight text-white leading-tight break-words gap-6">
-   Console <span className="text-yellow-400">DJ</span>
+<div className="min-w-0 sm:ml-4 lg:ml-56 text-center">
+  <div className="text-3xl sm:text-4xl lg:text-8xl font-black tracking-tight text-white leading-tight break-words">
+    Console <span className="text-yellow-400">DJ</span>
   </div>
 
-    <div className="mt-0 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
-        Musica... Dediche e Richieste degli Ospiti in un’unica Console...
-    </div>
+  <div className="mt-0 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
+    Musica, Dediche e Richieste degli Ospiti in un’Unica Console.
   </div>
+</div>
 
    </div>
 {code && code !== "TEST123" && (
@@ -1120,8 +1120,8 @@ const showEventTimer =
     <FakeSpectrumWide />
 
     <p className="mt-2 max-w-[92vw] text-sm sm:text-base leading-relaxed text-zinc-300/90 lg:max-w-4xl">
-      Crea un EVENTO... Condividi il QR... Ricevi i brani e dediche in una lista ordinata...
-      Tu decidi cosa suonare...
+      Crea un EVENTO... Condividi il QR... Ricevi i Brani e Dediche...
+      TU Decidi cosa Suonare...
     </p>
 
     <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
@@ -1197,11 +1197,11 @@ const showEventTimer =
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-         : Modalità PARTY ti permette di riprodurre i link di YOUTUBE in autoplay.
+         5: Modalità PARTY ti permette di riprodurre i link di YOUTUBE in autoplay.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          I pulsanti <b>DJ</b> / <b>Party</b> si attiveranno e la console comparirà solo dopo la creazione dell’evento.
+         🔵: I pulsanti <b>DJ</b> / <b>Party</b> si attiveranno e la console comparirà solo dopo la creazione dell’evento.
         </div>
 
         <div className="mt-3 text-xs text-yellow-300">
@@ -1218,7 +1218,7 @@ const showEventTimer =
         </div>
 
         <div className="text-sm text-zinc-200">
-         1: Scegli la durata e crea l’evento compilando il box con il nome evento.
+         1: Scegli la durata e crea l’Evento compilando il box con il nome evento.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
@@ -1616,7 +1616,7 @@ const showEventTimer =
     )}
 
     {/* rientra evento */}
-<div className="flex w-full flex-col gap-3 items-end mt-2">
+<div className="flex w-full flex-col gap-2 items-end mt-2">
   <button
 onClick={() => {
   const next = !showJoinBox;
@@ -1630,8 +1630,8 @@ onClick={() => {
 }}
    className={`w-full rounded-3xl px-5 py-4 text-left transition ${
   showJoinBox
-    ? "bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 text-zinc-950 shadow-[0_0_24px_rgba(251,113,133,0.30)]"
-    : "bg-zinc-900/70 text-zinc-300 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-pink-300/40"
+     ? "bg-gradient-to-r from-cyan-400 via-sky-400 to-emerald-300 text-zinc-950 shadow-[0_0_24px_rgba(34,211,238,0.30)]"
+     : "bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-pink-300/40"
 }`}
   >
     <div className="flex items-center gap-3">
@@ -1658,7 +1658,7 @@ onClick={() => {
 
       <button
         onClick={joinExistingEvent}
-        className="w-full rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
+        className="w-full rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-emerald-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.22)] hover:brightness-110 transition"
       >
         CONFERMA RIENTRO
       </button>
