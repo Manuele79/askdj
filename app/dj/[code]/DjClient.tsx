@@ -1113,7 +1113,7 @@ const showEventTimer =
 <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between md:mt-3">
   <div className="flex max-w-full flex-col items-start text-left lg:mx-auto lg:max-w-5xl lg:items-center lg:text-center lg:translate-x-32">
     <h1 className="max-w-[92vw] text-4xl md:text-5xl font-black tracking-tight lg:max-w-4xl">
-      Gestisci le richieste <span className="text-yellow-400">senza caos</span>
+      Gestisci le richieste <span className="text-yellow-400">senza caos...</span>
     </h1>
 
     <FakeSpectrumWide />
