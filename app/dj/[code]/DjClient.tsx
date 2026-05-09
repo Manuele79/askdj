@@ -1126,142 +1126,67 @@ const showEventTimer =
     <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
     <div className="mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
 
-    {/* INIZIA QUI */}
-{/* BOX DINAMICO SPIEGAZIONE */}
-{isLanding && (
-  <div className="mt-6 text-left rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
+{/* INIZIA QUI */}
+<div className="mt-6 flex flex-col lg:flex-row gap-4 items-start">
 
-    {/* ===== GENERALE ===== */}
-    {!eventMode && (
-      <>
-        <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
-          INIZIA QUI 👇
-        </p>
+  {joinMsg && (
+    <div className="w-full lg:w-[320px] rounded-2xl border border-yellow-400/35 bg-zinc-950/55 p-4 shadow-[0_0_22px_rgba(250,204,21,0.14)] flex flex-col items-start gap-3">
+      {joinMsg.startsWith("EXPIRED:") ? (
+        <>
+          <div>
+            <div className="text-base font-extrabold text-yellow-300">
+              ⏳ Evento scaduto
+            </div>
 
-        <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
-          <li>
-            SCEGLI LA MODALITA' EVENTO:
-            <br />
-            <b>🎧 DJ / PARTY</b> → richieste live con console DJ + Playlist TIDAL
-            <br />
-            <b>📻 JUKEBOX</b> → player automatico TOUTUBE con durata personalizzata
-          </li>
-
-          <li>
-            Inserisci il nome evento e crea il tuo codice
-          </li>
-
-          <li>
-            Dopo la creazione puoi attivare l’evento e usare le funzioni dedicate
-          </li>
-
-          <li>
-            Gli ospiti entrano solo tramite QR o codice evento
-          </li>
-
-          <li>
-            Per rientrare in un evento valido compilare il campo "rientra in evento" con "nome - codice"
-          </li>
-
-        </ol>
-
-        <div className="mt-3 text-xs text-yellow-300 leading-snug">
-          ⚠️ Questa è la schermata iniziale.
-          Dopo la scelta modalità vedrai il flusso specifico dell’evento.
-        </div>
-      </>
-    )}
-
-    {/* ===== DJ / PARTY ===== */}
-    {eventMode === "dj_party" && (
-      <>
-        <div className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
-          🎧 COME FUNZIONA DJ / PARTY (la durarta dell evento è di 12 ore)
-        </div>
-
-        <div className="text-sm text-zinc-200">
-          Srivi il nome dell'evento, clicca crea evento e condividi il QR creato con gli ospiti.
-        </div>
-
-        <div className="mt-1 text-sm text-zinc-200">
-          Ricevi richieste, dediche e voti in tempo reale, e decidi se utilizzare i brani in console, .
-        </div>
-
-        <div className="mt-1 text-sm text-zinc-200">
-          Gestisci BPM, playlist e la selezione brani dalla console.
-        </div>
-
-        <div className="mt-1 text-sm text-zinc-200">
-          Puoi creare automaticamente la playlist su <span className="font-bold text-cyan-300">TIDAL</span> utilizzandola istantaneamente.
-        </div>
-
-        <div className="mt-1 text-sm text-zinc-200">
-          Modalità PARTY ti permette di riprodurre i link di YOUTUBE in autoplay.
-        </div>
-
-        <div className="mt-1 text-sm text-zinc-200">
-          I pulsanti <b>DJ</b> / <b>Party</b> si attiveranno e la console comparirà solo dopo la creazione dell’evento.
-        </div>
-
-        <div className="mt-3 text-xs text-yellow-300">
-          Dopo che crei l’evento, questa guida sparisce.
-        </div>
-      </>
-    )}
-
-    {/* ===== JUKEBOX ===== */}
-    {eventMode === "jukebox" && (
-      <>
-        <div className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
-          📻 COME FUNZIONA JUKEBOX
-        </div>
-
-        <div className="text-sm text-zinc-200">
-          Scegli la durata e crea l’evento compilando il box con il nome evento.
-        </div>
-
-        <div className="mt-1 text-sm text-zinc-200">
-          Dopo il pagamento entri direttamente nel player automatico di JUKEBOXE.
-        </div>
-
-        <div className="mt-1 text-sm text-zinc-200">
-          Nessun DJ: la musica va in autoplay ricevendo i link di YOUTUBE.🎶
-        </div>
-
-        <div className="text-sm text-zinc-200">
-          Gli ospiti possono mandare le dediche con brani inviati.
-        </div>
-
-        <div className="mt-3 text-xs text-yellow-300">
-          Dopo che crei l’evento, questa guida sparisce.
-        </div>
-      </>
-    )}
-
-  </div>
-)}
-
-{joinMsg && (
-  <div className="mt-4 max-w-xl rounded-2xl border border-yellow-400/35 bg-zinc-950/55 p-4 shadow-[0_0_22px_rgba(250,204,21,0.14)] flex flex-col items-start gap-3">
-    {joinMsg.startsWith("EXPIRED:") ? (
-      <>
-        <div>
-          <div className="text-base font-extrabold text-yellow-300">
-            ⏳ Evento scaduto
+            <div className="mt-1 text-sm font-semibold text-zinc-300">
+              Puoi rinnovarlo e continuare a usare playlist e richieste.
+            </div>
           </div>
 
-          <div className="mt-1 text-sm font-semibold text-zinc-300">
-            Puoi rinnovarlo e continuare a usare playlist e richieste.
-          </div>
-        </div>
+          <button
+            onClick={async () => {
+              const expiredCode = joinMsg.replace("EXPIRED:", "");
 
-        <button
-          onClick={async () => {
-            const expiredCode = joinMsg.replace("EXPIRED:", "");
+              if (!paymentsEnabled) {
+                const res = await fetch("/api/paypal/confirm", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    eventCode: expiredCode,
+                    type: "renew",
+                  }),
+                });
 
-            // GRATIS se pagamenti OFF
-            if (!paymentsEnabled) {
-              const res = await fetch("/api/paypal/confirm", {
+                const data = await res.json();
+
+                if (!res.ok) {
+                  alert(data?.error || "Errore rinnovo");
+                  return;
+                }
+
+                const checkRes = await fetch(`/api/events?eventCode=${encodeURIComponent(expiredCode)}`, {
+                  cache: "no-store",
+                });
+
+                if (checkRes.ok) {
+                  const renewedData = await checkRes.json();
+
+                  if (renewedData.mode === "jukebox") {
+                    router.push(`/jukebox/${expiredCode}`);
+                  } else {
+                    router.push(`/dj/${expiredCode}`);
+                  }
+
+                  return;
+                }
+
+                router.push(`/dj/${expiredCode}`);
+                return;
+              }
+
+              const res = await fetch("/api/paypal/create-order", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -1274,67 +1199,135 @@ const showEventTimer =
 
               const data = await res.json();
 
-              if (!res.ok) {
+              if (!res.ok || !data?.approveUrl) {
                 alert(data?.error || "Errore rinnovo");
                 return;
               }
 
-              const checkRes = await fetch(`/api/events?eventCode=${encodeURIComponent(expiredCode)}`, {
-                cache: "no-store",
-              });
+              window.location.href = data.approveUrl;
+            }}
+            className="rounded-2xl bg-gradient-to-r from-yellow-300 to-pink-400 px-5 py-3 text-sm font-black text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.35)] hover:brightness-110 transition"
+          >
+            🔁 Rinnova evento
+          </button>
+        </>
+      ) : (
+        <div className="text-sm text-zinc-400">
+          {joinMsg}
+        </div>
+      )}
+    </div>
+  )}
 
-              if (checkRes.ok) {
-                const renewedData = await checkRes.json();
+  {isLanding && (
+    <div className="w-full lg:w-[620px] text-left rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
 
-                if (renewedData.mode === "jukebox") {
-                  router.push(`/jukebox/${expiredCode}`);
-                } else {
-                  router.push(`/dj/${expiredCode}`);
-                }
+      {/* ===== GENERALE ===== */}
+      {!eventMode && (
+        <>
+          <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
+            INIZIA QUI 👇
+          </p>
 
-                return;
-              }
+          <ol className="mt-1 text-sm text-zinc-200 list-decimal pl-5 space-y-1">
+            <li>
+              SCEGLI LA MODALITA' EVENTO:
+              <br />
+              <b>🎧 DJ / PARTY</b> → richieste live con console DJ + Playlist TIDAL
+              <br />
+              <b>📻 JUKEBOX</b> → player automatico TOUTUBE con durata personalizzata
+            </li>
 
-              router.push(`/dj/${expiredCode}`);
-              return;
-            }
+            <li>Inserisci il nome evento e crea il tuo codice</li>
 
-            // PAYPAL
-            const res = await fetch("/api/paypal/create-order", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                eventCode: expiredCode,
-                type: "renew",
-              }),
-            });
+            <li>Dopo la creazione puoi attivare l’evento e usare le funzioni dedicate</li>
 
-            const data = await res.json();
+            <li>Gli ospiti entrano solo tramite QR o codice evento</li>
 
-            if (!res.ok || !data?.approveUrl) {
-              alert(data?.error || "Errore rinnovo");
-              return;
-            }
+            <li>
+              Per rientrare in un evento valido compilare il campo "rientra in evento" con "nome - codice"
+            </li>
+          </ol>
 
-            window.location.href = data.approveUrl;
-          }}
-          className="rounded-2xl bg-gradient-to-r from-yellow-300 to-pink-400 px-5 py-3 text-sm font-black text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.35)] hover:brightness-110 transition"
-        >
-          🔁 Rinnova evento
-        </button>
-      </>
-    ) : (
-      <div className="text-sm text-zinc-400">
-        {joinMsg}
-      </div>
-    )}
+          <div className="mt-3 text-xs text-yellow-300 leading-snug">
+            ⚠️ Questa è la schermata iniziale.
+            Dopo la scelta modalità vedrai il flusso specifico dell’evento.
+          </div>
+        </>
+      )}
+
+      {/* ===== DJ / PARTY ===== */}
+      {eventMode === "dj_party" && (
+        <>
+          <div className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
+            🎧 COME FUNZIONA DJ / PARTY (la durarta dell evento è di 12 ore)
+          </div>
+
+          <div className="text-sm text-zinc-200">
+            Srivi il nome dell'evento, clicca crea evento e condividi il QR creato con gli ospiti.
+          </div>
+
+          <div className="mt-1 text-sm text-zinc-200">
+            Ricevi richieste, dediche e voti in tempo reale, e decidi se utilizzare i brani in console.
+          </div>
+
+          <div className="mt-1 text-sm text-zinc-200">
+            Gestisci BPM, playlist e la selezione brani dalla console.
+          </div>
+
+          <div className="mt-1 text-sm text-zinc-200">
+            Puoi creare automaticamente la playlist su{" "}
+            <span className="font-bold text-cyan-300">TIDAL</span> utilizzandola istantaneamente.
+          </div>
+
+          <div className="mt-1 text-sm text-zinc-200">
+            Modalità PARTY ti permette di riprodurre i link di YOUTUBE in autoplay.
+          </div>
+
+          <div className="mt-1 text-sm text-zinc-200">
+            I pulsanti <b>DJ</b> / <b>Party</b> si attiveranno e la console comparirà solo dopo la creazione dell’evento.
+          </div>
+
+          <div className="mt-3 text-xs text-yellow-300">
+            Dopo che crei l’evento, questa guida sparisce.
+          </div>
+        </>
+      )}
+
+      {/* ===== JUKEBOX ===== */}
+      {eventMode === "jukebox" && (
+        <>
+          <div className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
+            📻 COME FUNZIONA JUKEBOX
+          </div>
+
+          <div className="text-sm text-zinc-200">
+            Scegli la durata e crea l’evento compilando il box con il nome evento.
+          </div>
+
+          <div className="mt-1 text-sm text-zinc-200">
+            Dopo il pagamento entri direttamente nel player automatico di JUKEBOXE.
+          </div>
+
+          <div className="mt-1 text-sm text-zinc-200">
+            Nessun DJ: la musica va in autoplay ricevendo i link di YOUTUBE.🎶
+          </div>
+
+          <div className="text-sm text-zinc-200">
+            Gli ospiti possono mandare le dediche con brani inviati.
+          </div>
+
+          <div className="mt-3 text-xs text-yellow-300">
+            Dopo che crei l’evento, questa guida sparisce.
+          </div>
+        </>
+      )}
+
+    </div>
+  )}
+
   </div>
-)}
-
 </div>
-
 
 
   <div className="flex flex-col gap-4 sm:items-end">
