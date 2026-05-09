@@ -1240,7 +1240,6 @@ const showEventTimer =
 
   </div>
 )}
-</div>
 
 {joinMsg && (
   <div className="mt-4 max-w-xl rounded-2xl border border-yellow-400/35 bg-zinc-950/55 p-4 shadow-[0_0_22px_rgba(250,204,21,0.14)] flex flex-col items-start gap-3">
@@ -1333,6 +1332,10 @@ const showEventTimer =
     )}
   </div>
 )}
+
+</div>
+
+
 
   <div className="flex flex-col gap-4 sm:items-end">
     {code && code !== "TEST123" && tidalChecked && showFullUi && (
