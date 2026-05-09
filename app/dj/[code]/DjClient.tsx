@@ -1576,6 +1576,44 @@ const showEventTimer =
       </div>
     )}
 
+    {/* rientra evento */}
+<div className="flex w-full flex-col gap-3 items-end mt-4">
+  <button
+    onClick={() => setShowJoinBox((v) => !v)}
+    className="w-full rounded-3xl px-5 py-4 text-left transition bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-pink-300/40"
+  >
+    <div className="flex items-center gap-3">
+      <span className="text-2xl">🔁</span>
+      <div>
+        <div className="text-base sm:text-lg font-extrabold">
+          Rientra in evento
+        </div>
+        <div className="text-xs sm:text-sm text-zinc-400">
+          Inserisci il codice evento esistente
+        </div>
+      </div>
+    </div>
+  </button>
+
+  {showJoinBox && (
+    <div className="flex w-full flex-col gap-2">
+      <input
+        value={joinCode}
+        onChange={(e) => setJoinCode(e.target.value)}
+        placeholder="Scrivi: Nome Evento Esistente..."
+        className="w-full rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
+      />
+
+      <button
+        onClick={joinExistingEvent}
+        className="w-full rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
+      >
+        CONFERMA RIENTRO
+      </button>
+    </div>
+  )}
+</div>
+
     {/* create event */}
     {code === "TEST123" &&
       (
@@ -1606,47 +1644,7 @@ const showEventTimer =
   </div>
 </div>
           
-{isLanding && (
-  <>
-    {/* rientra evento */}
-    <div className="flex flex-col gap-3 sm:w-full sm:max-w-[420px] sm:items-end mt-4">
-      <button
-        onClick={() => setShowJoinBox((v) => !v)}
-        className="w-full rounded-3xl px-5 py-4 text-left transition bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-pink-300/40"
-      >
-        <div className="flex items-center gap-3">
-          <span className="text-2xl">🔁</span>
-          <div>
-            <div className="text-base sm:text-lg font-extrabold">
-              Rientra in evento
-            </div>
-            <div className="text-xs sm:text-sm text-zinc-400">
-              Inserisci il codice evento esistente
-            </div>
-          </div>
-        </div>
-      </button>
 
-      {showJoinBox && (
-        <div className="flex w-full flex-col gap-2">
-          <input
-            value={joinCode}
-            onChange={(e) => setJoinCode(e.target.value)}
-            placeholder="Scrivi: Nome Evento Esistente..."
-            className="w-full rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
-          />
-
-          <button
-            onClick={joinExistingEvent}
-            className="w-full rounded-2xl bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(251,113,133,0.18)] hover:brightness-110 transition"
-          >
-            CONFERMA RIENTRO
-          </button>
-        </div>
-      )}
-    </div>
-  </>
-)}
 
 
 {/* mode buttons */}
