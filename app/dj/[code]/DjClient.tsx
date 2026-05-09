@@ -1052,7 +1052,7 @@ const showEventTimer =
   </div>
 
     <div className="mt-0 text-xs sm:text-sm text-zinc-400 tracking-wide leading-snug">
-      ...Richieste e dediche in tempo reale...
+        Musica... Dediche e Richieste degli Ospiti in un’unica Console...
     </div>
   </div>
 
@@ -1181,23 +1181,23 @@ const showEventTimer =
         </div>
 
         <div className="text-sm text-zinc-200">
-          Srivi il nome dell'evento, clicca crea evento e condividi il QR creato con gli ospiti.
+         1: Srivi il nome dell'evento, clicca crea evento, condividi il QR con gli ospiti.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          Ricevi richieste, dediche e voti in tempo reale, e decidi se utilizzare i brani in console, .
+         2: Ricevi richieste, dediche e voti in tempo reale, e decidi se utilizzare i brani in console, .
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          Gestisci BPM, playlist e la selezione brani dalla console.
+         3: Gestisci BPM, playlist e la selezione brani dalla console.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          Puoi creare automaticamente la playlist su <span className="font-bold text-cyan-300">TIDAL</span> utilizzandola istantaneamente.
+         4: Puoi creare automaticamente la playlist su <span className="font-bold text-cyan-300">TIDAL</span> utilizzandola istantaneamente.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          Modalità PARTY ti permette di riprodurre i link di YOUTUBE in autoplay.
+         : Modalità PARTY ti permette di riprodurre i link di YOUTUBE in autoplay.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
@@ -1218,15 +1218,23 @@ const showEventTimer =
         </div>
 
         <div className="text-sm text-zinc-200">
-          Scegli la durata e crea l’evento compilando il box con il nome evento.
+         1: Scegli la durata e crea l’evento compilando il box con il nome evento.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          Dopo il pagamento entri direttamente nel player automatico di JUKEBOXE.
+         2: Dopo creato, entri direttamente nel player automatico di JUKEBOXE.
         </div>
 
         <div className="mt-1 text-sm text-zinc-200">
-          Nessun DJ: la musica va in autoplay ricevendo i link di YOUTUBE.🎶
+         3: Condividi il QR per ricevere i link da riprodurre.
+        </div>
+
+        <div className="mt-1 text-sm text-zinc-200">
+         4: Seleziona Importa Brani per popolare la Playlist
+        </div>
+
+        <div className="mt-1 text-sm text-zinc-200">
+         5: Nessun DJ: la musica va in autoplay ricevendo i link di YOUTUBE🎶SPOTIFY.
         </div>
 
         <div className="text-sm text-zinc-200">
@@ -1246,15 +1254,15 @@ const showEventTimer =
     </p>
 
     <div className="text-sm text-zinc-200">
-      Inserisci il codice completo dell’evento esistente.
+     1: Inserisci il codice completo dell’evento esistente.
     </div>
 
     <div className="mt-1 text-sm text-zinc-200">
-      Se l’evento è ancora attivo, verrai riportato automaticamente nella console corretta.
+     2: Se l’evento è ancora attivo, verrai riportato automaticamente nella console corretta.
     </div>
 
     <div className="mt-1 text-sm text-zinc-200">
-      Se l’evento è scaduto, potrai rinnovarlo e continuare a usare playlist e richieste.
+     3: Se l’evento è scaduto, potrai rinnovarlo e continuare a usare playlist e richieste.
     </div>
 
     <div className="mt-3 text-xs text-yellow-300">
@@ -1272,11 +1280,11 @@ const showEventTimer =
       <>
         <div>
           <div className="text-base font-extrabold text-yellow-300">
-            ⏳ Evento scaduto
+            ⏳ EVENTO SCADUTO
           </div>
 
           <div className="mt-1 text-sm font-semibold text-zinc-300">
-            Puoi rinnovarlo e continuare a usare playlist e richieste.
+            Puoi rinnovarlo e continuare a usare Playlist e richieste.
           </div>
         </div>
 
@@ -1347,7 +1355,7 @@ const showEventTimer =
           }}
           className="rounded-2xl bg-gradient-to-r from-yellow-300 to-pink-400 px-5 py-3 text-sm font-black text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.35)] hover:brightness-110 transition"
         >
-          🔁 Rinnova evento
+          🔁 Rinnova Evento
         </button>
       </>
     ) : (
@@ -1529,7 +1537,7 @@ const showEventTimer =
         <div className={`text-xs sm:text-sm ${
           eventMode === "jukebox" ? "text-zinc-800/80" : "text-zinc-400"
         }`}>
-          Playlist autoplay con durata personalizzata
+          Playlist Autoplay con durata personalizzata
         </div>
       </div>
     </div>
@@ -1608,7 +1616,7 @@ const showEventTimer =
     )}
 
     {/* rientra evento */}
-<div className="flex w-full flex-col gap-3 items-end mt-4">
+<div className="flex w-full flex-col gap-3 items-end mt-2">
   <button
 onClick={() => {
   const next = !showJoinBox;
@@ -1623,17 +1631,17 @@ onClick={() => {
    className={`w-full rounded-3xl px-5 py-4 text-left transition ${
   showJoinBox
     ? "bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 text-zinc-950 shadow-[0_0_24px_rgba(251,113,133,0.30)]"
-    : "bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-pink-300/40"
+    : "bg-zinc-900/70 text-zinc-300 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-pink-300/40"
 }`}
   >
     <div className="flex items-center gap-3">
       <span className="text-2xl">🔁</span>
       <div>
         <div className="text-base sm:text-lg font-extrabold">
-          Rientra in evento
+          Rientra in Evento
         </div>
         <div className="text-xs sm:text-sm text-zinc-400">
-          Inserisci il codice evento esistente
+          Inserisci il codice Evento esistente
         </div>
       </div>
     </div>
