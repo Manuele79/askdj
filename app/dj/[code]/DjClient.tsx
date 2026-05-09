@@ -1130,7 +1130,7 @@ const showEventTimer =
 <div className="mt-6 flex flex-col lg:flex-row gap-4 items-start">
 
   {joinMsg && (
-    <div className="w-full lg:w-[320px] rounded-2xl border border-yellow-400/35 bg-zinc-950/55 p-4 shadow-[0_0_22px_rgba(250,204,21,0.14)] flex flex-col items-start gap-3">
+    <div className="ml-4 w-full lg:w-[320px] rounded-2xl border border-yellow-400/35 bg-zinc-950/55 p-4 shadow-[0_0_22px_rgba(250,204,21,0.14)] flex flex-col items-start gap-3">
       {joinMsg.startsWith("EXPIRED:") ? (
         <>
           <div>
