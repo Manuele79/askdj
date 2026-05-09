@@ -1514,6 +1514,7 @@ const showEventTimer =
     onClick={() => {
       setEventMode("jukebox");
       setShowJoinBox(false);
+      setJukeboxDuration("");
     }}
     className={`w-full rounded-3xl px-5 py-4 text-left transition ${
       eventMode === "jukebox"
@@ -1615,7 +1616,7 @@ onClick={() => {
 
   if (next) {
     setEventMode("");
-    setJukeboxDuration("1d");
+    setJukeboxDuration("");
     setEventName("");
   }
 }}
