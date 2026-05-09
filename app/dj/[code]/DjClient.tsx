@@ -1450,9 +1450,12 @@ const showEventTimer =
      SCEGLI MODALITÀ EVENTO
     </div>
 
-<div className="flex flex-col gap-3 sm:w-full sm:max-w-[420px] sm:items-end">
+<div className="flex flex-col gap-3 w-full sm:max-w-[420px] sm:items-end">
   <button
-    onClick={() => setEventMode("dj_party")}
+    onClick={() => {
+      setEventMode("dj_party");
+      setShowJoinBox(false);
+    }}
     className={`w-full rounded-3xl px-5 py-4 text-left transition ${
       eventMode === "dj_party"
         ? "bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-400 text-zinc-950 shadow-[0_0_24px_rgba(250,204,21,0.35)]"
@@ -1484,7 +1487,10 @@ const showEventTimer =
   </button>
 
   <button
-    onClick={() => setEventMode("jukebox")}
+    onClick={() => {
+      setEventMode("jukebox");
+      setShowJoinBox(false);
+    }}
     className={`w-full rounded-3xl px-5 py-4 text-left transition ${
       eventMode === "jukebox"
         ? "bg-gradient-to-r from-cyan-400 via-emerald-400 to-teal-300 text-zinc-950 shadow-[0_0_24px_rgba(34,211,238,0.30)]"
@@ -1579,7 +1585,10 @@ const showEventTimer =
     {/* rientra evento */}
 <div className="flex w-full flex-col gap-3 items-end mt-4">
   <button
-    onClick={() => setShowJoinBox((v) => !v)}
+    onClick={() => {
+      setShowJoinBox((v) => !v);
+      setEventName("");
+    }}
     className="w-full rounded-3xl px-5 py-4 text-left transition bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-pink-300/40"
   >
     <div className="flex items-center gap-3">
@@ -1616,21 +1625,22 @@ const showEventTimer =
 
     {/* create event */}
     {code === "TEST123" &&
+      !showJoinBox &&
       (
         eventMode === "dj_party" ||
         (eventMode === "jukebox" && jukeboxDuration)
       ) && (
         <>
-          <div className="flex flex-col gap-2 sm:items-end">
+         <div className="flex w-full flex-col gap-2 sm:max-w-[420px] sm:items-end">
             <input
               value={eventName}
               onChange={(e) => setEventName(e.target.value)}
               placeholder="Scrivi: Scrivi Nuovo Evento..."
-              className="w-full sm:w-72 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
+              className="w-full rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
             />
             <button
               onClick={createEvent}
-              className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
+              className="w-full rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
             >
               CREA NUOVO EVENTO:
             </button>
