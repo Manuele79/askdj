@@ -1241,6 +1241,99 @@ const showEventTimer =
   </div>
 )}
 </div>
+
+{joinMsg && (
+  <div className="mt-4 max-w-xl rounded-2xl border border-yellow-400/35 bg-zinc-950/55 p-4 shadow-[0_0_22px_rgba(250,204,21,0.14)] flex flex-col items-start gap-3">
+    {joinMsg.startsWith("EXPIRED:") ? (
+      <>
+        <div>
+          <div className="text-base font-extrabold text-yellow-300">
+            ⏳ Evento scaduto
+          </div>
+
+          <div className="mt-1 text-sm font-semibold text-zinc-300">
+            Puoi rinnovarlo e continuare a usare playlist e richieste.
+          </div>
+        </div>
+
+        <button
+          onClick={async () => {
+            const expiredCode = joinMsg.replace("EXPIRED:", "");
+
+            // GRATIS se pagamenti OFF
+            if (!paymentsEnabled) {
+              const res = await fetch("/api/paypal/confirm", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  eventCode: expiredCode,
+                  type: "renew",
+                }),
+              });
+
+              const data = await res.json();
+
+              if (!res.ok) {
+                alert(data?.error || "Errore rinnovo");
+                return;
+              }
+
+              const checkRes = await fetch(`/api/events?eventCode=${encodeURIComponent(expiredCode)}`, {
+                cache: "no-store",
+              });
+
+              if (checkRes.ok) {
+                const renewedData = await checkRes.json();
+
+                if (renewedData.mode === "jukebox") {
+                  router.push(`/jukebox/${expiredCode}`);
+                } else {
+                  router.push(`/dj/${expiredCode}`);
+                }
+
+                return;
+              }
+
+              router.push(`/dj/${expiredCode}`);
+              return;
+            }
+
+            // PAYPAL
+            const res = await fetch("/api/paypal/create-order", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                eventCode: expiredCode,
+                type: "renew",
+              }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data?.approveUrl) {
+              alert(data?.error || "Errore rinnovo");
+              return;
+            }
+
+            window.location.href = data.approveUrl;
+          }}
+          className="rounded-2xl bg-gradient-to-r from-yellow-300 to-pink-400 px-5 py-3 text-sm font-black text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.35)] hover:brightness-110 transition"
+        >
+          🔁 Rinnova evento
+        </button>
+      </>
+    ) : (
+      <div className="text-sm text-zinc-400">
+        {joinMsg}
+      </div>
+    )}
+  </div>
+)}
+
   <div className="flex flex-col gap-4 sm:items-end">
     {code && code !== "TEST123" && tidalChecked && showFullUi && (
   <div className="flex flex-col items-end gap-2">
@@ -1285,7 +1378,7 @@ const showEventTimer =
     onClick={() => setAppleSearchEnabled((v) => !v)}
     className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
       appleSearchEnabled
-        ? "bg-pink-400 text-white"
+        ? "bg-gradient-to-r from-red-500 to-rose-500 text-white shadow-[0_0_18px_rgba(239,68,68,0.35)]"
         : "bg-zinc-800 text-zinc-300"
     }`}
   >
@@ -1527,91 +1620,7 @@ const showEventTimer =
       </button>
     </div>
 
-{joinMsg && (
-  <div className="mt-2 flex flex-col items-start gap-3">
-    {joinMsg.startsWith("EXPIRED:") ? (
-      <>
-        <div className="text-sm text-yellow-300">
-          ⏳ Evento scaduto. Puoi rinnovarlo.
-        </div>
 
-        <button
-          onClick={async () => {
-            const expiredCode = joinMsg.replace("EXPIRED:", "");
-
-            // GRATIS se pagamenti OFF
-            if (!paymentsEnabled) {
-              const res = await fetch("/api/paypal/confirm", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  eventCode: expiredCode,
-                  type: "renew",
-                }),
-              });
-
-              const data = await res.json();
-
-              if (!res.ok) {
-                alert(data?.error || "Errore rinnovo");
-                return;
-              }
-
-              const checkRes = await fetch(`/api/events?eventCode=${encodeURIComponent(expiredCode)}`, {
-                cache: "no-store",
-              });
-
-              if (checkRes.ok) {
-                const renewedData = await checkRes.json();
-
-                if (renewedData.mode === "jukebox") {
-                  router.push(`/jukebox/${expiredCode}`);
-                } else {
-                  router.push(`/dj/${expiredCode}`);
-                }
-
-                return;
-              }
-
-              router.push(`/dj/${expiredCode}`);
-              return;
-            }
-
-            // PAYPAL
-            const res = await fetch("/api/paypal/create-order", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                eventCode: expiredCode,
-                type: "renew",
-              }),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok || !data?.approveUrl) {
-              alert(data?.error || "Errore rinnovo");
-              return;
-            }
-
-            window.location.href = data.approveUrl;
-          }}
-          className="rounded-2xl bg-gradient-to-r from-yellow-300 to-pink-400 px-5 py-3 text-sm font-black text-zinc-950 shadow-[0_0_20px_rgba(250,204,21,0.35)] hover:brightness-110 transition"
-        >
-          🔁 Rinnova evento
-        </button>
-      </>
-    ) : (
-      <div className="text-sm text-zinc-400">
-        {joinMsg}
-      </div>
-    )}
-  </div>
-)}
   </>
 )}
 
@@ -1908,7 +1917,7 @@ const showEventTimer =
                 target="_blank"
                 rel="noreferrer"
                 title="Cerca su Apple Music"
-                className="hidden lg:inline-flex rounded-xl bg-pink-500 px-2.5 py-2 text-xs font-semibold text-white transition hover:bg-pink-400 shadow-[0_6px_18px_rgba(0,0,0,0.25)]"
+                className="hidden lg:inline-flex rounded-xl bg-gradient-to-r from-red-500 to-rose-500 px-2.5 py-2 text-xs font-semibold text-white transition hover:brightness-110 shadow-[0_6px_18px_rgba(239,68,68,0.35)]"
               >
                 🍎
               </a>
@@ -2116,7 +2125,7 @@ const showEventTimer =
         localStorage.removeItem("dj_console_event");
         window.location.href = "/dj/TEST123";
       }}
-      className="rounded-full border border-zinc-700 bg-zinc-900/60 px-5 py-2 text-xs font-bold text-zinc-400 transition hover:border-yellow-400/50 hover:text-white hover:bg-zinc-800"
+      className="rounded-full border border-zinc-700 bg-zinc-900/60 px-5 py-2 text-sm font-bold text-zinc-400 transition hover:border-yellow-400/50 hover:text-white hover:bg-zinc-800"
     >
       ⬅️ Esci dall’evento
     </button>
@@ -2124,7 +2133,9 @@ const showEventTimer =
 )}
 
 {/* Footer */}
-<footer className="mt-2 pb-6 text-center text-[12px] text-zinc-200">
+<footer className={`text-center text-[12px] text-zinc-200 ${
+  isLanding ? "mt-4 pb-4" : "mt-2 pb-6"
+}`}>
 
   <div className="mb-2 opacity-80">
     Nessun audio viene inviato — AskDJ gestisce solo link, titolo e dedica
