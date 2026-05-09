@@ -1133,7 +1133,7 @@ const showEventTimer =
   <div className="mt-6 text-left rounded-2xl border border-red-500/40 shadow-[0_0_18px_rgba(239,68,68,0.25)] px-4 py-4">
 
     {/* ===== GENERALE ===== */}
-    {!eventMode && (
+   {!eventMode && !showJoinBox && (
       <>
         <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
           INIZIA QUI 👇
@@ -1238,6 +1238,30 @@ const showEventTimer =
         </div>
       </>
     )}
+
+    {showJoinBox && (
+  <>
+    <p className="text-sm font-extrabold text-cyan-400 mb-3 tracking-wide">
+      🔁 RIENTRA IN EVENTO
+    </p>
+
+    <div className="text-sm text-zinc-200">
+      Inserisci il codice completo dell’evento esistente.
+    </div>
+
+    <div className="mt-1 text-sm text-zinc-200">
+      Se l’evento è ancora attivo, verrai riportato automaticamente nella console corretta.
+    </div>
+
+    <div className="mt-1 text-sm text-zinc-200">
+      Se l’evento è scaduto, potrai rinnovarlo e continuare a usare playlist e richieste.
+    </div>
+
+    <div className="mt-3 text-xs text-yellow-300">
+      Usa il codice completo, esempio: MATRIMONIO-2940.
+    </div>
+  </>
+)}
 
   </div>
 )}
@@ -1585,11 +1609,21 @@ const showEventTimer =
     {/* rientra evento */}
 <div className="flex w-full flex-col gap-3 items-end mt-4">
   <button
-    onClick={() => {
-      setShowJoinBox((v) => !v);
-      setEventName("");
-    }}
-    className="w-full rounded-3xl px-5 py-4 text-left transition bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-pink-300/40"
+onClick={() => {
+  const next = !showJoinBox;
+  setShowJoinBox(next);
+
+  if (next) {
+    setEventMode("");
+    setJukeboxDuration("1d");
+    setEventName("");
+  }
+}}
+   className={`w-full rounded-3xl px-5 py-4 text-left transition ${
+  showJoinBox
+    ? "bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 text-zinc-950 shadow-[0_0_24px_rgba(251,113,133,0.30)]"
+    : "bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-pink-300/40"
+}`}
   >
     <div className="flex items-center gap-3">
       <span className="text-2xl">🔁</span>
