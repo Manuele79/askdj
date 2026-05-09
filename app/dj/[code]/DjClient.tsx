@@ -1241,8 +1241,8 @@ const showEventTimer =
   </div>
 )}
 
-{joinMsg && (
-  <div className="mt-4 max-w-xl rounded-2xl border border-yellow-400/35 bg-zinc-950/55 p-4 shadow-[0_0_22px_rgba(250,204,21,0.14)] flex flex-col items-start gap-3">
+{isLanding && joinMsg && (
+  <div className="mt-6 max-w-2xl rounded-2xl border border-yellow-400/35 bg-zinc-950/55 p-4 shadow-[0_0_22px_rgba(250,204,21,0.14)] flex flex-col items-start gap-3">
     {joinMsg.startsWith("EXPIRED:") ? (
       <>
         <div>
