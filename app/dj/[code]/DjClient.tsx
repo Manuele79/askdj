@@ -1378,20 +1378,20 @@ const showEventTimer =
         <button
           disabled
           title="Disponibile nella versione completa"
-          className="inline-flex items-center rounded-2xl border border-zinc-600 bg-zinc-800/60 px-4 py-2 text-sm font-bold text-zinc-400 opacity-75 cursor-not-allowed"
+          className="inline-flex w-[260px] items-center justify-center rounded-2xl border border-zinc-600 bg-zinc-800/60 px-4 py-3 text-sm font-extrabold text-zinc-400 opacity-75 cursor-not-allowed"
         >
           🔗 Collega TIDAL
         </button>
       </div>
     ) : tidalConnected ? (
-      <div className="mb-4 flex items-center gap-2">
-        <div className="inline-flex items-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-300">
+      <div className="mb-3 flex w-[260px] flex-col gap-2">
+        <div className="inline-flex w-full items-center justify-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-sm font-extrabold text-emerald-300">
           ✅ TIDAL collegato
         </div>
 
         <button
           onClick={disconnectTidal}
-          className="rounded-md bg-red-500/20 px-3 py-1 text-xs font-bold text-red-300 hover:bg-red-500/40"
+          className="w-full rounded-2xl bg-red-500/20 px-4 py-3 text-sm font-extrabold text-red-300 hover:bg-red-500/40"
         >
           Scollega TIDAL
         </button>
@@ -1400,7 +1400,7 @@ const showEventTimer =
       <a
         href={`/api/tidal/connect?eventCode=${encodeURIComponent(code)}`}
         title="Collega il tuo account TIDAL per usare i brani matchati nell’evento"
-        className="inline-flex items-center rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-4 py-2 text-sm font-bold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-300 transition"
+        className="inline-flex w-[260px] items-center justify-center rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-4 py-3 text-sm font-extrabold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-300 transition"
       >
         🔗 Collega TIDAL
       </a>
@@ -1424,27 +1424,27 @@ const showEventTimer =
 )}
 
 {code && code !== "TEST123" && (
-<div className="hidden lg:flex justify-end mt-3">
-  <button
-  onClick={() => setShowQr((v) => !v)}
-  className="
-    inline-flex items-center gap-2
-    px-4 py-2.5
-    rounded-full
-    text-sm font-extrabold
-    text-yellow-300
-    border border-yellow-400/60
-    ring-1 ring-yellow-400/40
-    bg-yellow-500/10
-    hover:bg-yellow-500/20
-    hover:ring-yellow-300
-    hover:scale-105
-    transition-all duration-200
-  "
->
-  {showQr ? "👁️ Nascondi QR" : "📲 Mostra QR"}
-</button>
-</div>
+  <div className="hidden lg:flex w-[260px]">
+    <button
+      onClick={() => setShowQr((v) => !v)}
+      className="
+        inline-flex w-full items-center justify-center gap-2
+        px-4 py-3
+        rounded-2xl
+        text-sm font-extrabold
+        text-yellow-300
+        border border-yellow-400/60
+        ring-1 ring-yellow-400/40
+        bg-yellow-500/10
+        hover:bg-yellow-500/20
+        hover:ring-yellow-300
+        hover:scale-[1.02]
+        transition-all duration-200
+      "
+    >
+      {showQr ? "👁️ Nascondi QR" : "📲 Mostra QR"}
+    </button>
+  </div>
 )}
 
             {paymentsEnabled && !isLanding && !isPaid && (
