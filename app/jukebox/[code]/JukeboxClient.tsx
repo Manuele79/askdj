@@ -1611,7 +1611,7 @@ useEffect(() => {
       localStorage.removeItem("jukebox_event");
       window.location.href = "/dj/TEST123";
     }}
-    className="text-xs text-zinc-400 underline hover:text-white"
+    className="text-sm text-zinc-400 underline hover:text-white"
   >
     ⬅️ Esci dall’evento
   </button>
