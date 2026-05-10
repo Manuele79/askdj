@@ -1369,12 +1369,11 @@ const showEventTimer =
 </div>
 
 
-
-  <div className="flex flex-col gap-4 sm:items-end">
+<div className="mt-6 flex flex-col gap-4 sm:items-end">
     {code && code !== "TEST123" && tidalChecked && showFullUi && (
   <div className="flex flex-col items-end gap-2">
     {isDemo ? (
-      <div className="mb-4 flex items-center gap-2">
+      <div className="mb-3 flex items-center gap-2">
         <button
           disabled
           title="Disponibile nella versione completa"
@@ -1384,7 +1383,7 @@ const showEventTimer =
         </button>
       </div>
     ) : tidalConnected ? (
-      <div className="mb-3 flex w-[260px] flex-col gap-2">
+      <div className="hidden lg:flex mb-3 w-[260px] flex-col gap-3">
         <div className="inline-flex w-full items-center justify-center rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-sm font-extrabold text-emerald-300">
           ✅ TIDAL collegato
         </div>
@@ -1424,7 +1423,7 @@ const showEventTimer =
 )}
 
 {code && code !== "TEST123" && (
-  <div className="hidden lg:flex w-[260px]">
+  <div className="hidden lg:flex mb-3 w-[260px]">
     <button
       onClick={() => setShowQr((v) => !v)}
       className="
