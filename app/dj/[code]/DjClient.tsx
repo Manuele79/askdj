@@ -1111,7 +1111,7 @@ const showEventTimer =
 
  </div>
 
-<div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between md:mt-3">
+<div className={`flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between ${isLanding ? "md:mt-3" : "md:mt-[-80px]"}`}>
   <div className="flex max-w-full flex-col items-start text-left lg:mx-auto lg:max-w-5xl lg:items-center lg:text-center lg:translate-x-32">
     <h1 className="max-w-[92vw] text-4xl md:text-5xl font-black tracking-tight lg:max-w-4xl">
       Gestisci le richieste <span className="text-yellow-400">senza caos...</span>
@@ -1616,6 +1616,7 @@ const showEventTimer =
     )}
 
     {/* rientra evento */}
+{isLanding && (  
 <div className="flex w-full flex-col gap-2 items-end mt-2">
   <button
 onClick={() => {
@@ -1665,7 +1666,7 @@ onClick={() => {
     </div>
   )}
 </div>
-
+)}
     {/* create event */}
     {code === "TEST123" &&
       !showJoinBox &&
