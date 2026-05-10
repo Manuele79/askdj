@@ -1085,7 +1085,7 @@ const showEventTimer =
 
     {/* TIMER */}
     {showEventTimer && (
-      <div className={`text-sm font-bold ${timer.color}`}>
+      <div className={`mt-1 text-sm font-bold ${timer.color}`}>
         {timer.title}
         {timer.detail && (
           <div className="text-xs text-zinc-400 font-semibold">
