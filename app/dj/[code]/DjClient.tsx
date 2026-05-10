@@ -1409,18 +1409,18 @@ const showEventTimer =
 )}
 
 {code && code !== "TEST123" && (
-<div className="hidden lg:flex mb-4 items-center gap-2">
-  <button
-    onClick={() => setAppleSearchEnabled((v) => !v)}
-    className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
-      appleSearchEnabled
-        ? "bg-gradient-to-r from-red-500 to-rose-500 text-white shadow-[0_0_18px_rgba(239,68,68,0.35)]"
-        : "bg-zinc-800 text-zinc-300"
-    }`}
-  >
-    🍎 Apple Search {appleSearchEnabled ? "ON" : "OFF"}
-  </button>
-</div>
+  <div className="hidden lg:flex mb-3 w-[260px]">
+    <button
+      onClick={() => setAppleSearchEnabled((v) => !v)}
+      className={`w-full rounded-2xl px-4 py-3 text-sm font-extrabold transition ${
+        appleSearchEnabled
+          ? "bg-gradient-to-r from-red-500 to-rose-500 text-white shadow-[0_0_18px_rgba(239,68,68,0.35)]"
+          : "bg-zinc-800 text-zinc-300"
+      }`}
+    >
+      🍎 Apple Search {appleSearchEnabled ? "ON" : "OFF"}
+    </button>
+  </div>
 )}
 
 {code && code !== "TEST123" && (
