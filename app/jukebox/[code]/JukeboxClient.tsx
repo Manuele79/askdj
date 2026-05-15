@@ -748,8 +748,11 @@ useEffect(() => {
   checkEventStatus();
   load();
 
-  const t1 = setInterval(load, 5000);
-  const t2 = setInterval(checkEventStatus, 5000);
+  const intervalMs =
+    document.visibilityState !== "visible" ? 60000 : 5000;
+
+  const t1 = setInterval(load, intervalMs);
+  const t2 = setInterval(checkEventStatus, 30000);
 
   return () => {
     clearInterval(t1);
