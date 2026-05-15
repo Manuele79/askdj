@@ -545,7 +545,10 @@ useEffect(() => {
   load();
   loadEventStatus();
 
-  const t = setInterval(load, 5000);
+  const intervalMs =
+    document.visibilityState !== "visible" ? 60000 : 5000;
+
+  const t = setInterval(load, intervalMs);
   const t2 = setInterval(loadEventStatus, 30000);
 
   return () => {
