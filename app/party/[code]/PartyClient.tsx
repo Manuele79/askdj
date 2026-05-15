@@ -329,7 +329,12 @@ const spotifyList = useMemo(() => {
   // refresh lista
   useEffect(() => {
     load();
-    const t = setInterval(load, 5000);
+
+    const intervalMs =
+      document.visibilityState !== "visible" ? 60000 : 5000;
+
+    const t = setInterval(load, intervalMs);
+
     return () => clearInterval(t);
   }, [code]);
 
