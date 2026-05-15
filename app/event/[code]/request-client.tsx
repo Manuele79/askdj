@@ -193,8 +193,35 @@ useEffect(() => {
   loadPartyRequests();
   loadEventMode();
 
-  const t = setInterval(loadPartyRequests, 8000);
-  return () => clearInterval(t);
+  function startPolling() {
+    return setInterval(
+      loadPartyRequests,
+      document.visibilityState === "visible"
+        ? 8000
+        : 60000
+    );
+  }
+
+  let t = startPolling();
+
+  const handleVisibility = () => {
+    clearInterval(t);
+    t = startPolling();
+  };
+
+  document.addEventListener(
+    "visibilitychange",
+    handleVisibility
+  );
+
+  return () => {
+    clearInterval(t);
+
+    document.removeEventListener(
+      "visibilitychange",
+      handleVisibility
+    );
+  };
 }, [code]);
 
 
