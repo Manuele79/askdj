@@ -1504,7 +1504,7 @@ const showEventTimer =
   <div className={`text-xs sm:text-sm ${
     eventMode === "dj_party" ? "text-zinc-800/80" : "text-zinc-400"
   }`}>
-    Richieste live + Gestione DJ + Party Mode
+    Richieste live + Gestione x DJ (Matrimoni-Party-Eventi)
   </div>
 
   {paymentsEnabled && (
@@ -1539,7 +1539,7 @@ const showEventTimer =
         <div className={`text-xs sm:text-sm ${
           eventMode === "jukebox" ? "text-zinc-800/80" : "text-zinc-400"
         }`}>
-          Playlist Autoplay con durata personalizzata
+          Playlist Autoplay per evnti seza DJ(bar-locali-feste)
         </div>
       </div>
     </div>
