@@ -3,7 +3,7 @@
   "short_name": "AskDJ",
   "start_url": "/dj/TEST123",
   "scope": "/",
-  "display": "standalone",
+  "display": "minimal-ui",
   "background_color": "#09090b",
   "theme_color": "#09090b",
   "icons": [
