@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import EventQr from "@/app/components/EventQr";
-import { startVisibleInterval } from "@/app/lib/visibleInterval";
 
 type RequestItem = {
   id: string;
@@ -749,21 +748,21 @@ useEffect(() => {
   checkEventStatus();
   load();
 
-  const stopRequestsPolling = startVisibleInterval(load, 5000);
-  const stopEventStatusPolling = startVisibleInterval(checkEventStatus, 30000);
+  const t1 = setInterval(load, 5000);
+  const t2 = setInterval(checkEventStatus, 5000);
 
   return () => {
-    stopRequestsPolling();
-    stopEventStatusPolling();
+    clearInterval(t1);
+    clearInterval(t2);
   };
 }, [code, playlistEnabled]);
 
 useEffect(() => {
-  const stopTick = startVisibleInterval(() => {
+  const t = setInterval(() => {
     setNowTick(Date.now());
   }, 60000);
 
-  return stopTick;
+  return () => clearInterval(t);
 }, []);
 
 function advance(reason: string) {
@@ -1200,7 +1199,7 @@ useEffect(() => {
 }, [currentKey, eventExpired]);
 
 useEffect(() => {
-  const stopPlayerFallback = startVisibleInterval(() => {
+  const t = setInterval(() => {
     if (eventExpired) return;
 
     const cur = getCurrentQueueEntry();
@@ -1224,7 +1223,7 @@ useEffect(() => {
     } catch {}
   }, 700);
 
-  return stopPlayerFallback;
+  return () => clearInterval(t);
 }, [eventExpired]);
 
   const currentSourceKey =

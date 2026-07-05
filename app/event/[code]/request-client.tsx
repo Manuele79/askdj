@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { startVisibleInterval } from "@/app/lib/visibleInterval";
 
 type PlatformKey = "youtube" | "spotify" | "apple" | "amazon" | "tidal";
 
@@ -194,7 +193,35 @@ useEffect(() => {
   loadPartyRequests();
   loadEventMode();
 
-  return startVisibleInterval(loadPartyRequests, 8000);
+  function startPolling() {
+    return setInterval(
+      loadPartyRequests,
+      document.visibilityState === "visible"
+        ? 8000
+        : 60000
+    );
+  }
+
+  let t = startPolling();
+
+  const handleVisibility = () => {
+    clearInterval(t);
+    t = startPolling();
+  };
+
+  document.addEventListener(
+    "visibilitychange",
+    handleVisibility
+  );
+
+  return () => {
+    clearInterval(t);
+
+    document.removeEventListener(
+      "visibilitychange",
+      handleVisibility
+    );
+  };
 }, [code]);
 
 

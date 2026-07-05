@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import EventQr from "@/app/components/EventQr";
-import { startVisibleInterval } from "@/app/lib/visibleInterval";
 
 
 type Platform = "youtube" | "spotify" | "apple" | "amazon" | "tidal" | "other";
@@ -546,24 +545,27 @@ useEffect(() => {
   load();
   loadEventStatus();
 
-  const stopRequestsPolling = startVisibleInterval(load, 5000);
-  const stopEventStatusPolling = startVisibleInterval(loadEventStatus, 30000);
+  const intervalMs =
+    document.visibilityState !== "visible" ? 60000 : 5000;
+
+  const t = setInterval(load, intervalMs);
+  const t2 = setInterval(loadEventStatus, 30000);
 
   return () => {
-    stopRequestsPolling();
-    stopEventStatusPolling();
+    clearInterval(t);
+    clearInterval(t2);
   };
 }, [code]);
 
 useEffect(() => {
   if (!expiresAt) return;
 
-  const stopTick = startVisibleInterval(() => {
+  const t = setInterval(() => {
     // forza re-render
     setExpiresAt((prev) => (prev ? `${prev}` : prev));
   }, 60000);
 
-  return stopTick;
+  return () => clearInterval(t);
 }, [expiresAt]);
 
 useEffect(() => {

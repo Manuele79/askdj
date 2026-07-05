@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { startVisibleInterval } from "@/app/lib/visibleInterval";
 
 type RequestItem = {
   id: string;
@@ -330,10 +329,8 @@ const spotifyList = useMemo(() => {
   // refresh lista
   useEffect(() => {
     load();
-
-    const stopPolling = startVisibleInterval(load, 5000);
-
-    return stopPolling;
+    const t = setInterval(load, 5000);
+    return () => clearInterval(t);
   }, [code]);
 
   useEffect(() => {
@@ -531,7 +528,7 @@ useEffect(() => {
 
   // fallback timer: per i VIDEO singoli ok, per PLAYLIST no (altrimenti skippa)
   useEffect(() => {
-    const stopPlayerFallback = startVisibleInterval(() => {
+    const t = setInterval(() => {
       const cur = findPlayableByKey(currentKeyRef.current);
       if (cur?._kind === "playlist") return;
 
@@ -552,7 +549,7 @@ useEffect(() => {
       } catch {}
     }, 500);
 
-    return stopPlayerFallback;
+    return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
