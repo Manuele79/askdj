@@ -23,150 +23,178 @@ function minutesAgoIso(minutes: number) {
   return new Date(Date.now() - minutes * 60 * 1000).toISOString();
 }
 
-export async function GET(request: Request) {
+function isAuthorized(request: Request) {
   const authHeader = request.headers.get("authorization");
-  const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
+  const adminToken = process.env.ADMIN_TOKEN;
+  return !!authHeader && !!adminToken && authHeader === `Bearer ${adminToken}`;
+}
 
-  if (!authHeader || authHeader !== `Bearer ${ADMIN_TOKEN}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+type EventRow = {
+  event_code: string;
+  name?: string | null;
+  mode?: string | null;
+  created_at: string;
+  expires_at: string | null;
+  paid?: boolean | null;
+  tidal_connected?: boolean | null;
+  tidal_playlist_id?: string | null;
+};
+
+type RequestRow = {
+  event_code: string;
+  created_at: string;
+};
+
+export async function GET(request: Request) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
   const nowIso = new Date().toISOString();
   const todayIso = startOfTodayIso();
-  const fifteenMinAgoIso = minutesAgoIso(15);
+  const recentWindowIso = minutesAgoIso(15);
 
   try {
-    // 1) Eventi creati oggi
-    const { count: createdToday, error: createdTodayError } = await supabase
-      .from("events")
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", todayIso);
+    const [
+      createdTodayResult,
+      requestsTodayResult,
+      liveEventsResult,
+      recentEventsResult,
+      recentRequestsResult,
+      tidalRowsResult,
+    ] = await Promise.all([
+      supabase
+        .from("events")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", todayIso),
 
-    if (createdTodayError) throw createdTodayError;
-
-    // 2) Eventi live (non scaduti)
-    const { count: liveEvents, error: liveEventsError } = await supabase
-      .from("events")
-      .select("*", { count: "exact", head: true })
-      .gt("expires_at", nowIso);
-
-    if (liveEventsError) throw liveEventsError;
-
-    // 3) Richieste di oggi
-    const { count: requestsToday, error: requestsTodayError } = await supabase
-      .from("requests")
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", todayIso);
-
-    if (requestsTodayError) throw requestsTodayError;
-
-    // 4) Ultimi 5 eventi creati
-    const { data: recentEventsRaw, error: recentEventsError } = await supabase
-      .from("events")
-      .select("event_code, created_at, expires_at")
-      .order("created_at", { ascending: false })
-      .limit(5);
-
-    if (recentEventsError) throw recentEventsError;
-
-    const recentEventCodes = (recentEventsRaw || []).map((e) => e.event_code);
-
-    let requestsByEvent: Record<string, number> = {};
-
-    if (recentEventCodes.length > 0) {
-      const { data: recentRequests, error: recentRequestsError } = await supabase
+      supabase
         .from("requests")
-        .select("event_code")
-        .in("event_code", recentEventCodes);
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", todayIso),
 
-      if (recentRequestsError) throw recentRequestsError;
+      supabase
+        .from("events")
+        .select(
+          "event_code, name, mode, created_at, expires_at, paid, tidal_connected, tidal_playlist_id"
+        )
+        .gt("expires_at", nowIso)
+        .order("created_at", { ascending: false }),
 
-      requestsByEvent = (recentRequests || []).reduce((acc: Record<string, number>, row: any) => {
-        const code = row.event_code;
-        acc[code] = (acc[code] || 0) + 1;
+      supabase
+        .from("events")
+        .select(
+          "event_code, name, mode, created_at, expires_at, paid, tidal_connected, tidal_playlist_id"
+        )
+        .order("created_at", { ascending: false })
+        .limit(10),
+
+      supabase
+        .from("requests")
+        .select("event_code, created_at")
+        .gte("created_at", recentWindowIso),
+
+      supabase
+        .from("events")
+        .select("event_code, tidal_connected, tidal_playlist_id")
+        .eq("tidal_connected", true),
+    ]);
+
+    if (createdTodayResult.error) throw createdTodayResult.error;
+    if (requestsTodayResult.error) throw requestsTodayResult.error;
+    if (liveEventsResult.error) throw liveEventsResult.error;
+    if (recentEventsResult.error) throw recentEventsResult.error;
+    if (recentRequestsResult.error) throw recentRequestsResult.error;
+    if (tidalRowsResult.error) throw tidalRowsResult.error;
+
+    const liveEvents = (liveEventsResult.data ?? []) as EventRow[];
+    const recentEventsRaw = (recentEventsResult.data ?? []) as EventRow[];
+    const recentRequests = (recentRequestsResult.data ?? []) as RequestRow[];
+    const tidalRows = tidalRowsResult.data ?? [];
+
+    const recentRequestCountByEvent = recentRequests.reduce<Record<string, number>>(
+      (acc, request) => {
+        acc[request.event_code] = (acc[request.event_code] || 0) + 1;
         return acc;
-      }, {});
-    }
+      },
+      {}
+    );
 
-    const recent_events = (recentEventsRaw || []).map((e) => ({
-      code: e.event_code,
-      created_at: e.created_at,
-      expires_at: e.expires_at,
-      requests: requestsByEvent[e.event_code] || 0,
-    }));
+    const live_events = liveEvents.map((event) => {
+      const recentRequestsCount = recentRequestCountByEvent[event.event_code] || 0;
 
-    // 5) Alert: eventi live ma fermi
-    // evento live + creato da almeno 15 min + nessuna richiesta ultimi 15 min
-    const { data: liveEventsRaw, error: liveEventsRawError } = await supabase
-      .from("events")
-      .select("event_code, created_at")
-      .gt("expires_at", nowIso)
-      .lte("created_at", fifteenMinAgoIso);
+      return {
+        code: event.event_code,
+        name: event.name ?? null,
+        mode: event.mode ?? null,
+        created_at: event.created_at,
+        expires_at: event.expires_at,
+        paid: Boolean(event.paid),
+        requests_last_15_min: recentRequestsCount,
+        in_use: recentRequestsCount > 0,
+        status: recentRequestsCount > 0 ? "in_use" : "live_idle",
+      };
+    });
 
-    if (liveEventsRawError) throw liveEventsRawError;
+    const recent_events = recentEventsRaw.map((event) => {
+      const isLive = !!event.expires_at && event.expires_at > nowIso;
+      const recentRequestsCount = recentRequestCountByEvent[event.event_code] || 0;
 
-    const liveCodes = (liveEventsRaw || []).map((e) => e.event_code);
+      return {
+        code: event.event_code,
+        name: event.name ?? null,
+        mode: event.mode ?? null,
+        created_at: event.created_at,
+        expires_at: event.expires_at,
+        paid: Boolean(event.paid),
+        live: isLive,
+        requests_last_15_min: recentRequestsCount,
+        status: isLive
+          ? recentRequestsCount > 0
+            ? "in_use"
+            : "live_idle"
+          : "expired",
+      };
+    });
 
-    let activeRecentRequestCodes = new Set<string>();
+    const activeEvents = live_events.filter((event) => event.in_use);
+    const idleLiveEvents = live_events.filter((event) => !event.in_use);
 
-    if (liveCodes.length > 0) {
-      const { data: recentActiveRequests, error: recentActiveRequestsError } = await supabase
-        .from("requests")
-        .select("event_code")
-        .in("event_code", liveCodes)
-        .gte("created_at", fifteenMinAgoIso);
-
-      if (recentActiveRequestsError) throw recentActiveRequestsError;
-
-      activeRecentRequestCodes = new Set(
-        (recentActiveRequests || []).map((r: any) => r.event_code)
-      );
-    }
-
-    const inactiveEventsCount = (liveEventsRaw || []).filter(
-      (e) => !activeRecentRequestCodes.has(e.event_code)
-    ).length;
-
-    // 6) TIDAL
-    const { count: tidalConnected, error: tidalConnectedError } = await supabase
-      .from("events")
-      .select("*", { count: "exact", head: true })
-      .eq("tidal_connected", true);
-
-    if (tidalConnectedError) throw tidalConnectedError;
-
-    const { data: tidalConnectedRows, error: tidalPlaylistMissingError } = await supabase
-      .from("events")
-      .select("event_code, tidal_playlist_id")
-      .eq("tidal_connected", true);
-
-    if (tidalPlaylistMissingError) throw tidalPlaylistMissingError;
-
-    const playlistMissing = (tidalConnectedRows || []).filter(
-      (e: any) => !e.tidal_playlist_id
-    ).length;
+    const tidalConnected = tidalRows.length;
+    const playlistMissing = tidalRows.filter((event: any) => !event.tidal_playlist_id).length;
 
     return NextResponse.json({
-      events: {
-        created_today: createdToday || 0,
-        live: liveEvents || 0,
+      ok: true,
+      generated_at: new Date().toISOString(),
+      recommended_scan_interval_seconds: live_events.length > 0 ? 300 : 900,
+
+      summary: {
+        events_created_today: createdTodayResult.count || 0,
+        requests_today: requestsTodayResult.count || 0,
+        live_events: live_events.length,
+        active_events: activeEvents.length,
+        idle_live_events: idleLiveEvents.length,
       },
-      requests: {
-        today: requestsToday || 0,
-      },
+
+      live_events,
+      active_events: activeEvents,
+      idle_live_events: idleLiveEvents,
       recent_events,
+
       alerts: {
-        inactive_events: inactiveEventsCount,
+        inactive_events: idleLiveEvents.length,
         errors: 0,
       },
+
       tidal: {
-        connected_events: tidalConnected || 0,
+        connected_events: tidalConnected,
         playlist_missing: playlistMissing,
       },
     });
   } catch (error: any) {
     return NextResponse.json(
       {
+        ok: false,
         error: error?.message || "Internal server error",
       },
       { status: 500 }
