@@ -29,22 +29,6 @@ function isAuthorized(request: Request) {
   return !!authHeader && !!adminToken && authHeader === `Bearer ${adminToken}`;
 }
 
-type EventRow = {
-  event_code: string;
-  name?: string | null;
-  mode?: string | null;
-  created_at: string;
-  expires_at: string | null;
-  paid?: boolean | null;
-  tidal_connected?: boolean | null;
-  tidal_playlist_id?: string | null;
-};
-
-type RequestRow = {
-  event_code: string;
-  created_at: string;
-};
-
 export async function GET(request: Request) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
@@ -52,13 +36,13 @@ export async function GET(request: Request) {
 
   const nowIso = new Date().toISOString();
   const todayIso = startOfTodayIso();
-  const recentWindowIso = minutesAgoIso(15);
+  const fifteenMinAgoIso = minutesAgoIso(15);
 
   try {
     const [
       createdTodayResult,
-      requestsTodayResult,
       liveEventsResult,
+      requestsTodayResult,
       recentEventsResult,
       recentRequestsResult,
       tidalRowsResult,
@@ -69,125 +53,123 @@ export async function GET(request: Request) {
         .gte("created_at", todayIso),
 
       supabase
+        .from("events")
+        .select("event_code, created_at, expires_at")
+        .gt("expires_at", nowIso)
+        .order("created_at", { ascending: false }),
+
+      supabase
         .from("requests")
         .select("*", { count: "exact", head: true })
         .gte("created_at", todayIso),
 
       supabase
         .from("events")
-        .select(
-          "event_code, name, mode, created_at, expires_at, paid, tidal_connected, tidal_playlist_id"
-        )
-        .gt("expires_at", nowIso)
-        .order("created_at", { ascending: false }),
-
-      supabase
-        .from("events")
-        .select(
-          "event_code, name, mode, created_at, expires_at, paid, tidal_connected, tidal_playlist_id"
-        )
+        .select("event_code, created_at, expires_at")
         .order("created_at", { ascending: false })
         .limit(10),
 
       supabase
         .from("requests")
         .select("event_code, created_at")
-        .gte("created_at", recentWindowIso),
+        .gte("created_at", fifteenMinAgoIso),
 
       supabase
         .from("events")
-        .select("event_code, tidal_connected, tidal_playlist_id")
+        .select("event_code, tidal_playlist_id")
         .eq("tidal_connected", true),
     ]);
 
     if (createdTodayResult.error) throw createdTodayResult.error;
-    if (requestsTodayResult.error) throw requestsTodayResult.error;
     if (liveEventsResult.error) throw liveEventsResult.error;
+    if (requestsTodayResult.error) throw requestsTodayResult.error;
     if (recentEventsResult.error) throw recentEventsResult.error;
     if (recentRequestsResult.error) throw recentRequestsResult.error;
     if (tidalRowsResult.error) throw tidalRowsResult.error;
 
-    const liveEvents = (liveEventsResult.data ?? []) as EventRow[];
-    const recentEventsRaw = (recentEventsResult.data ?? []) as EventRow[];
-    const recentRequests = (recentRequestsResult.data ?? []) as RequestRow[];
-    const tidalRows = tidalRowsResult.data ?? [];
+    const liveEventsRaw = liveEventsResult.data || [];
+    const recentEventsRaw = recentEventsResult.data || [];
+    const recentRequests = recentRequestsResult.data || [];
+    const tidalRows = tidalRowsResult.data || [];
 
-    const recentRequestCountByEvent = recentRequests.reduce<Record<string, number>>(
-      (acc, request) => {
-        acc[request.event_code] = (acc[request.event_code] || 0) + 1;
+    const recentRequestsByEvent = recentRequests.reduce<Record<string, number>>(
+      (acc, row: any) => {
+        acc[row.event_code] = (acc[row.event_code] || 0) + 1;
         return acc;
       },
       {}
     );
 
-    const live_events = liveEvents.map((event) => {
-      const recentRequestsCount = recentRequestCountByEvent[event.event_code] || 0;
+    const live_events = liveEventsRaw.map((event: any) => {
+      const requestsLast15 = recentRequestsByEvent[event.event_code] || 0;
 
       return {
         code: event.event_code,
-        name: event.name ?? null,
-        mode: event.mode ?? null,
         created_at: event.created_at,
         expires_at: event.expires_at,
-        paid: Boolean(event.paid),
-        requests_last_15_min: recentRequestsCount,
-        in_use: recentRequestsCount > 0,
-        status: recentRequestsCount > 0 ? "in_use" : "live_idle",
+        requests_last_15_min: requestsLast15,
+        in_use: requestsLast15 > 0,
+        status: requestsLast15 > 0 ? "in_use" : "live_idle",
       };
     });
 
-    const recent_events = recentEventsRaw.map((event) => {
+    const recent_events = recentEventsRaw.map((event: any) => {
       const isLive = !!event.expires_at && event.expires_at > nowIso;
-      const recentRequestsCount = recentRequestCountByEvent[event.event_code] || 0;
+      const requestsLast15 = recentRequestsByEvent[event.event_code] || 0;
 
       return {
         code: event.event_code,
-        name: event.name ?? null,
-        mode: event.mode ?? null,
         created_at: event.created_at,
         expires_at: event.expires_at,
-        paid: Boolean(event.paid),
         live: isLive,
-        requests_last_15_min: recentRequestsCount,
+        requests_last_15_min: requestsLast15,
         status: isLive
-          ? recentRequestsCount > 0
+          ? requestsLast15 > 0
             ? "in_use"
             : "live_idle"
           : "expired",
       };
     });
 
-    const activeEvents = live_events.filter((event) => event.in_use);
-    const idleLiveEvents = live_events.filter((event) => !event.in_use);
+    const active_events = live_events.filter((e: any) => e.in_use);
+    const idle_live_events = live_events.filter((e: any) => !e.in_use);
 
-    const tidalConnected = tidalRows.length;
-    const playlistMissing = tidalRows.filter((event: any) => !event.tidal_playlist_id).length;
+    const playlistMissing = tidalRows.filter((e: any) => !e.tidal_playlist_id).length;
 
     return NextResponse.json({
       ok: true,
       generated_at: new Date().toISOString(),
-      recommended_scan_interval_seconds: live_events.length > 0 ? 300 : 900,
 
+      // Compatibilità vecchio monitor HA
+      events: {
+        created_today: createdTodayResult.count || 0,
+        live: live_events.length,
+      },
+      requests: {
+        today: requestsTodayResult.count || 0,
+      },
+
+      // Nuovo monitor più utile
       summary: {
         events_created_today: createdTodayResult.count || 0,
         requests_today: requestsTodayResult.count || 0,
         live_events: live_events.length,
-        active_events: activeEvents.length,
-        idle_live_events: idleLiveEvents.length,
+        active_events: active_events.length,
+        idle_live_events: idle_live_events.length,
       },
 
       live_events,
-      active_events: activeEvents,
-      idle_live_events: idleLiveEvents,
+      active_events,
+      idle_live_events,
       recent_events,
 
       alerts: {
-        inactive_events: idleLiveEvents.length,
+        inactive_events: idle_live_events.length,
         errors: 0,
       },
 
       tidal: {
-        connected_events: tidalConnected,
+        connected_events: tidalRows.length,
         playlist_missing: playlistMissing,
       },
     });
