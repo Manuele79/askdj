@@ -210,6 +210,8 @@ export default function DjClient({ code }: { code: string }) {
   const [eventName, setEventName] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [joinMsg, setJoinMsg] = useState("");
+  const [eventNameError, setEventNameError] = useState("");
+  const eventNameInputRef = useRef<HTMLInputElement | null>(null);
   const [showQr, setShowQr] = useState(true);
   const [partyFrameHeight, setPartyFrameHeight] = useState(420);
  
@@ -587,14 +589,39 @@ useEffect(() => {
   } catch {}
 }, [appleSearchEnabled]);
 
-async function createEvent() { 
-  if (!eventName.trim()) {
-    alert("Inserisci un nome evento");
+useEffect(() => {
+  if (
+    code !== "TEST123" ||
+    showJoinBox ||
+    !(eventMode === "dj_party" || (eventMode === "jukebox" && jukeboxDuration))
+  ) {
     return;
   }
 
-  const rawEventCode = makeEventCodeFromName(eventName);
-  if (!rawEventCode) return;
+  const t = setTimeout(() => {
+    eventNameInputRef.current?.focus();
+  }, 80);
+
+  return () => clearTimeout(t);
+}, [code, eventMode, jukeboxDuration, showJoinBox]);
+
+async function createEvent() { 
+  const safeEventName = eventName.trim();
+
+  if (!safeEventName) {
+    setEventNameError("Inserisci il nome dell'evento");
+    eventNameInputRef.current?.focus();
+    return;
+  }
+
+  const rawEventCode = makeEventCodeFromName(safeEventName);
+  if (!rawEventCode || rawEventCode.startsWith("-")) {
+    setEventNameError("Inserisci il nome dell'evento");
+    eventNameInputRef.current?.focus();
+    return;
+  }
+
+  setEventNameError("");
 
   let password = "";
 
@@ -1002,6 +1029,11 @@ const showEventTimer =
   code !== "TEST123" &&
   expiresAt &&
   new Date(expiresAt).getTime() - Date.now() <= 2 * 60 * 60 * 1000; 
+
+const landingChoice = showJoinBox ? "join" : eventMode;
+const hasLandingChoice = !!landingChoice;
+const inactiveLandingCardClass =
+  "bg-zinc-950/45 text-zinc-500 ring-1 ring-zinc-800 opacity-55 grayscale hover:opacity-90 hover:grayscale-0 hover:bg-zinc-900/80 hover:text-zinc-100";
 
 
   return (
@@ -1489,10 +1521,13 @@ const showEventTimer =
     onClick={() => {
       setEventMode("dj_party");
       setShowJoinBox(false);
+      setEventNameError("");
     }}
     className={`w-full rounded-3xl px-5 py-4 text-left transition ${
-      eventMode === "dj_party"
+      landingChoice === "dj_party"
         ? "bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-400 text-zinc-950 shadow-[0_0_24px_rgba(250,204,21,0.35)]"
+        : hasLandingChoice
+        ? inactiveLandingCardClass
         : "bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-yellow-300/40"
     }`}
   >
@@ -1502,7 +1537,11 @@ const showEventTimer =
   <div className="text-base sm:text-lg font-extrabold">DJ / Party</div>
 
   <div className={`text-xs sm:text-sm ${
-    eventMode === "dj_party" ? "text-zinc-800/80" : "text-zinc-400"
+    landingChoice === "dj_party"
+      ? "text-zinc-800/80"
+      : hasLandingChoice
+      ? "text-zinc-500"
+      : "text-zinc-400"
   }`}>
     Richieste live - Gestione x DJ-(Matrimoni-Party-Eventi)
   </div>
@@ -1510,7 +1549,11 @@ const showEventTimer =
   {paymentsEnabled && (
     <div
       className={`mt-2 text-sm sm:text-base font-black ${
-        eventMode === "dj_party" ? "text-zinc-950" : "text-cyan-300"
+        landingChoice === "dj_party"
+          ? "text-zinc-950"
+          : hasLandingChoice
+          ? "text-zinc-500"
+          : "text-cyan-300"
       }`}
     >
       Durarata evento 12 ore - Costo 10€ 
@@ -1525,10 +1568,13 @@ const showEventTimer =
       setEventMode("jukebox");
       setShowJoinBox(false);
       setJukeboxDuration("");
+      setEventNameError("");
     }}
     className={`w-full rounded-3xl px-5 py-4 text-left transition ${
-      eventMode === "jukebox"
+      landingChoice === "jukebox"
         ? "bg-gradient-to-r from-cyan-400 via-emerald-400 to-teal-300 text-zinc-950 shadow-[0_0_24px_rgba(34,211,238,0.30)]"
+        : hasLandingChoice
+        ? inactiveLandingCardClass
         : "bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-cyan-300/40"
     }`}
   >
@@ -1537,7 +1583,11 @@ const showEventTimer =
       <div>
         <div className="text-base sm:text-lg font-extrabold">Jukebox</div>
         <div className={`text-xs sm:text-sm ${
-          eventMode === "jukebox" ? "text-zinc-800/80" : "text-zinc-400"
+          landingChoice === "jukebox"
+            ? "text-zinc-800/80"
+            : hasLandingChoice
+            ? "text-zinc-500"
+            : "text-zinc-400"
         }`}>
           Playlist Autoplay X Eventi seza DJ (bar-locali-feste)
         </div>
@@ -1629,11 +1679,14 @@ onClick={() => {
     setEventMode("");
     setJukeboxDuration("");
     setEventName("");
+    setEventNameError("");
   }
 }}
    className={`w-full rounded-3xl px-5 py-4 text-left transition ${
-  showJoinBox
+  landingChoice === "join"
      ? "bg-gradient-to-r from-cyan-400 via-sky-400 to-emerald-300 text-zinc-950 shadow-[0_0_24px_rgba(34,211,238,0.30)]"
+     : hasLandingChoice
+     ? inactiveLandingCardClass
      : "bg-zinc-900/70 text-zinc-100 ring-1 ring-zinc-700 hover:bg-zinc-800/90 hover:ring-pink-300/40"
 }`}
   >
@@ -1643,7 +1696,13 @@ onClick={() => {
         <div className="text-base sm:text-lg font-extrabold">
           Rientra in Evento
         </div>
-        <div className="text-xs sm:text-sm text-zinc-400">
+        <div className={`text-xs sm:text-sm ${
+          landingChoice === "join"
+            ? "text-zinc-800/80"
+            : hasLandingChoice
+            ? "text-zinc-500"
+            : "text-zinc-400"
+        }`}>
           Inserisci il codice Evento esistente
         </div>
       </div>
@@ -1679,14 +1738,30 @@ onClick={() => {
         <>
          <div className="flex w-full flex-col gap-2 sm:max-w-[420px] sm:items-end">
             <input
+              ref={eventNameInputRef}
               value={eventName}
-              onChange={(e) => setEventName(e.target.value)}
-              placeholder="Scrivi: Scrivi Nuovo Evento..."
-              className="w-full rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 transition"
+              onChange={(e) => {
+                setEventName(e.target.value);
+                if (e.target.value.trim()) {
+                  setEventNameError("");
+                }
+              }}
+              placeholder="Scrivi il nome dell'evento"
+              aria-invalid={!!eventNameError}
+              className={`w-full rounded-2xl border bg-zinc-950/80 px-4 py-3 text-sm font-semibold text-zinc-100 placeholder:text-yellow-100/80 outline-none transition shadow-[0_0_22px_rgba(250,204,21,0.24)] ${
+                eventNameError
+                  ? "border-red-400 ring-2 ring-red-400/70 focus:border-red-300 focus:ring-red-300/80"
+                  : "border-yellow-300 ring-2 ring-yellow-300/70 focus:border-yellow-200 focus:ring-yellow-200/90"
+              }`}
             />
+            {eventNameError && (
+              <div className="w-full rounded-xl border border-red-400/50 bg-red-500/10 px-3 py-2 text-sm font-extrabold text-red-200 shadow-[0_0_16px_rgba(248,113,113,0.22)]">
+                {eventNameError}
+              </div>
+            )}
             <button
               onClick={createEvent}
-              className="w-full rounded-2xl bg-gradient-to-r from-emerald-400 via-cyan-300 to-pink-400 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_26px_rgba(34,211,238,0.18)] hover:brightness-110 transition"
+              className="w-full rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-400 px-5 py-3 text-sm font-black tracking-wide text-zinc-950 ring-2 ring-yellow-200/70 shadow-[0_0_34px_rgba(250,204,21,0.42)] hover:brightness-110 hover:shadow-[0_0_42px_rgba(250,204,21,0.56)] transition"
             >
               CREA NUOVO EVENTO:
             </button>
