@@ -521,7 +521,7 @@ function FakeSpectrumWide() {
 </div>
 
 
- <h1 className="mt-6 text-3xl sm:text-4xl font-black tracking-tight text-white">
+ <h1 className={`mt-6 text-3xl sm:text-4xl font-black text-white ${isJukeboxImport ? "tracking-wide" : "tracking-tight"}`}>
   {isJukeboxImport ? (
     <>Importa <span className="text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">brani...</span></>
   ) : (
@@ -918,9 +918,11 @@ function FakeSpectrumWide() {
     </button>
   )}
 
-  <div className="mt-1 text-[11px] text-zinc-400">
-    Apri la pagina web e installa l’app
-  </div>
+  {!isJukeboxImport && (
+    <div className="mt-1 text-[11px] text-zinc-400">
+      Apri la pagina web e installa l’app
+    </div>
+  )}
 </div>
 </div>
 
