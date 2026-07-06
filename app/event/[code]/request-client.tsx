@@ -85,8 +85,18 @@ export default function RequestClient({ code }: { code: string }) {
   const [showMyRequests, setShowMyRequests] = useState(false);
   const [showGuestVotes, setShowGuestVotes] = useState(false);
   const [lastRequestData, setLastRequestData] = useState<any>(null);
+  const [isJukeboxImport, setIsJukeboxImport] = useState(false);
  
 
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      setIsJukeboxImport(params.get("from") === "jukebox-import");
+    } catch {
+      setIsJukeboxImport(false);
+    }
+  }, []);
 
   // carica storico da localStorage (solo questo telefono)
   useEffect(() => {
@@ -512,7 +522,11 @@ function FakeSpectrumWide() {
 
 
  <h1 className="mt-6 text-3xl sm:text-4xl font-black tracking-tight text-white">
-  Richiedi una <span className="text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">canzone...</span>
+  {isJukeboxImport ? (
+    <>Importa <span className="text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">brani...</span></>
+  ) : (
+    <>Richiedi una <span className="text-yellow-300 drop-shadow-[0_0_12px_rgba(250,204,21,1)]">canzone...</span></>
+  )}
 </h1>
   <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-90" />
 <div className="mx-auto mt-[-3px] h-[3px] w-28 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[2px] opacity-70" />
@@ -883,15 +897,26 @@ function FakeSpectrumWide() {
 </section>
 
 <div className="mt-3 text-center">
-  <button
-    onClick={() => {
-      localStorage.removeItem("dj_guest_event");
-      window.location.href = "/";
-    }}
-    className="text-sm font-bold text-zinc-300 underline hover:text-white transition"
-  >
-    ⬅️ Esci Dall’Evento
-  </button>
+  {isJukeboxImport ? (
+    <button
+      onClick={() => {
+        window.location.href = `/jukebox/${code}`;
+      }}
+      className="w-full max-w-md rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-400 px-5 py-4 text-sm sm:text-base font-black tracking-wide text-zinc-950 ring-2 ring-yellow-200/70 shadow-[0_0_34px_rgba(250,204,21,0.42)] transition hover:brightness-110 hover:shadow-[0_0_42px_rgba(250,204,21,0.56)]"
+    >
+      ✅ Fine importazione — Torna al Jukebox
+    </button>
+  ) : (
+    <button
+      onClick={() => {
+        localStorage.removeItem("dj_guest_event");
+        window.location.href = "/";
+      }}
+      className="text-sm font-bold text-zinc-300 underline hover:text-white transition"
+    >
+      ⬅️ Esci Dall’Evento
+    </button>
+  )}
 
   <div className="mt-1 text-[11px] text-zinc-400">
     Apri la pagina web e installa l’app

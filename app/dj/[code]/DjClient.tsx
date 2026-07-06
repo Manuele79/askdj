@@ -1519,8 +1519,17 @@ const inactiveLandingCardClass =
 <div className="flex flex-col gap-3 w-full sm:max-w-[420px] sm:items-end">
   <button
     onClick={() => {
+      if (landingChoice === "dj_party") {
+        setEventMode("");
+        setShowJoinBox(false);
+        setJukeboxDuration("");
+        setEventNameError("");
+        return;
+      }
+
       setEventMode("dj_party");
       setShowJoinBox(false);
+      setJukeboxDuration("");
       setEventNameError("");
     }}
     className={`w-full rounded-3xl px-5 py-4 text-left transition ${
@@ -1565,6 +1574,14 @@ const inactiveLandingCardClass =
 
   <button
     onClick={() => {
+      if (landingChoice === "jukebox") {
+        setEventMode("");
+        setShowJoinBox(false);
+        setJukeboxDuration("");
+        setEventNameError("");
+        return;
+      }
+
       setEventMode("jukebox");
       setShowJoinBox(false);
       setJukeboxDuration("");
@@ -1680,6 +1697,10 @@ onClick={() => {
     setJukeboxDuration("");
     setEventName("");
     setEventNameError("");
+  } else {
+    setEventMode("");
+    setJukeboxDuration("");
+    setEventNameError("");
   }
 }}
    className={`w-full rounded-3xl px-5 py-4 text-left transition ${
@@ -1714,13 +1735,13 @@ onClick={() => {
       <input
         value={joinCode}
         onChange={(e) => setJoinCode(e.target.value)}
-        placeholder="Scrivi: Nome Evento Esistente..."
-        className="w-full rounded-2xl border border-zinc-800/80 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-400/70 focus:ring-2 focus:ring-pink-400/20 transition"
+        placeholder="Esempio: MATRIMONIO-2940"
+        className="w-full rounded-2xl border border-yellow-300 bg-zinc-950/80 px-4 py-3 text-sm font-semibold text-zinc-100 placeholder:text-yellow-100/80 outline-none ring-2 ring-yellow-300/70 shadow-[0_0_22px_rgba(250,204,21,0.24)] transition focus:border-yellow-200 focus:ring-yellow-200/90"
       />
 
       <button
         onClick={joinExistingEvent}
-        className="w-full rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-emerald-300 px-5 py-3 text-sm font-extrabold text-zinc-950 shadow-[0_0_22px_rgba(34,211,238,0.22)] hover:brightness-110 transition"
+        className="w-full rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-400 px-5 py-3 text-sm font-black tracking-wide text-zinc-950 ring-2 ring-yellow-200/70 shadow-[0_0_34px_rgba(250,204,21,0.42)] transition hover:brightness-110 hover:shadow-[0_0_42px_rgba(250,204,21,0.56)]"
       >
         CONFERMA RIENTRO
       </button>
