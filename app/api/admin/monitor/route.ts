@@ -55,6 +55,7 @@ export async function GET(request: Request) {
   const nowIso = new Date().toISOString();
   const todayIso = startOfTodayIso();
   const fifteenMinAgoIso = minutesAgoIso(15);
+  const fifteenMinAgoMs = Date.now() - 15 * 60 * 1000;
 
   try {
     const [
@@ -95,7 +96,7 @@ export async function GET(request: Request) {
         .or(
           [
             `created_at.gte.${fifteenMinAgoIso}`,
-            `updated_at.gte.${fifteenMinAgoIso}`,
+            `updated_at.gte.${fifteenMinAgoMs}`,
             `jukebox_queued_at.gte.${fifteenMinAgoIso}`,
             `jukebox_played_at.gte.${fifteenMinAgoIso}`,
           ].join(",")
