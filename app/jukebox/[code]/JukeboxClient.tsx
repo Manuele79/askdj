@@ -697,6 +697,16 @@ async function load() {
       if (!queueRef.current.length) {
         setQueue(nextPlayable.map(makeQueueEntry));
       }
+
+      const initialRequestQueue = sortRequestQueueEntries(
+        nextPlayable
+          .filter((p) => p.jukeboxStatus === "pending")
+          .map(makeQueueEntry)
+      );
+
+      requestQueueRef.current = initialRequestQueue;
+      setRequestQueue(initialRequestQueue);
+
       lastSeenRef.current = seen;
       return;
     }
