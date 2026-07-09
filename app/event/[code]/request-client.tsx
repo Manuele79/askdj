@@ -900,6 +900,7 @@ function FakeSpectrumWide() {
   {isJukeboxImport ? (
     <button
       onClick={() => {
+        localStorage.removeItem("jukebox_import_event");
         window.location.href = `/jukebox/${code}`;
       }}
       className="w-full max-w-md rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-400 px-5 py-4 text-sm sm:text-base font-black tracking-wide text-zinc-950 ring-2 ring-yellow-200/70 shadow-[0_0_34px_rgba(250,204,21,0.42)] transition hover:brightness-110 hover:shadow-[0_0_42px_rgba(250,204,21,0.56)]"

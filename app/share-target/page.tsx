@@ -18,7 +18,10 @@ function ShareHandler() {
 
     if (eventCode) {
       localStorage.setItem("dj_shared_link", url);
-      window.location.href = `/event/${eventCode}`;
+      const importEventCode = localStorage.getItem("jukebox_import_event");
+      const importSuffix =
+        importEventCode === eventCode ? "?from=jukebox-import" : "";
+      window.location.href = `/event/${eventCode}${importSuffix}`;
     } else {
       window.location.href = "/dj/TEST123";
     }

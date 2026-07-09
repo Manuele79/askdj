@@ -1390,6 +1390,7 @@ useEffect(() => {
               setStatusMsg("⏸ Metti in pausa per importare brani");
               return;
             }
+            localStorage.setItem("jukebox_import_event", code);
             window.open(`/event/${code}?from=jukebox-import`, "_blank");
           }}
           className={[
