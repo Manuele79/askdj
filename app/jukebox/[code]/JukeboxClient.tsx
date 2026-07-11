@@ -347,6 +347,17 @@ useEffect(() => {
   const loadingQueueKeyRef = useRef<string>("");
   const playedRequestTokensRef = useRef<Set<string>>(new Set());
   const resumeBaseKeyRef = useRef<string>("");
+  const pollingStoppedRef = useRef(false);
+  const requestsPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const eventPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  function stopPolling() {
+    pollingStoppedRef.current = true;
+    if (requestsPollRef.current) clearInterval(requestsPollRef.current);
+    if (eventPollRef.current) clearInterval(eventPollRef.current);
+    requestsPollRef.current = null;
+    eventPollRef.current = null;
+  }
 
   useEffect(() => {
   fetch("/api/settings", { cache: "no-store" })
@@ -595,6 +606,8 @@ function safeLoadAndPlay(entry: QueueEntry, reason?: string, autoplay = true) {
 }
 
 async function checkEventStatus() {
+  if (pollingStoppedRef.current) return;
+
   if (!code || code === "TEST123") {
     setEventExpired(false);
     setEventChecked(true);
@@ -608,6 +621,7 @@ async function checkEventStatus() {
     });
 
     if (res.status === 410 || res.status === 404) {
+      stopPolling();
       setEventExpired(true);
       setEventChecked(true);
       setExpiresAt(null);
@@ -638,11 +652,31 @@ async function checkEventStatus() {
 }
 
 async function load() {
+  if (pollingStoppedRef.current) return;
+
   try {
     const res = await fetch(
       `/api/jukebox/requests?eventCode=${encodeURIComponent(code)}`,
       { cache: "no-store" }
     );
+
+    if (res.status === 410 || res.status === 404) {
+      stopPolling();
+      setEventExpired(true);
+      setEventChecked(true);
+      setExpiresAt(null);
+      localStorage.removeItem("jukebox_event");
+
+      try {
+        playerRef.current?.pauseVideo?.();
+      } catch {}
+
+      setIsPlaying(false);
+      setStatusMsg("⛔ Evento scaduto");
+      return;
+    }
+
+    if (!res.ok) return;
 
     const data = await res.json();
 
@@ -775,15 +809,37 @@ async function load() {
 }
 
 useEffect(() => {
+  pollingStoppedRef.current = false;
+
+  function startEventPolling() {
+    if (eventPollRef.current) clearInterval(eventPollRef.current);
+    if (pollingStoppedRef.current) return;
+
+    eventPollRef.current = setInterval(
+      checkEventStatus,
+      document.visibilityState === "visible" ? 30000 : 60000
+    );
+  }
+
+  function handleVisibility() {
+    if (pollingStoppedRef.current) return;
+    if (document.visibilityState === "visible") checkEventStatus();
+    startEventPolling();
+  }
+
   checkEventStatus();
   load();
 
-  const t1 = setInterval(load, 5000);
-  const t2 = setInterval(checkEventStatus, 5000);
+  requestsPollRef.current = setInterval(load, 5000);
+  startEventPolling();
+  document.addEventListener("visibilitychange", handleVisibility);
 
   return () => {
-    clearInterval(t1);
-    clearInterval(t2);
+    if (requestsPollRef.current) clearInterval(requestsPollRef.current);
+    if (eventPollRef.current) clearInterval(eventPollRef.current);
+    requestsPollRef.current = null;
+    eventPollRef.current = null;
+    document.removeEventListener("visibilitychange", handleVisibility);
   };
 }, [code, playlistEnabled]);
 

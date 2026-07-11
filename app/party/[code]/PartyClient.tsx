@@ -102,6 +102,14 @@ export default function PartyClient({ code }: { code: string }) {
   const loopRef = useRef<boolean>(true);
   const advancingRef = useRef<boolean>(false);
   const startedRef = useRef<boolean>(false);
+  const pollingStoppedRef = useRef(false);
+  const pollingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  function stopPolling() {
+    pollingStoppedRef.current = true;
+    if (pollingTimerRef.current) clearInterval(pollingTimerRef.current);
+    pollingTimerRef.current = null;
+  }
 
 function startedKey(code: string) {
   return `djreq_party_started:${String(code || "").toUpperCase()}`;
@@ -117,11 +125,20 @@ function startedKey(code: string) {
   }, [loopEnabled]);
 
   async function load() {
+    if (pollingStoppedRef.current) return;
+
     try {
       const res = await fetch(
         `/api/requests?eventCode=${encodeURIComponent(code)}`,
         { cache: "no-store" }
       );
+
+      if (res.status === 410) {
+        stopPolling();
+        return;
+      }
+
+      if (!res.ok) return;
       const data = await res.json();
 
       const mapped: RequestItem[] = (data.requests || []).map((r: any) => ({
@@ -328,9 +345,33 @@ const spotifyList = useMemo(() => {
 
   // refresh lista
   useEffect(() => {
+    pollingStoppedRef.current = false;
+
+    function startPolling() {
+      if (pollingTimerRef.current) clearInterval(pollingTimerRef.current);
+      if (pollingStoppedRef.current) return;
+
+      pollingTimerRef.current = setInterval(
+        load,
+        document.visibilityState === "visible" ? 5000 : 60000
+      );
+    }
+
+    function handleVisibility() {
+      if (pollingStoppedRef.current) return;
+      if (document.visibilityState === "visible") load();
+      startPolling();
+    }
+
     load();
-    const t = setInterval(load, 5000);
-    return () => clearInterval(t);
+    startPolling();
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      if (pollingTimerRef.current) clearInterval(pollingTimerRef.current);
+      pollingTimerRef.current = null;
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, [code]);
 
   useEffect(() => {

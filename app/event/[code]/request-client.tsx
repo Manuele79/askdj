@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type PlatformKey = "youtube" | "spotify" | "apple" | "amazon" | "tidal";
 
@@ -83,6 +83,14 @@ export default function RequestClient({ code }: { code: string }) {
   const [showTitle, setShowTitle] = useState(false);
   const [openedPlatform, setOpenedPlatform] = useState(false);
   const [showMyRequests, setShowMyRequests] = useState(false);
+  const pollingStoppedRef = useRef(false);
+  const pollingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  function stopPolling() {
+    pollingStoppedRef.current = true;
+    if (pollingTimerRef.current) clearInterval(pollingTimerRef.current);
+    pollingTimerRef.current = null;
+  }
   const [showGuestVotes, setShowGuestVotes] = useState(false);
   const [lastRequestData, setLastRequestData] = useState<any>(null);
   const [isJukeboxImport, setIsJukeboxImport] = useState(false);
@@ -200,11 +208,15 @@ useEffect(() => {
 }, [votedMap, code]);
 
 useEffect(() => {
+  pollingStoppedRef.current = false;
   loadPartyRequests();
   loadEventMode();
 
   function startPolling() {
-    return setInterval(
+    if (pollingTimerRef.current) clearInterval(pollingTimerRef.current);
+    if (pollingStoppedRef.current) return;
+
+    pollingTimerRef.current = setInterval(
       loadPartyRequests,
       document.visibilityState === "visible"
         ? 8000
@@ -212,11 +224,12 @@ useEffect(() => {
     );
   }
 
-  let t = startPolling();
+  startPolling();
 
   const handleVisibility = () => {
-    clearInterval(t);
-    t = startPolling();
+    if (pollingStoppedRef.current) return;
+    if (document.visibilityState === "visible") loadPartyRequests();
+    startPolling();
   };
 
   document.addEventListener(
@@ -225,7 +238,8 @@ useEffect(() => {
   );
 
   return () => {
-    clearInterval(t);
+    if (pollingTimerRef.current) clearInterval(pollingTimerRef.current);
+    pollingTimerRef.current = null;
 
     document.removeEventListener(
       "visibilitychange",
@@ -285,6 +299,12 @@ async function loadEventMode() {
       cache: "no-store",
     });
 
+    if (resp.status === 410) {
+      stopPolling();
+      setModeLoaded(true);
+      return;
+    }
+
     if (!resp.ok) {
       setModeLoaded(true);
       return;
@@ -304,8 +324,14 @@ async function loadEventMode() {
 }
 
 async function loadPartyRequests() {
+  if (pollingStoppedRef.current) return;
+
   try {
     const resp = await fetch(`/api/requests?eventCode=${encodeURIComponent(code)}`);
+    if (resp.status === 410) {
+      stopPolling();
+      return;
+    }
     if (!resp.ok) return;
 
     const data = await resp.json().catch(() => null);

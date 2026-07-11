@@ -235,6 +235,17 @@ export default function DjClient({ code }: { code: string }) {
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [appleSearchEnabled, setAppleSearchEnabled] = useState(false);
   const [showJoinBox, setShowJoinBox] = useState(false);
+  const pollingStoppedRef = useRef(false);
+  const requestsPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const eventPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  function stopPolling() {
+    pollingStoppedRef.current = true;
+    if (requestsPollRef.current) clearInterval(requestsPollRef.current);
+    if (eventPollRef.current) clearInterval(eventPollRef.current);
+    requestsPollRef.current = null;
+    eventPollRef.current = null;
+  }
 
   function resetPartyUnlock() {
     try {
@@ -325,12 +336,17 @@ function splitDedications(raw: string | null | undefined) {
   }, [items]);
 
 async function load() {
-  if (!code || code === "TEST123") return;
+  if (!code || code === "TEST123" || pollingStoppedRef.current) return;
 
   try {
     const res = await fetch(`/api/requests?eventCode=${encodeURIComponent(code)}`, {
       cache: "no-store",
     });
+
+    if (res.status === 410) {
+      stopPolling();
+      return;
+    }
 
     if (!res.ok) {
       return;
@@ -544,18 +560,38 @@ useEffect(() => {
     return;
   }
 
+  pollingStoppedRef.current = false;
+
+  function startPolling() {
+    if (requestsPollRef.current) clearInterval(requestsPollRef.current);
+    if (eventPollRef.current) clearInterval(eventPollRef.current);
+    if (pollingStoppedRef.current) return;
+
+    const hidden = document.visibilityState !== "visible";
+    requestsPollRef.current = setInterval(load, hidden ? 60000 : 5000);
+    eventPollRef.current = setInterval(loadEventStatus, hidden ? 60000 : 30000);
+  }
+
+  function handleVisibility() {
+    if (pollingStoppedRef.current) return;
+    if (document.visibilityState === "visible") {
+      load();
+      loadEventStatus();
+    }
+    startPolling();
+  }
+
   load();
   loadEventStatus();
-
-  const intervalMs =
-    document.visibilityState !== "visible" ? 60000 : 5000;
-
-  const t = setInterval(load, intervalMs);
-  const t2 = setInterval(loadEventStatus, 30000);
+  startPolling();
+  document.addEventListener("visibilitychange", handleVisibility);
 
   return () => {
-    clearInterval(t);
-    clearInterval(t2);
+    if (requestsPollRef.current) clearInterval(requestsPollRef.current);
+    if (eventPollRef.current) clearInterval(eventPollRef.current);
+    requestsPollRef.current = null;
+    eventPollRef.current = null;
+    document.removeEventListener("visibilitychange", handleVisibility);
   };
 }, [code]);
 
@@ -731,12 +767,17 @@ async function handleRenewEvent() {
 }
 
 async function loadEventStatus() {
-  if (!code || code === "TEST123") return;
+  if (!code || code === "TEST123" || pollingStoppedRef.current) return;
 
   try {
     const res = await fetch(`/api/events?eventCode=${encodeURIComponent(code)}`, {
       cache: "no-store",
     });
+
+    if (res.status === 410) {
+      stopPolling();
+      return;
+    }
 
     if (!res.ok) return;
 
