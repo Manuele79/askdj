@@ -55,6 +55,34 @@ function normalizeVideoId(x: any) {
   return String(x || "").trim();
 }
 
+function formatReceivedAt(value?: number) {
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const now = new Date();
+  const isToday =
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate();
+
+  const time = new Intl.DateTimeFormat("it-IT", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+
+  if (isToday) return `Ricevuta oggi alle ${time}`;
+
+  const day = new Intl.DateTimeFormat("it-IT", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+
+  return `Ricevuta ${day}, ${time}`;
+}
+
 function isYouTubePlaylistUrl(urlStr: string) {
   const u = (urlStr || "").toLowerCase();
   return u.includes("youtube.com") && u.includes("list=");
@@ -1242,6 +1270,8 @@ useEffect(() => {
     "";
 
   const pendingQueueCount = requestQueue.length;
+  const nextRequest =
+    requestQueue.find((item) => item._queueKey !== currentKey) ?? null;
 
   if (redirecting) return null;
 
@@ -1364,7 +1394,21 @@ useEffect(() => {
       {pendingQueueCount > 0 ? <>🎧 Coda Richieste : {pendingQueueCount}</> : <>🎧 Nessuna Richiesta</>}
     </div>
 
-   
+    {nextRequest && (
+      <div className="w-full rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-3 py-2 shadow-[0_0_14px_rgba(34,211,238,0.12)]">
+        <div className="text-[11px] font-extrabold uppercase tracking-wide text-cyan-300">
+          Prossima richiesta
+        </div>
+        <div className="mt-0.5 truncate text-sm font-bold text-zinc-100">
+          {nextRequest.title || "Richiesta senza titolo"}
+        </div>
+        {nextRequest.dedication && (
+          <div className="mt-0.5 truncate text-xs italic text-zinc-400">
+            💬 {nextRequest.dedication}
+          </div>
+        )}
+      </div>
+    )}
 
     <div className="hidden lg:block w-full mt-10">
       <FakeSpectrumWide />
@@ -1519,6 +1563,10 @@ useEffect(() => {
               {playable.map((r, idx) => {
                 const isPlaylist = r._kind === "playlist";
                 const isCurrentSource = r._key === currentSourceKey;
+                const isQueuedRequest = requestQueue.some((q) => q.id === r.id);
+                const receivedLabel = isQueuedRequest
+                  ? formatReceivedAt(r.jukeboxQueuedAt || r.createdAt)
+                  : "";
 
                 return (
                    <li
@@ -1568,6 +1616,12 @@ useEffect(() => {
                             🔥 {r.votes}
                           </span>
                         </div>
+
+                        {receivedLabel && (
+                          <div className="mt-2 text-[11px] text-zinc-500">
+                            {receivedLabel}
+                          </div>
+                        )}
 
                         {r.dedication && (
                           <div className="mt-2 text-xs italic text-zinc-300">
