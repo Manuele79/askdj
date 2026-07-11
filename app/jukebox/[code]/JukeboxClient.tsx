@@ -1555,10 +1555,9 @@ useEffect(() => {
               {playable.map((r, idx) => {
                 const isPlaylist = r._kind === "playlist";
                 const isCurrentSource = r._key === currentSourceKey;
-                const isQueuedRequest = requestQueue.some((q) => q.id === r.id);
-                const receivedLabel = isQueuedRequest
-                  ? formatReceivedAt(r.jukeboxQueuedAt || r.createdAt)
-                  : "";
+                const receivedLabel = formatReceivedAt(
+                  r.jukeboxQueuedAt || r.createdAt
+                );
 
                 return (
                    <li
