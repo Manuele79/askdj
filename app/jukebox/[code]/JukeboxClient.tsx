@@ -1317,7 +1317,9 @@ useEffect(() => {
     requestQueue.find((q) => q._queueKey === currentKey)?._key ||
     "";
 
-  const pendingQueueCount = requestQueue.length;
+  const pendingQueueCount = requestQueue.filter(
+    (item) => item._queueKey !== currentKey
+  ).length;
   const nextRequest =
     requestQueue.find((item) => item._queueKey !== currentKey) ?? null;
 
