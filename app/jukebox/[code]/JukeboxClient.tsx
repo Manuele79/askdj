@@ -61,18 +61,10 @@ function formatReceivedAt(value?: number) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
 
-  const now = new Date();
-  const isToday =
-    date.getFullYear() === now.getFullYear() &&
-    date.getMonth() === now.getMonth() &&
-    date.getDate() === now.getDate();
-
   const time = new Intl.DateTimeFormat("it-IT", {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
-
-  if (isToday) return `Ricevuta oggi alle ${time}`;
 
   const day = new Intl.DateTimeFormat("it-IT", {
     day: "numeric",
@@ -80,7 +72,7 @@ function formatReceivedAt(value?: number) {
     year: "numeric",
   }).format(date);
 
-  return `Ricevuta ${day}, ${time}`;
+  return `🕒 Ricevuta: ${day} • ${time}`;
 }
 
 function isYouTubePlaylistUrl(urlStr: string) {
