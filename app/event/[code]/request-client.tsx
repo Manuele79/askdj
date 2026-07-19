@@ -819,12 +819,16 @@ function FakeSpectrumWide() {
               className="rounded-xl border border-yellow-400 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-100"
             >
               <div className="flex items-center justify-between gap-2">
-                <div className="font-medium">{r.title}</div>
-                <span className="text-[11px] text-zinc-400">{r.platform}</span>
+                <div className="min-w-0 flex-1 break-words font-medium">
+                  {r.title}
+                </div>
+                <span className="shrink-0 text-[11px] text-zinc-400">
+                  {r.platform}
+                </span>
               </div>
 
               {r.dedication && r.dedication.trim() && (
-                <div className="mt-1 text-xs text-zinc-200">
+                <div className="mt-1 break-words text-xs text-zinc-200">
                   “{r.dedication}”
                 </div>
               )}

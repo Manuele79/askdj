@@ -1445,15 +1445,15 @@ useEffect(() => {
     </div>
 
     {nextRequest && (
-      <div className="w-full rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-3 py-2 shadow-[0_0_14px_rgba(34,211,238,0.12)]">
+      <div className="w-full min-w-0 max-w-full overflow-hidden rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-3 py-2 shadow-[0_0_14px_rgba(34,211,238,0.12)]">
         <div className="text-[11px] font-extrabold uppercase tracking-wide text-cyan-300">
           Prossima richiesta
         </div>
-        <div className="mt-0.5 truncate text-sm font-bold text-zinc-100">
+        <div className="mt-0.5 min-w-0 max-w-full overflow-hidden break-words line-clamp-2 text-sm font-bold text-zinc-100">
           {nextRequest.title || "Richiesta senza titolo"}
         </div>
         {nextRequest.dedication && (
-          <div className="mt-0.5 truncate text-xs italic text-zinc-400">
+          <div className="mt-0.5 max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-xs italic text-zinc-400">
             💬 {nextRequest.dedication}
           </div>
         )}
